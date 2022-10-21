@@ -99,8 +99,9 @@ class Stay < ApplicationRecord
       # capturar la nota mínima requerida por ministerio
       area = Program.find_by_id(self.program_id).area if self.program_id
       anno = self.year_enrollment.chars.first if self.year_enrollment
-      @notaminima = 0
-      @notaminima = Gradesmin.find_by(area: area, year:anno).grades if anno != "F"
+      #@notaminima = 0
+      if anno != "F" then @notaminima = Gradesmin.find_by(area: area, year:anno).grades else @notaminima = 0 end
+      #@notaminima = Gradesmin.find_by(area: area, year:anno).grades if anno != "F"
       self.update_column :gradesmin, @notaminima
     end
   end
