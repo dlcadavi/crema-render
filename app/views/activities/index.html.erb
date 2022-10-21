@@ -11,7 +11,6 @@
       <tr>
         <th><span> Attività </span></th>
         <th><span> Titolo </span></th>
-        <th><span> Subtitolo </span></th>
         <th><span> Data </span></th>
         <th><span> Ore </span></th>
         <th><span> Data confermata? </span></th>
@@ -31,8 +30,7 @@
       <% courses_id = Activitycourse.where(activity_id: activity.id).pluck(:course_id) %>
       <% curso = Course.find_by(id: courses_id) %>
       <td> <%= link_to curso.name, curso if curso %> </td>
-      <td> <%= link_to activity.name, activity %> </td>
-      <td> <%= activity.subtitle if activity.subtitle %> </td>
+      <td> <%= if activity.subtitle.length > 0 then link_to activity.subtitle, activity else link_to activity.name, activity end %> </td>
       <td> <%= activity.activity_date.to_date.strftime("%d/%m/%y") %> </td>
       <td> <%= activity.duration %> </td>
       <td> <%= if activity.confirmed_date == true then 'sì' else 'no' end %> </td>
