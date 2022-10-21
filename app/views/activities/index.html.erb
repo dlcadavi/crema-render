@@ -30,7 +30,14 @@
       <% courses_id = Activitycourse.where(activity_id: activity.id).pluck(:course_id) %>
       <% curso = Course.find_by(id: courses_id) %>
       <td> <%= link_to curso.name, curso if curso %> </td>
-      <td> <%= if activity.subtitle.length > 0 then link_to activity.subtitle, activity else link_to activity.name, activity end %> </td>
+      <td>
+        <% if activity.subtitle %>
+          <%= if activity.subtitle.length > 0 then link_to activity.subtitle, activity else link_to activity.name, activity end %>
+        <% else %>
+          <%= link_to activity.name, activity %>
+        <% end %>
+      </td>
+
       <td> <%= activity.activity_date.to_date.strftime("%d/%m/%y") %> </td>
       <td> <%= activity.duration %> </td>
       <td> <%= if activity.confirmed_date == true then 'sì' else 'no' end %> </td>
