@@ -67,7 +67,11 @@ class Course < ApplicationRecord
     self.update_column :numberactivities, @activities.length
   end
 
-
+  def update_duration
+    @activities = Activitycourse.where(course_id: self.id)
+    self.update_column :duration, @activities.pluck(:duration).sum
+  end
+  
   #revisar esta, candidata a modificarse
   def update_attendance_course
     @courseattendances = Courseattendance.where(course_id: self.id)

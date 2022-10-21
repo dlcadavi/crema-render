@@ -67,12 +67,26 @@ end
 # actualizar courses
 
 task :update_courses => [:update_cursos] do
-  puts "Finiseh update stays task"
+  puts "Finiseh update courses task"
 end
 
 task :update_cursos => :environment do
   courses = Course.all
   courses.each do |course|
     course.save
+  end
+end
+
+###############################################################################################
+# actualizar actividades
+
+task :update_activities => [:update_actividades] do
+  puts "Finiseh update activities task"
+end
+
+task :update_actividades => :environment do
+  activities = Activity.all
+  activities.each do |activity|
+    activity.save
   end
 end
