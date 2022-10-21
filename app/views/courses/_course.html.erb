@@ -112,7 +112,7 @@
                     </tr>
                 </thead>
 
-                <% @activities.each do |activity| %>
+                <% @activities.order(activity_date: :desc).each do |activity| %>
                   <table class="">
                     <tbody id="">
                       <td style="width:30%"> <input class="form-control-non-editable" style="width:100%" value = "<%= activity.activity_date.strftime('%d/%m/%Y, alle %H:%M') %>"> </td>
