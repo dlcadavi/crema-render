@@ -163,23 +163,24 @@
         <% end %>
 
         <% if stay %>
-          <span class="badge rounded-pill bg-danger" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= mostrar if stay.attendance_status == 'insufficiente' and stay.examfree == false %></span>
-          <span class="badge rounded-pill bg-warning" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= mostrar if stay.attendance_status == 'buono' and stay.examfree == false %></span>
-          <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= mostrar if stay.attendance_status == 'ottimo' and stay.examfree == false %></span>
+          <span class="badge rounded-pill bg-danger" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= mostrar if stay.attendance_status == 'insufficiente' %></span>
+          <span class="badge rounded-pill bg-warning" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= mostrar if stay.attendance_status == 'buono' %></span>
+          <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= mostrar if stay.attendance_status == 'ottimo' %></span>
           <span class="badge rounded-pill bg-dark" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= 'NA' if stay.attendance_status == 'NA' and stay.examfree == false %></span>
-          <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= 'NA' if stay.examfree == true %></span>
           <br>
           <span class="student-subhead"> min: <%= stay.min_hours_required.round(0) if stay.min_hours_required %>h</span>
         <% end %>
       </td>
 
+
       <!-- Semaforo PeriodGrades -->
       <td class="text-center">
         <% if stay %>
-          <span class="badge rounded-pill bg-danger" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades.round(2) if stay.periodgrades_status == 'insufficiente' %></span>
-          <span class="badge rounded-pill bg-warning" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades.round(2) if stay.periodgrades_status == 'buono' %></span>
-          <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades.round(2) if stay.periodgrades_status == 'ottimo'%></span>
-          <span class="badge rounded-pill bg-dark" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades_status if stay.periodgrades_status == 'NA' %></span>
+          <span class="badge rounded-pill bg-danger" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades.round(2) if stay.periodgrades_status == 'insufficiente' and (stay.examfree == false or not stay.examfree?) %></span>
+          <span class="badge rounded-pill bg-warning" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades.round(2) if stay.periodgrades_status == 'buono' and (stay.examfree == false or not stay.examfree?) %></span>
+          <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades.round(2) if stay.periodgrades_status == 'ottimo' and (stay.examfree == false or not stay.examfree?) %></span>
+          <span class="badge rounded-pill bg-dark" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades_status if stay.periodgrades_status == 'NA' and (stay.examfree == false or not stay.examfree?) %></span>
+          <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= 'NA' if stay.examfree == true %></span>
           <br>
           <span class="student-subhead"> min: <%= stay.gradesmin %></span>
         <% end %>

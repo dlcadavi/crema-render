@@ -92,11 +92,11 @@
 
         <!-- Semaforo PeriodGrades -->
         <td class="text-center">
-          <span class="badge rounded-pill bg-danger" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades.round(2) if stay.periodgrades_status == 'insufficiente' and stay.examfree == false %></span>
-          <span class="badge rounded-pill bg-warning" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades.round(2) if stay.periodgrades_status == 'buono' and stay.examfree == false %></span>
-          <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades.round(2) if stay.periodgrades_status == 'ottimo' and stay.examfree == false %></span>
-          <span class="badge rounded-pill bg-dark" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades_status if stay.periodgrades_status == 'NA' and stay.examfree == false %></span>
-          <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades_status if stay.examfree == true %></span>
+          <span class="badge rounded-pill bg-danger" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades.round(2) if stay.periodgrades_status == 'insufficiente' and (stay.examfree == false or not stay.examfree?) %></span>
+          <span class="badge rounded-pill bg-warning" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades.round(2) if stay.periodgrades_status == 'buono' and (stay.examfree == false or not stay.examfree?) %></span>
+          <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades.round(2) if stay.periodgrades_status == 'ottimo' and (stay.examfree == false or not stay.examfree?) %></span>
+          <span class="badge rounded-pill bg-dark" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades_status if stay.periodgrades_status == 'NA' and (stay.examfree == false or not stay.examfree?) %></span>
+          <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= 'NA' if stay.examfree == true %></span>
           <br>
           <span class="student-subhead"> min: <%= stay.gradesmin %></span>
         </td>
