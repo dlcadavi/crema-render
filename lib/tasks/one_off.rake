@@ -48,3 +48,17 @@ task :update_profesores => :environment do
     profesor.update_hours_lectured
   end
 end
+
+###############################################################################################
+# actualizar stays
+
+task :update_stays => [:update_estadias] do
+  puts "Finiseh update stays task"
+end
+
+task :update_estadias => :environment do
+  stays = Stay.all
+  stays.each do |stay|
+    stay.save
+  end
+end
