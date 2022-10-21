@@ -1,0 +1,140 @@
+<h1>Lezione</h1>
+
+<p>
+  <% attendance = Attendance.where(student_id: Student.find_by(user_id: current_user.id).id) %>
+  <% actividades_frecuentadas_este_anno = Activity.where(id: attendance.pluck(:activity_id), acyear_id: $year.id) %>
+
+  <% enrollment = Enrollment.where(user_id: current_user.id) %>
+  <% actividades_inscritas_este_anno = Activity.where(id: enrollment.pluck(:activity_id), acyear_id: $year.id) %>
+
+  Totale lezioni alle qualli ti sei inscritt* quest'anno: <%= actividades_inscritas_este_anno.count %>
+  <br>
+  Ore alle quali ti sei iscritt* quest'anno: <%= actividades_inscritas_este_anno.sum(:duration) %>h
+</p>
+
+
+<div style="width: 100%; overflow: hidden;">
+    <div style="width: 300px; display: table-cell;">
+      <%= pie_chart [
+        ["mi sono iscritt*", current_user.activities.count],
+        ["non mi sono inscritt*", @activities.count - current_user.activities.count]
+        ],
+        title: "Lezioni",
+        donut: true,
+        colors:["mediumturquoise", "#666"] %>
+      </div>
+
+    <div style="display: table-cell;">
+      <%= pie_chart [
+        ["mi sono iscritt*", current_user.activities.sum(:duration)],
+        ["non mi sono iscritt*", @activities.sum(:duration)- current_user.activities.sum(:duration)]
+        ],
+        title: "Ore",
+        donut: true,
+        colors:["mediumturquoise", "#666"] %>
+      </div>
+
+</div>
+
+<br>
+<br>
+
+<table class="table student-list">
+  <thead style="text-align: center;">
+      <tr>
+        <th style="text-align: left;"><span> Attività </span></th>
+        <th style="text-align: left;"><span> Nome </span></th>
+        <th><span> Data </span></th>
+        <th><span> Ore </span></th>
+        <th><span> Data confermata? </span></th>
+        <th><span> Iscrizione </span></th>
+        <th><span> Sono stato? </span></th>
+        <th style="text-align: left;"><span> Descrizione </span></th>
+        <th><span> Azioni </span></th>
+      </tr>
+  </thead>
+
+  <tr>
+  <% @futureactivities.each do |activity| %>
+
+    <tbody id="activities" style="text-align: center;">
+      <% student = Student.find_by(user: current_user) %>
+      <% @enrollment = Enrollment.where(user: current_user, activity: activity) %>
+      <% @attendance = Attendance.where(student: student, activity: activity) %>
+      <% activitycourse = Activitycourse.find_by(activity_id: activity.id) %>
+      <% course = Course.find_by_id(activitycourse.course_id)%>
+
+      <td style="width:30%;text-align: left;"> <%= course.name %> </td>
+      <td style="width:30%;text-align: left;"> <%= activity.name %> </td>
+      <td style="width:5%;"> <%= activity.activity_date.to_date.strftime("%d/%m/%y") %> </td>
+      <td style="width:5%;"> <%= activity.duration %> </td>
+      <td style="width:10%;"> <%= if activity.confirmed_date == true then 'sì' else 'no' end %> </td>
+
+      <td>
+          <!-- Inscribirse: no se ha inscrito previamente -->
+        <% if !@enrollment.exists? %>
+          <%= link_to 'Conferma', activity_enroll_path(activity, user_id: current_user.id), data: { "turbo-method": :post }, :class => "btn button-17 btn-xs" , :style => 'background-color:mediumturquoise'%>
+        <% else %>
+          <!-- Desinscribirse: sólo si ya se ha inscrito previamente -->
+          <%= link_to 'Cancella', activity_unenrroll_path(activity, user_id: current_user.id), data: { "turbo-method": :post}, :class => "btn button-17 btn-xs" %>
+        <% end %>
+
+      </td>
+
+      <td style="width:10%;">
+      </td>
+
+      <td style="width:30%;text-align: left;"> <%= truncate(strip_tags(activity.description),length: 80) %> </td>
+
+      <td style="width:5%;">
+        <%= link_to fa_icon('search-plus', style: "font-size: 1.5em; color:rgb(28,163,184)"),activity %>
+      </td>
+    </tbody>
+
+  <% end %>
+
+
+  <% @pastactivities.each do |activity| %>
+
+    <tbody id="activities" style="text-align: center; color: gray;font-style: italic;;">
+      <% student = Student.find_by(user: current_user) %>
+      <% @enrollment = Enrollment.where(user: current_user, activity: activity) %>
+      <% @attendance = Attendance.where(student: student, activity: activity) %>
+      <% activitycourse = Activitycourse.find_by(activity_id: activity.id)%>
+      <% course = Course.find_by_id(activitycourse.course_id) if activitycourse %>
+
+      <td style="width:30%;text-align: left;"> <%= course.name if course %> </td>
+
+      <td style="width:30%;text-align: left;"> <%= activity.name %> </td>
+      <td style="width:5%;"> <%= activity.activity_date.to_date.strftime("%d/%m/%y") %> </td>
+      <td style="width:5%;"> <%= activity.duration %> </td>
+      <td style="width:10%;"> <%= if activity.confirmed_date == true then 'sì' else 'no' end %> </td>
+
+      <td>
+        <!-- mostrar si se había inscrito o no  -->
+        <% if !@enrollment.exists? %>
+          <%= fa_icon('times',text: "", style: "text-align: center;font-size: 2em; color:rgb(28,163,184)")%>
+        <% else %>
+          <%= fa_icon('check',text: "", style: "text-align: center;font-size: 2em; color:rgb(28,163,184)")%>
+        <% end %>
+
+      </td>
+
+      <td style="width:10%;">
+        <% if @attendance.length > 0 %>
+          <%= fa_icon('check',text: "", style: "text-align: center;font-size: 2em; color:rgb(28,163,184)")%>
+        <% else %>
+          <%= fa_icon('times',text: "", style: "text-align: center;font-size: 2em; color:rgb(28,163,184)")%>
+        <% end %>
+      </td>
+
+      <td style="width:30%;text-align: left;"> <%= truncate(strip_tags(activity.description),length: 80) %> </td>
+
+      <td style="width:5%;">
+        <%= link_to fa_icon('search-plus', style: "font-size: 1.5em; color:rgb(28,163,184)"),activity %>
+      </td>
+    </tbody>
+
+  <% end %>
+
+</table>

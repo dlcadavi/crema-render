@@ -1,0 +1,65 @@
+<h1>Lezione</h1>
+
+<p>
+  Azioni:
+  <%= link_to fa_icon('arrow-left', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
+    :back %>
+</p>
+
+<table class="table student-list">
+  <thead>
+      <tr>
+        <th><span> Attività </span></th>
+        <th><span> Titolo </span></th>
+        <th><span> Data </span></th>
+        <th><span> Ore </span></th>
+        <th><span> Data confermata? </span></th>
+        <th><span> Tipo </span></th>
+        <th><span> Formatori </span></th>
+        <th><span> Contesto </span></th>
+        <th><span> Totale iscritti </span></th>
+        <th><span> Totale presenti </span></th>
+        <th><span> Azioni </span></th>
+      </tr>
+  </thead>
+
+  <tbody id="activities">
+    <tr>
+    <% @activities.each do |activity| %>
+      <% course_id = Activitycourse.find_by(activity_id:activity.id).course_id %>
+      <% curso = Course.find_by_id(course_id) %>
+      <td> <%= link_to curso.name, curso if curso %> </td>
+      <td> <%= link_to activity.name, activity %> </td>
+      <td> <%= activity.activity_date.to_date.strftime("%d/%m/%y") %> </td>
+      <td> <%= activity.duration %> </td>
+      <td> <%= if activity.confirmed_date == true then 'sì' else 'no' end %> </td>
+      <td> <%= activity.kind %> </td>
+
+      <!-- Mostrar el nombre de los profesores -->
+      <td>
+        <%= activity.professor_fullname %>
+      </td>
+
+      <!-- actualizar el campo de cualificación agregada, por si cambió la cualificación de algún profesor -->
+      <td> <%= activity.context %> </td>
+      <td>
+        <!-- cuenta la cantidad de estudiantes inscritos en cada actividad -->
+        <%= activity.users.count %>
+      </td>
+
+      <td> <%= activity.students.count %></td>
+
+
+      <td>
+        <%= link_to fa_icon('user', style: "font-size: 1.5em; color:rgb(28,163,184)"),editattendance_path(activity) %>
+        <!-- <%= link_to fa_icon('search-plus', style: "font-size: 1.5em; color:rgb(28,163,184)"),activity %> -->
+        <%= link_to fa_icon('pencil', style: "font-size: 1.5em;color:rgb(28,163,184)"), edit_activity_path(activity) %>
+        <!-- <%= link_to fa_icon('clone', style: "font-size: 1.5em;color:rgb(28,163,184)"), duplicate_activity_path(activity) %> -->
+        <%= link_to fa_icon('trash', style: "font-size: 2em; color: Tomato;"),
+          activity, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Sei sicuro di rimuovere questa lezione?" }%>
+
+        </td>
+      </tbody>
+
+  <% end %>
+</table>

@@ -1,0 +1,149 @@
+<%= form_with(model: guest) do |form| %>
+  <% if guest.errors.any? %>
+    <div style="color: red;font-size: 1em;">
+      <%= "Hey #{current_user.name}!" %>, non possiamo salvare questo guest per <%= pluralize(guest.errors.count, "errore:") %>
+      <ul>
+        <% guest.errors.each do |error| %>
+          <li><%= error.message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+<div class="container">
+  <div class="row">
+		<div class="col-12">
+
+			<!-- Page title -->
+			<div >
+        <%= link_to fa_icon('arrow-left', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
+          guests_path %>
+        <h3>Guest</h3>
+			  <hr>
+		  </div>
+
+
+		<!-- Primera fila: Información de contacto -->
+			<div class="row mb-5 gx-5">
+
+				<!-- Contatto -->
+				<div class="col-xxl-8 mb-5 mb-xxl-0">
+					<div class="bg-secondary-soft px-4 py-5 rounded">
+
+						<div class="row g-3">
+							<h4 class="mb-4 mt-0">Informazione di contatto</h4>
+							<!-- First Name -->
+							<div class="col-md-6">
+								<label class="form-label">Nome *</label>
+								<input type="text" class="form-control" placeholder="" aria-label="First name" <%= form.text_field :name %>
+							</div>
+							<!-- Last name -->
+							<div class="col-md-6">
+								<label class="form-label">Cognome *</label>
+								<input type="text" class="form-control" placeholder="" aria-label="Last name" <%= form.text_field :lastname %>
+							</div>
+							<!-- Mobile number -->
+							<div class="col-md-6">
+								<label class="form-label">Telefono cellulare *</label>
+								<input type="text" class="form-control" placeholder="" aria-label="Phone number" <%= form.text_field :phone_number %>
+							</div>
+							<!-- Email -->
+							<div class="col-md-6">
+								<label for="inputEmail4" class="form-label">Email *</label>
+								<input type="email" class="form-control" id="inputEmail4" <%= form.text_field :email %>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				<!-- Upload profile -->
+				<div class="col-xxl-4">
+					<div class="bg-secondary-soft px-4 py-5 rounded">
+						<div class="row g-3">
+							<h4 class="mb-4 mt-0">Carica la foto</h4>
+								<!-- Image upload -->
+								<div class="position-relative display-2 mb-3">
+                  <div >
+                    <% if guest.profile_picture.present? %>
+                      <%= link_to image_tag(guest.profile_picture, style:"width:105px; height:105px", class: 'list_image'), student %>
+                    <% else %>
+                      <%= if guest.gender == "Uomo" then link_to image_tag('male.jpg',  style:"width:105px; height:105px", class: 'list_image'),guest end %>
+                      <%= if guest.gender == "Donna" then link_to image_tag('female.jpg',  style:"width:105px; height:105px", class: 'list_image'),guest end %>
+                      <%= if guest.gender == "non specificato" then link_to image_tag('unspecified.jpg',  style:"width:105px; height:105px", class: 'list_image'),guest end %>
+                    <% end %>
+                  </div>
+                </div>
+
+								<!-- Button -->
+								<input type="file" id="customFile" name="file" hidden="">
+
+
+                <!-- Link para eliminar la foto -->
+                <%= if guest.profile_picture.present? then link_to 'Cancella foto', purge_avatar_student_path(student), data: { "turbo-method": :delete }, class: "btn btn-danger ml-3" end %>
+
+                <!-- Button para cargar la foto: este es el que está activo, lo dejé porque es más simple -->
+                <%= form.file_field :profile_picture, class: 'form-control input-md'  %>
+
+						</div>
+					</div>
+				</div>
+
+			</div> <!-- Row END -->
+
+			<!-- Segunda fila: Personal information -->
+			<div class="row mb-5 gx-5">
+				<div class="col-xxl-7 mb-5 mb-xxl-0">
+					<div class="bg-secondary-soft px-4 py-5 rounded">
+						<div class="row g-3">
+							<h4 class="mb-4 mt-0">Informazione personale</h4>
+              <!-- Codice fiscale -->
+              <div class="col-md-6">
+								<label class="form-label">Codice fiscale o numero di passaporto *</label>
+								<%= form.text_field :id_number, class: 'form-control', placeholder: '', style: "width=30%;" %>
+							</div>
+
+							<!-- Birthdate -->
+							<div class="col-md-6">
+								<label class="form-label">Data di nascita *</label>
+								<input class="form-control" placeholder="" <%= form.date_field :birthdate %>
+							</div>
+							<!-- Country -->
+							<div class="col-md-6">
+								<label class="form-label"><i class=""></i>Nazionalità *</label>
+								<select type="text" class="form-control" placeholder=""  <%= country_select("student", "country_of_birth",priority_countries: ["IT"]) %>
+							</div>
+              <!-- Gender -->
+							<div class="col-md-6">
+								<label class="form-label">Genere *</label>
+                <select type="text" class="form-control" placeholder=""  <%= form.select :gender, ['Donna', 'Uomo', 'non specificato'] %>
+              </div>
+						</div> <!-- Row END -->
+					</div>
+				</div>
+
+				<!-- Informazione accademica-->
+        <div class="col-xxl-5 mb-5 mb-xxl-0">
+					<div class="bg-secondary-soft px-4 py-5 rounded">
+						<div class="row g-3">
+							<h4 class="mb-4 mt-0">Informazione accademica</h4>
+              <!-- Country -->
+              <div class="col-md-6">
+                <label class="form-label"><i class=""></i>Università *</label>
+                <input type="text" class="form-control" style="width:200%;" placeholder="" <%= form.text_field :university %>
+              </div>
+			      </div>
+          </div>
+        </div>
+
+			<!-- button -->
+			<div class="gap-3 d-md-flex justify-content-md-end text-center">
+        <%= form.submit "Inviare guest",  :class => "btn btn-primary btn-lg", local: true, data: { turbo: false } %>
+			</div>
+
+		</div><!-- Form END -->
+	</div>
+</div>
+
+<% end %>

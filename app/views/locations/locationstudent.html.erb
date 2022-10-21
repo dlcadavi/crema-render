@@ -1,0 +1,54 @@
+<h3>Alloggi di </h3>
+<h1> <%= @student.lastname + ' ' + @student.name  %> </h1>
+
+<p>
+  Azioni:
+  <% stays = Stay.find_by(student_id: params[:id]) %>
+  <% if stays %>
+    <%= link_to fa_icon('plus', text: "", style: "font-size: 2.5em; color:rgb(28,163,184)"),
+      new_location_path(@student), data: { turbo: false } %>
+  <% else %>
+    <h6>Atenzione: per creare un alloggio nuovo devi prima creare un soggiorno per lo studente. </h6>
+  <% end %>
+</p>
+
+<table class="table professor-list">
+  <thead>
+      <tr>
+        <th><span> Anno </span></th>
+        <th><span> Camera </span></th>
+        <th><span> Data inizio </span></th>
+        <th><span> Data fine </span></th>
+        <th><span> Mesi </span></th>
+        <th><span> Retta mensile </span></th>
+        <th><span> Descrizione </span></th>
+        <th><span> Azioni </th>
+      </tr>
+  </thead>
+
+  <tbody id="students">
+
+    <tr>
+      <% @locations.order(start_location_date: :desc).each do |location| %>
+
+      <!-- Los camnpos -->
+      <!-- La l minúscula de las fechas es para que por defecto use el formato que yo definí en  config/locales/en.yml -->
+      <td> <%= location.stay.acyear.name %> </td>
+      <td> <%= location.room if location.room %> </td>
+      <td> <%= l location.start_location_date if location.start_location_date%> </td>
+      <td> <%= l location.end_location_date if location.end_location_date%> </td>
+      <td> <%= location.months if location.months %> </td>
+      <td> <%= location.fee if location.fee %> </td>
+      <td> <%= location.description if location.description %> </td>
+
+      <td>
+        <%= link_to fa_icon('search-plus', style: "font-size: 1.5em; color:rgb(28,163,184)"),location %>
+        <%= link_to fa_icon('pencil', style: "font-size: 1.5em;color:rgb(28,163,184)"), edit_location_path(location)%>
+        <%= link_to fa_icon('trash', style: "font-size: 2em; color: Tomato;"),
+          location, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Sei sicuro di rimuovere questo alloggio?" } %>
+      </td>
+
+    </tbody>
+    <% end %>
+
+</table>

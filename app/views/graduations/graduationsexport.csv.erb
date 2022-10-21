@@ -1,0 +1,10 @@
+<%- nombres_columnas = ['Cognome', 'Nome', 'Classe', 'Data laurea', 'Tipo', 'Voti laurea'] -%>
+<%= CSV.generate_line nombres_columnas -%>
+<%- @graduations.each do |graduation| -%>
+  <%- stay = Stay.find_by_id(graduation.stay_id) -%>
+  <%- student = Student.find_by_id(stay.student_id) -%>
+  <%- row = [student.lastname, student.name,
+  stay.kind,
+  graduation.graduation_date.to_date.strftime("%d/%m/%y"), graduation.tipo, graduation.grades] -%>
+  <%= CSV.generate_line(row).html_safe -%>
+<%- end -%>

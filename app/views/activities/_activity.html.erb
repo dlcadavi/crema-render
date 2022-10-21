@@ -1,0 +1,200 @@
+<%= form_with(model: activity) do |form| %>
+  <% if activity.errors.any? %>
+    <div style="color: red;font-size: 1em;">
+      <%= pluralize(activity.errors.count, "error") %> prohibited this activity from being saved:
+
+      <ul>
+        <% activity.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+  <div class="container">
+    <div class="row">
+  		<div class="col-12">
+  			<!-- Page title -->
+  			<div >
+          <%= link_to fa_icon('arrow-left', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
+            activities_path %>
+          <h3>Lezione</h3>
+          <%= link_to fa_icon('pencil', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
+            edit_activity_path(activity) %>
+  			  <hr>
+
+  		  </div>
+
+  			<!-- Form START -->
+  			<form class="file-upload">
+
+  				<div class="row mb-5 gx-5">
+  					<!-- Contatto -->
+  					<div class="col-xxl-7 mb-5 mb-xxl-0">
+  						<div class="bg-secondary-activity px-4 py-5 rounded">
+  							<div class="row g-3">
+  								<h4 class="mb-4 mt-0">Informazione generale</h4>
+                  <!-- Acyear. No he logrado que lo imprima en un form.text_field :(. anno viene de la acción show pasando por show.htm.erb que dispara este partial -->
+  								<div class="col-md-6">
+  									<label class="form-label">Anno accademico della lezione: </label>
+                    <%= anno.name if anno %>
+
+  								</div>
+                  <!-- Div para mejoras estéticas -->
+                  <div>
+  								</div>
+  								<!-- Título -->
+  								<div class="col-md-6">
+  									<label class="form-label">Titolo *</label>
+  									<input type="text" class="form-control-non-editable" style="width: 200%;"<%= form.text_field :name %>
+  								</div>
+                  <div></div>
+                  <!-- Subtitle -->
+  								<div class="col-md-6">
+  									<label class="form-label">Subtitolo *</label>
+  									<input type="text" class="form-control-non-editable" style="width: 200%;"<%= form.text_field :subtitle %>
+  								</div>
+                  <div></div>
+  								<!-- Descripción -->
+  								<div class="col-md-6">
+  									<label class="form-label">Descrizione *</label>
+  									<textarea rows="3" cols="1" class="form-control-non-editable" style="width: 200%;" <%= form.text_area :description %>
+  								</div>
+                  <div>
+  								</div>
+
+                  <!-- Contesto -->
+  								<div class="col-md-6">
+  									<label class="form-label">Contesto *</label>
+                    <select id='',type="text" class="form-control-non-editable" <%= form.select :context, [["Nazionale", "N"], ["Internazionale", "I"]]  %>
+  								</div>
+
+                  <!-- tipo: no lo pueden ver los estudiantes-->
+  								<div class="col-md-6">
+                    <% if current_user.role.name == "Admin" %>
+                      <label class="form-label">Tipologia *</label>
+                      <select id='',type="text" class="form-control-non-editable" <%= form.select :kind, options_for_select($typology_list,selected: activity.kind) %>
+                    <% end %>
+  								</div>
+
+  							</div> <!-- Row END -->
+  						</div>
+  					</div>
+            </div>
+
+            <!-- Detalles -->
+  					<div class="col-xxl-5", style="padding-left:60%; width:100%; margin-top: -46%">
+  						<div class="bg-secondary-activity px-4 py-5 rounded">
+  							<div class="row g-3">
+  								<h4 class="mb-4 mt-0">Dettagli</h4>
+
+                  <!-- Fecha -->
+  								<div class="col-md-6">
+  									<label class="form-label">Data *</label>
+  									<input class="form-control-non-editable" style="width: 150%;" <%= form.datetime_field :activity_date,  placeholder: 'DD/MM/YYYY HH:%MM' %>
+  								</div>
+
+                  <!-- Duración -->
+                  <div class="col-md-6" style="position:relative; width: 50%; left:90px;" >
+  									<label class="form-label">Ore *</label>
+  									<input type="text" class="form-control-non-editable" style="width: 50%;" <%= form.text_field :duration %>
+  								</div>
+
+                  <!-- Confirmed_date -->
+                  <div class="col-md-6">
+                    <label class="form-label">Data confermata? *</label>
+  									<%= form.check_box :confirmed_date, checked: @activity.confirmed_date,:disabled => true  %>
+                  </div>
+
+                  <hr/>
+
+
+                  <div class="row g-3">
+    								<h4 class="my-4">Formatori</h4>
+                    <!-- Profesores -->
+
+
+                    <div class="">
+                      <table class="">
+                        <thead>
+                          <th> </th>
+                          <th> </th>
+                          <th> <% if current_user.role.name == "Admin" then "costo" end %></th>
+                        </thead>
+                      <% @professors.order(:lastname, :name).each do |professor| %>
+                        <tbody id="">
+                          <!-- Confirmed date-->
+                          <!-- no fui capaz de hacer la data confermata como un check, porque los check no se envían en html cuando son False, un poblema enorme-->
+                          <!-- en el div de más abajo (display: none) se capturta el ID de cada actividad para saber cuál hay que update en el courses_controller-->
+                          <!-- Costo: no lo pueden ver los estudiantes -->
+                          <% @professoractivity = Professoractivity.find_by(activity_id: activity.id, professor_id: professor.id) if activity.id %>
+                          <td style="width:15%">
+                            <% if @professoractivity.present? then seleccionado = 'sì' else seleccionado = 'no' end %>
+                            <select name="professors_selected[]" type="text" class="form-control-non-editable"  <%= form.select(:professors_selected, ["sì", "no"], selected: seleccionado) %>
+                          </td>
+                          <td style="width:50%;"> <%= professor.display_fullname %> </td>
+                          <td>
+                            <% if current_user.role.name == "Admin" %>
+                              <input type="text" class="form-control-non-editable" style="width:100%;" value = "<%= @professoractivity.cost if @professoractivity %>"<%= text_field_tag 'costs[]' %>
+                            <% end %>
+                          </td>
+                        </tbody>
+                      <% end %>
+                    </table>
+                    <br><br>
+                      <!-- <%= link_to 'Creare nuovo professore', new_professor_path, data: { turbo: false } %>-->
+                    </div>
+    							</div>
+                    <!-- Qualifica -->
+                    <div class="col-md-6">
+                      <label class="form-label">Qualifica specifica </label>
+                      <textarea rows="3" cols="1" class="form-control-non-editable" style="width: 200%;" <%= form.text_area :aggregated_qualification %>
+                    </div>
+    							</div>
+
+                </div>
+              </div>
+            </div>
+  				</div>
+
+
+          <!-- Estudiantes presentes-->
+          <!-- No visible para los estudiantes -->
+          <% if current_user.role.name == "Admin" %>
+    				<div class="row mb-5 gx-5">
+    					<div class="col-xxl-6 mb-5 mb-xxl-5" style="margin-top:-8%; width:58%">
+    						<div class="bg-secondary-activity px-4 py-5 rounded">
+    							<div class="row g-3">
+    								<h4 class="mb-4 mt-0">Studenti</h4>
+                    <div class="col-md-6">
+                      <label class="form-label">Studenti presenti </label>
+                      <p>
+                        <br>
+                        <% @activity.students.each do |student| %>
+                          <li><%= student.lastname + " " + student.name %></li>
+                        <% end %>
+                      </p>
+                    </div>
+
+                    <!-- estudiantes inscritos -->
+                    <div class="col-md-6">
+                      <label class="form-label">Studenti iscritti </label>
+                      <p>
+                        <br>
+                        <% activity.users.each do |user| %>
+                          <li><%= user.lastname + ' ' + user.name %></li>
+                        <% end %>
+                      </p>
+                    </div>
+
+    							</div> <!-- Row END -->
+    						</div>
+    					</div>
+            <% end %>
+
+  		</div>
+  	</div>
+  </div>
+
+<% end %>

@@ -1,0 +1,115 @@
+<%= form_with(model: location) do |form| %>
+  <% if location.errors.any? %>
+    <div style="color: red;font-size: 1em;">
+      <%= "Hey #{current_user.name}!" %>, non possiamo salvare questa laurea per <%= pluralize(locations.errors.count, "errore:") %>
+
+      <ul>
+        <% location.errors.each do |error| %>
+          <li><%= error.message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% if @location.id %>
+    <% stay = Stay.find_by_id(@location.stay_id) %>
+    <% student = Student.find_by_id(stay.student_id) %>
+    <% stays = Stay.where(student_id: student.id) %>
+  <% else %>
+    <% student = Student.find(params[:id]) %>
+    <% stays = Stay.where(student_id: student.id) %>
+  <% end %>
+
+
+  <div class="container">
+    <div class="row">
+  		<div class="col-12">
+  			<!-- Page title -->
+  			<div >
+          <h3>Alloggio di</h3>
+          <h2><%= student.display_fullname %></h2>
+          <br><br>
+
+  			  <hr>
+  		  </div>
+
+			<!-- Información general -->
+				<div class="">
+					<!-- Contatto -->
+					<div class="col-xxl-8 mb-5 mb-xxl-0">
+						<div class="bg-secondary-activity px-4 py-5 rounded">
+							<div class="row g-3">
+                <div class="">
+
+                </div>
+                <!-- Estudiante: captura el ide del estudiante desde la url y lo manda al campo :student.id para ser leido por el controlador-->
+                <% if !@location.id %>
+                  <%= form.hidden_field :student_id, value: params[:id] %>
+                <% end %>
+
+
+                <div class="col-md-6">
+                  <table style="width:200%;">
+                    <tr>
+                      <td style="width:50%;">
+                        <label class="form-label">Soggiorno *</label>
+                        <% options = options_from_collection_for_select(stays, :id, :show_year_with_dates, @location.stay_id) %>
+                        <select type="text" class="form-control" <%= select_tag(:stay_id, options) %>
+                      </td>
+                    <tr>
+                  </table>
+
+                  <table style="width:200%;">
+                    <tr>
+                      <!-- Graduation date -->
+                      <td style="width:50%;">
+                        <label class="form-label">Data inizio *</label>
+                        <%= form.date_field :start_location_date, class: 'form-control',placeholder: 'DD/MM/YYYY' %>
+                      </td>
+
+                      <!-- Data fine -->
+                      <td style="width:50%;">
+                        <label class="form-label">Data fine *</label>
+                        <%= form.date_field :end_location_date, class: 'form-control',placeholder: 'DD/MM/YYYY' %>
+                      </td>
+                    <tr>
+                  </table>
+
+
+
+                  <table style="width:200%;">
+                    <tr>
+                      <td style="width:50%;">
+                        <label class="form-label">Camera</label>
+                        <select type="text" class="form-control" <%= form.select :room, options_for_select($room_list,selected: location.room) %>
+                      </td>
+
+                      <td style="width:50%;">
+                        <label class="form-label">Retta mensile</label>
+                        <input id="course_name" type="text" class="form-control" style="width: 50%;"<%= form.text_field :fee %>
+                      </td>
+                    <tr>
+                  </table>
+
+                  <!-- Descripción -->
+                  <div class="col-md-6">
+                    <label class="form-label">Descrizione</label>
+                    <textarea rows="3" cols="1" class="form-control" style="width: 400%;" <%= form.text_area :description %>
+                  </div>
+
+                </div>
+
+							</div> <!-- Row END -->
+						</div>
+					</div>
+				</div>  <!-- Terminan los dos primeros módulos -->
+
+				<!-- button -->
+				<div class="gap-3 d-md-flex justify-content-md-end text-center">
+          <%= form.submit "Inviare alloggio",  :class => "btn btn-primary btn-lg", local: true, data: { turbo: false } %>
+				</div>
+
+  		</div><!-- Form END -->
+  	</div>
+  </div>
+<% end %>

@@ -1,0 +1,79 @@
+
+<h1>Guests</h1>
+<p>
+  Azioni:
+    <%= link_to fa_icon('plus', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
+    new_guest_path, data: { turbo: false } %>
+</p>
+<hr>
+
+
+<table class="table student-list">
+  <thead>
+      <tr>
+        <th>  </th>
+        <th>  </th>
+        <th><span> Email </span></th>
+        <th><span> Telefono </span></th>
+        <th><span> Instituzione </span></th>
+        <th><span> Data inizio </span></th>
+        <th><span> Data fine </span></th>
+        <th><span> Retta complessa </span></th>
+        <th><span> Azioni </span></th>
+      </tr>
+  </thead>
+
+  <!-- actualizar los campos de la estadía, por si cambió alguno de ellos (antes de graficar) -->
+  <% @guests.each do |guest| %>
+    <% guest.copy_attributes_from_visit %>
+  <% end %>
+  <tbody id="students">
+
+    <tr>
+      <% @guests.each do |guest| %>
+
+        <!-- Imagen del perfil -->
+        <td style="width: 2%;">
+          <% if guest.profile_picture.present? %>
+            <%= link_to image_tag(student.profile_picture, style:"width:60px; height:60px", class: 'list_image'), student %>
+          <% else %>
+            <%= if guest.gender == "Donna" then link_to image_tag('female.jpg',  style:"width:50px; height:50px", class: 'list_image'),guest end %>
+            <%= if guest.gender == "Uomo" then link_to image_tag('male.jpg',  style:"width:50px; height:50px", class: 'list_image'),guest end %>
+            <%= if guest.gender == "non specificato" then link_to image_tag('unspecified.jpg',  style:"width:50px; height:50px", class: 'list_image'),guest end %>
+          <% end %>
+        </td>
+
+        <td style="width: 10%;">
+          <a href="#" class="student-link"> <%= link_to guest.lastname + ' ' + guest.name, guest%></a>
+          <br>
+          <span class="student-subhead"> <%= guest.id_number %></span>
+        </td>
+
+      <!-- Los camnpos -->
+      <!-- La l minúscula de las fechas es para que por defecto use el formato que yo definí en  config/locales/en.yml -->
+      <td> <%= guest.email %> </td>
+      <td> <%= guest.phone_number %> </td>
+      <td> <%= guest.university %> </td>
+      <td> <%= l guest.hosting_start_date if guest.hosting_start_date %> </td>
+      <td> <%= l guest.hosting_end_date if guest.hosting_end_date %> </td>
+      <td> <%= guest.fee if guest.fee %> </td>
+
+      <td>
+        <%= link_to fa_icon('pencil', style: "font-size: 1.5em;color:rgb(28,163,184)"), edit_guest_path(guest), data: { turbo: false } %>
+        <!-- Botón para crear estadía -->
+        <%= link_to fa_icon('bed', style: "font-size: 1.5em; color:rgb(28,163,184)"),visitguest_path(guest) %>
+        <%= link_to fa_icon('trash', style: "font-size: 2em; color: Tomato;"),
+          guest, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Sei sicuro di rimuovere questo guest?" }%>
+      </td>
+
+      <td>
+      </td>
+
+    </tbody>
+
+    <!-- No se pueden borrar estudiantes: se debe borrar primero el usuario asociado
+    <%= submit_tag "Rimuovi selezione", :class => 'btn button-17 btn-xs' %>
+    -->
+    <% end %>
+
+</table>

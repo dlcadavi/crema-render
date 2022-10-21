@@ -1,0 +1,65 @@
+<%= form_with(model: @activity) do |form| %>
+
+
+<div class="container">
+<div class="row">
+		<div class="col-12">
+			<!-- Page title -->
+      <div >
+        <%= link_to fa_icon('arrow-left', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
+          activities_path %>
+        <h3>Partecipazione</h3>
+        <br><br>
+        <h3> <%= @activity.name  %> </h3>
+			  <hr>
+		  </div>
+
+
+			<!-- Form START -->
+			<form class="file-upload">
+				<div class="row mb-5 gx-5">
+
+          <!-- Estudiantes -->
+					<div class="row mb-5 gx-5">
+						<div class="col-xxl-6 mb-5 mb-xxl-0">
+							<div class="bg-secondary-activity px-4 py-5 rounded">
+								<div class="row g-3">
+									<h4 class="mb-4 mt-0">Studenti</h4>
+	                <div class="col-md-6">
+	                  <label class="form-label">Studenti iscritti </label>
+
+
+										<!-- solo listar los estudiantes que tienen una estadía en el año de la actividad :) -->
+										<!-- pluck pone en un array el atributo student_id del subconjunto que sale de where -->
+										<!-- https://stackoverflow.com/questions/22418952/get-array-of-attributes-from-array-of-database-items -->
+										<% estadias = Stay.where(acyear_id: @activity.acyear_id).pluck(:student_id) %>
+										<% @students = Student.where(id: estadias).order(:lastname, :name) %>
+	                  <%= form.collection_check_boxes :student_ids, @students, :id, :name do |b|%>
+	                    <br>
+                    	<%= b.label(class: "check_box") do %>
+                      	<%= b.check_box(class: "check_box") %>
+                      	<%= b.object.lastname + " " + b.object.name %>
+	                  	<% end %>
+										<% end %>
+	                </div>
+
+								</div> <!-- Row END -->
+							</div>
+						</div>
+
+            <!-- para redireccionar en el edit de manera condicional -->
+            <%= hidden_field_tag :redirect_location, activities_path %>
+
+            <!-- button -->
+    				<div class="gap-3 d-md-flex justify-content-md-end text-center">
+              <%= form.submit "Inviare partecipazione",  :class => "btn btn-primary btn-lg", local: true, data: { turbo: false } %>
+    				</div>
+
+
+
+			</form> <!-- Form END -->
+		</div>
+	</div>
+	</div>
+
+  <% end %>

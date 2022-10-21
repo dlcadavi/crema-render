@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+    </head>
+
+    <body>
+
+      <!-- Header-->
+      <header class="">
+        <div class="">
+            <div class="">
+                <div class="text-center">
+                    <div class="">
+                      <%= link_to image_tag('logoCollegio.png', width: "300", height: "75", alt: 'Professors'), :back %>
+                    </div>
+                    <br><br><br>
+                </div>
+            </div>
+        </div>
+        <div class=" text-center">
+        <h1 class=" fw-bold">Welcome to College REsource MAnagement </h1>
+        <p class="fs-4"> Cosa vuoi fare?</p>
+        <!-- Professors -->
+      </div>
+      </header>
+
+
+      <% if current_user %>
+        <% if current_user.role.name == 'Admin' %>
+          <%= render "home/admindashboard" %>
+        <% end %>
+        <% if current_user.role.name == 'Student' %>
+          <%= render "home/studentdashboard" %>
+        <% end %>
+      <% else %>
+        <%= render "nueva" %>
+      <% end %>
+
+    </body>
+
+</html>

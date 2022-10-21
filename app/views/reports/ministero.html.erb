@@ -1,0 +1,66 @@
+<%= render 'reports/left_panel' %>
+
+<!-- Panel derecho -->
+
+<div class="" style="position: relative;top: -150px; left: 250px;width:80%">
+
+  <table class="table student-list">
+
+    <thead>
+        <tr>
+          <th><span>  </span></th>
+          <th><span> Nome </span></th>
+          <th><span> Scarica </span></th>
+          <th style="width:20%"><span> Scarica </span></th>
+        </tr>
+    </thead>
+
+    <tbody id="activities">
+      <!-- Anagráfica studenti -->
+      <tr>
+      <td> <i class="fa fa-file-excel-o" style="font-size: 30px; color:rgb(28,163,184);"></i> </td>
+      <td> Ministero: Anagrafica studenti </td>
+      <td> Documento in formato .csv con l'anagrafica degli studenti per Ministero </td>
+      <td>
+       <%= form_tag(export_ministerio_anagrafica_students_path, method: :get) do %>
+         <%= select_tag(:acyear_filter,
+           options_from_collection_for_select(Acyear.all, :id, :name, params[:acyear_filter]),
+           include_blank: 'seleziona anno', onchange: 'this.form.submit()', class:"form-control", style:"display: table-cell;width: 80%;") %>
+       <% end %>
+      </td>
+
+        <!-- Partecipazione Corsi SIN participación mínima (aparece como Actividad porque así la reconoce el Collegio)-->
+      <tr>
+      <td> <i class="fa fa-file-excel-o" style="font-size: 30px; color:rgb(28,163,184);"></i> </td>
+      <td> Ministero: Anagrafica attività senza partecipazione minima</td>
+      <td> Documento in formato .csv con l'informazione sulla partecipazione degli studenti alle attività culturale per Ministero </td>
+      <td>
+        <%= form_tag(href="/courseattendances_export.csv", method: :get) do %>
+          <%= select_tag(:acyear_filter,
+            options_from_collection_for_select(Acyear.all, :id, :name, params[:acyear_filter]),
+            include_blank: 'seleziona anno', onchange: 'this.form.submit()', class:"form-control", style:"display: table-cell;width: 80%;") %>
+          <span style="display:none;">
+            <%= hidden_field_tag :nombre, "sin_participacion_minima" %>
+          </span>
+        <% end %>
+      </td>
+
+      <!-- Partecipazione Corsi CON participación mínima (aparece como Actividad porque así la reconoce el Collegio)-->
+      <tr>
+      <td> <i class="fa fa-file-excel-o" style="font-size: 30px; color:rgb(28,163,184);"></i> </td>
+      <td> Ministero: Anagrafica attività con partecipazione minima</td>
+      <td> Documento in formato .csv con l'informazione sulla partecipazione degli studenti alle attività culturale per Ministero </td>
+      <td>
+        <%= form_tag(href="/courseattendances_export.csv", method: :get) do %>
+          <%= select_tag(:acyear_filter,
+            options_from_collection_for_select(Acyear.all, :id, :name, params[:acyear_filter]),
+            include_blank: 'seleziona anno', onchange: 'this.form.submit()', class:"form-control", style:"display: table-cell;width: 80%;") %>
+            <span style="display:none;">
+              <%= hidden_field_tag :nombre, "con_participacion_minima" %>
+            </span>
+        <% end %>
+      </td>
+
+    </tbody>
+  </table>
+</div>

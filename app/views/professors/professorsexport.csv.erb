@@ -1,0 +1,15 @@
+<%- nombres_columnas = ['Anno accademico','CF', 'Cognome', 'Nome', 'Email', 'Telefono', 'Qualifica', 'Ore atitvità', 'Numero lezioni', 'Compenso'] -%>
+<%= CSV.generate_line nombres_columnas -%>
+<%- @professors.each do |professor| -%>
+  <%- @professorcourses = Professorcourse.where(professor_id: professor.id) -%>
+  <%- @courses = Course.where(id: @professorcourses.pluck(:course_id)) -%>
+  <%- @courses.each do |course| -%>
+    <%- @activitycourses = Activitycourse.where(course_id: course.id) -%>
+    <%- @actividades = Activity.where(id:@activitycourses.pluck(:activity_id)) -%>
+    <%- @professoractivities = Professoractivity.where(activity_id:@actividades.pluck(:id), professor_id:professor.id) -%>
+    <%- anno = Acyear.find_by_id(course.acyear_id) -%>
+    <%- row = [anno.name, professor.id_number, professor.lastname, professor.name, professor.email, professor.phone_number, professor.qualification,
+    course.duration, course.numberactivities, @professoractivities.sum(:cost)] -%>
+    <%= CSV.generate_line(row).html_safe -%>
+  <%- end -%>
+<%- end -%>

@@ -1,0 +1,25 @@
+<%= month_calendar attribute: :activity_date, partial: 'month_calendar', events: @activities do |date, activities| %>
+  <%= date %>
+
+  <% activities.each do |activity| %>
+  <div>
+    <%= check_box_tag "name", 'accepted', activity.confirmed_date, disabled: true %>
+    <%= link_to activity.name, activity%>
+
+    <% if activity.confirmed_date? %>
+      <a style="font-weight: bold;"> <%= activity.activity_date.strftime("%I:%M%p") %>,
+    <% else %>
+      <a style=""> <%= activity.activity_date.strftime("%I:%M%p") %>,
+    <% end %>
+
+    <a style=""> <%= activity.duration %> ore.
+
+    <% @enrollment = Enrollment.where(user: current_user, activity: activity) %>
+    <!-- Desinscribirse: solamente los que son estudiantes pueden inscribirse a una actividad -->
+    <% if @enrollment.exists? %>
+      <%= link_to 'Cancella inscriz', activity_unenrroll_path(activity, user_id: current_user.id), data: { "turbo-method": :post }, :class => "btn btn-danger" %>
+    <% end %>
+
+  </div>
+  <% end %>
+<% end %>

@@ -1,0 +1,33 @@
+<%= month_calendar attribute: :activity_date, partial: 'month_calendar', events: @activities do |date, activities| %>
+  <%= date %>
+
+  <% activities.each do |activity| %>
+  <div>
+    <%= check_box_tag "name", 'accepted', activity.confirmed_date, disabled: true %>
+    <%= link_to activity.name, activity%>
+
+    <% if activity.confirmed_date? %>
+      <a style="font-weight: bold;"> <%= activity.activity_date.strftime("%I:%M%p") %>,
+    <% else %>
+      <a style=""> <%= activity.activity_date.strftime("%I:%M%p") %>,
+    <% end %>
+
+    <a style=""> <%= activity.duration %> ore.
+
+
+    <!-- Inscribirse: solamente los que son estudiantes y no inscritos pueden inscribirse a la actividad -->
+    <% @enrollment = Enrollment.where(user: current_user, activity: activity) %>
+    <% if current_user %>
+      <% if current_user.role.name == "Student" %>
+        <% if !@enrollment.exists? %>
+          <%= link_to 'Conferma inscriz', activity_enroll_path(activity, user_id: current_user.id), data: { "turbo-method": :post }, :class => "btn btn-primary" %>
+        <% else %>
+        <!-- Desinscribirse -->
+          <%= link_to 'Cancella inscriz', activity_unenrroll_path(activity, user_id: current_user.id), data: { "turbo-method": :post }, :class => "btn btn-danger" %>
+        <% end %>
+      <% end %>
+    <% end %>
+
+  </div>
+  <% end %>
+<% end %>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <%= csrf_meta_tags %>
+
+<!-- con estos se actualiza después del update en la página pero no funciona el turbo -->
+    <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track": 'reload' %>
+    <%= javascript_include_tag "application", "data-turbolinks-track": 'reload' %>
+
+  </head>
+
+
+  <body>
+    <header class="main">
+      <%= image_tag 'LogoConNombre.png', alt: 'Collegio Management' %>
+      <h1><%= @page_title %></h1>
+    </header>
+    <section class="content">
+      <nav class= "side_nav">
+        <ul>
+          <li><a href="http://www....">Inizio</a></li>
+          <li><a href="http://www..../faq">Domande</a></li>
+          <li><a href="http://www..../news">Notizie</a></li>
+          <li><a href="http://www..../contact">Contatto</a></li>
+        </ul>
+      </nav>
+      <main class='<%= controller.controller_name %>'>
+        <%= yield %>
+      </main>
+    </section>
+  </body>
+</html>

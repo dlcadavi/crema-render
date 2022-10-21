@@ -1,0 +1,46 @@
+<h1>Partecipazione</h1>
+<p>
+  Azioni:
+  <%= link_to fa_icon('file-excel-o', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
+    href="/attendances_export.csv" %>
+
+</p>
+
+<table class="table student-list">
+  <thead>
+      <tr>
+        <th><span> Nome </span></th>
+        <th><span> Data </span></th>
+        <th><span> Ore </span></th>
+        <th><span> Tipo </span></th>
+        <th><span> Argomento </span></th>
+        <th><span> Docente </span></th>
+        <th><span> Qualifica </span></th>
+        <th><span> Contesto </span></th>
+      </tr>
+  </thead>
+
+  <tbody id="students">
+    <% @students.each do |student| %>
+      <% student.activities.each do |activity| %>
+        <tr>
+        <td> <%= student.id_number %> </td>
+        <td> <%= activity.activity_date.to_date.strftime("%d/%m/%y") %> </td>
+        <td> <%= activity.duration %></td>
+        <td> <%= activity.kind %></td>
+        <td> <%= activity.name %></td>
+        <td>
+          <br>
+          <% activity.professors.each do |professor| %>
+            <li><%= professor.lastname + " " + professor.name %></li>
+          <% end %>
+        </td>
+        <td> <%= activity.aggregated_qualification %></td>
+        <td> <%= activity.context %></td>
+
+      <% end %>
+    <% end %>
+
+  </tbody>
+
+</table>

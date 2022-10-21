@@ -1,0 +1,89 @@
+<!-- <h2>Modificare profilo <%= resource_name.to_s.humanize %></h2> -->
+<div >
+  <%= link_to fa_icon('arrow-left', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
+    :back %>
+  <h3>Modificare profilo</h3>
+</div>
+
+
+<%= form_for(@user) do |f| %>
+
+  <!-- Administración de los errores -->
+  <% if @user.errors.any? %>
+    <div style="color: gray;font-size: 1em;">
+      <%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:
+      <ul>
+        <% @user.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+  <div class="form-inputs">
+
+    <!-- Mail -->
+    <div class="col-md-6">
+      <label class="form-label" style="margin-top:3%;">Email *</label>
+      <input type="text" class="form-control-non-editable" style="width: 60%;"
+      <%= f.text_field :email %>
+    </div>
+
+    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+      <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
+    <% end %>
+
+    <!-- Name -->
+    <div class="col-md-6">
+      <label class="form-label" style="margin-top:3%;">Nome *</label>
+      <input type="text" class="form-control-non-editable" style="width: 60%;"
+      <%= f.text_field :name %>
+    </div>
+
+    <!-- Lastname -->
+    <div class="col-md-6">
+      <label class="form-label" style="margin-top:3%;">Cognome *</label>
+      <input type="text" class="form-control-non-editable" style="width: 60%;"
+      <%= f.text_field :lastname %>
+    </div>
+
+    <!-- New password -->
+    <div class="col-md-6">
+      <label class="form-label" style="margin-top:3%;" >Nuova password</label>
+      <input type="password" class="form-control" style="width: 60%;" placeholder= "lascia in bianco se non vuoi modificare la password"
+      <%= f.text_field :password,
+                  required: false %>
+    </div>
+
+    <!-- Confirmation -->
+    <div class="col-md-6">
+      <label class="form-label" style="margin-top:3%;" >Conferma la nuova password</label>
+      <input type="password" class="form-control" style="width: 60%;" placeholder= "lascia in bianco se non vuoi modificare la password"
+      <%= f.text_field :password_confirmation,
+                  required: false,
+                  input_html: { autocomplete: "new-password" } %>
+    </div>
+
+    <!-- Current password -->
+    <div class="col-md-6">
+      <label class="form-label" style="margin-top:3%;" >Password attuale</label>
+      <input type="password" class="form-control" style="width: 60%;" placeholder= "inserisci la tua password per salvare le modifiche"
+      <%= f.text_field :current_password,
+                  required: true,
+                  text_field_html: { autocomplete: "current-password" } %>
+    </div>
+
+  </div>
+
+  <div class="form-actions" style="margin-top:3%;">
+    <%= f.submit "Invia",  :class => "btn btn-primary btn-lg" %>
+  </div>
+
+<% end %>
+
+<!--
+<h3>Cancel my account</h3>
+<p>Unhappy? <%= link_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %></p>
+
+-->

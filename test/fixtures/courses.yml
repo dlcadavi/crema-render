@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  description: MyString
+  context: MyString
+  typology: MyString
+  professor: MyString
+  cost: 1.5
+
+two:
+  name: MyString
+  description: MyString
+  context: MyString
+  typology: MyString
+  professor: MyString
+  cost: 1.5

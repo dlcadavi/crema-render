@@ -1,0 +1,103 @@
+<%= form_with(model: mobility) do |form| %>
+  <% if @mobility.id %>
+    <% stay = Stay.find_by_id(@mobility.stay_id) %>
+    <% student = Student.find_by_id(stay.student_id) %>
+    <% stays = Stay.where(student_id: student.id) %>
+  <% else %>
+    <% student = Student.find(params[:id]) %>
+    <% stays = Stay.where(student_id: student.id) %>
+  <% end %>
+
+
+  <div class="container">
+    <div class="row">
+  		<div class="col-12">
+  			<!-- Page title -->
+  			<div >
+          <%= link_to fa_icon('arrow-left', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
+            :back %>
+          <h3>Mobilità di</h3>
+          <h2><%= student.display_fullname %></h2>
+          <br><br>
+
+  			  <hr>
+  		  </div>
+
+			<!-- Información general -->
+				<div class="">
+					<!-- Contatto -->
+					<div class="col-xxl-8 mb-5 mb-xxl-0">
+						<div class="bg-secondary-activity px-4 py-5 rounded">
+							<div class="row g-3">
+                <div class="">
+
+                </div>
+                <!-- Estudiante: captura el ide del estudiante desde la url y lo manda al campo :student.id para ser leido por el controlador-->
+                <% if !@mobility.id %>
+                  <%= form.hidden_field :student_id, value: params[:id] %>
+                <% end %>
+
+
+                <div class="col-md-6">
+                  <table style="width:143%;">
+                    <tr>
+                      <!-- Graduation date -->
+                      <td style="width:30%;">
+                        <label class="form-label">Soggiorno *</label>
+                        <% options = options_from_collection_for_select(stays, :id, :show_year, @mobility.stay_id) %>
+                        <select id='' type="text" class="form-control-non-editable" <%= select_tag(:stay_id, options) %>
+                      </td>
+
+                      <td style="width:20%;">
+                        <label class="form-label">Paese</label>
+                        <input id="course_name" type="text" class="form-control-non-editable" style="width: 200%;"<%= form.text_field :country %>
+                      </td>
+
+                    <tr>
+                  </table>
+
+                  <table style="width:200%;">
+                    <tr>
+                      <!-- Graduation date -->
+                      <td style="width:50%;">
+                        <label class="form-label">Data inizio *</label>
+                        <%= form.date_field :start_mobility_date, class: 'form-control-non-editable',placeholder: 'DD/MM/YYYY' %>
+                      </td>
+
+                      <!-- Data fine -->
+                      <td style="width:50%;">
+                        <label class="form-label">Data fine *</label>
+                        <%= form.date_field :end_mobility_date, class: 'form-control-non-editable',placeholder: 'DD/MM/YYYY' %>
+                      </td>
+
+                    <tr>
+                  </table>
+
+
+                  <!-- Descripción -->
+                  <div class="col-md-6">
+                    <label class="form-label">Accordo</label>
+                    <input id="course_name" type="text" class="form-control-non-editable" style="width: 400%;"<%= form.text_field :mobility_program %>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label">Descrizione *</label>
+                    <textarea rows="3" cols="1" class="form-control-non-editable" style="width: 400%;" <%= form.text_area :description %>
+                  </div>
+
+                </div>
+
+							</div> <!-- Row END -->
+						</div>
+					</div>
+				</div>  <!-- Terminan los dos primeros módulos -->
+
+				<!-- button -->
+				<div class="gap-3 d-md-flex justify-content-md-end text-center">
+          <%= form.submit "Inviare mobilità",  :class => "btn btn-primary btn-lg", local: true, data: { turbo: false } %>
+				</div>
+
+  		</div><!-- Form END -->
+  	</div>
+  </div>
+<% end %>

@@ -1,0 +1,67 @@
+<h1>Formatori</h1>
+
+<p>
+  Azioni:
+  <%= link_to fa_icon('plus', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
+    new_professor_path, data: { turbo: false } %>
+</p>
+
+
+<table class="table professor-list">
+  <thead>
+      <tr>
+        <th><span> Formatore </span></th>
+        <th><span> Email </span></th>
+        <th><span> Telefono </span></th>
+        <th><span> Qualifica </span></th>
+        <th><span> Numero di lezioni </span></th>
+        <th><span> Ore di lezione </span></th>
+        <th><span> Lezione </span></th>
+        <th><span> Azioni </span></th>
+        <th><span> Scarica </th>
+      </tr>
+  </thead>
+
+  <tbody id="students">
+
+    <tr>
+    <% @professors.each do |professor| %>
+
+      <td style="width: 15%;">
+        <a href="#" class="professor-link"> <%= link_to professor.lastname + ' ' + professor.name, professor%></a>
+        <br>
+        <span class="professor-subhead"> <%= professor.id_number %></span>
+      </td>
+
+
+      <!-- Los camnpos -->
+      <!-- La l minúscula de las fechas es para que por defecto use el formato que yo definí en  config/locales/en.yml -->
+      <td> <%= professor.email %> </td>
+      <td> <%= professor.phone_number %> </td>
+      <td> <%= professor.qualification %> </td>
+      <td> <%= professor.number_activities_lectured %></td>
+      <td> <%= professor.hours_lectured %> </td>
+
+      <!-- lista actividades de cada profesor. Más bonito así en viñetas -->
+      <% professor.activitiesname %>
+      <td>
+        <% professor.activities.each do |activity| %>
+          <li><%= activity.name %></li>
+          <% end %>
+      </td>
+
+      <td>
+        <%= link_to fa_icon('search-plus', style: "font-size: 1.5em; color:rgb(28,163,184)"),professor %>
+        <%= link_to fa_icon('pencil', style: "font-size: 1.5em;color:rgb(28,163,184)"), edit_professor_path(professor), data: { turbo: false } %>
+        <%= link_to fa_icon('trash', style: "font-size: 2em; color: Tomato;"),
+          professor, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Sei sicuro di rimuovere questo professor?" }%>
+      </td>
+
+      <td>
+        <%= link_to "Contratto in italiano", set_contract_professor_path(professor) %>
+      </td>
+
+    </tbody>
+    <% end %>
+
+</table>

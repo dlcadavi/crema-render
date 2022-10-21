@@ -1,0 +1,37 @@
+<%= link_to "Documenti", documents_path, class: "h1", style: "text-decoration: none;color:#748b8e;"%>
+<p>Carica qua i documenti</p>
+
+
+<div class="">
+  <div class="row">
+
+    <!-- Panel izquierdo -->
+    <div class="col-sm-2">
+      <div class="panel panel-dark-outline tabs-panel">
+        <div class="panel-body tab-content">
+          <div class="tab-pane active documents-panel">
+            <div class="clear"></div>
+            <div class="v-spacing-xs"></div>
+            <h4 class="no-margin-top"> Folders</h4>
+            <ul class="folders list-unstyled">
+              <li>
+                <a href="#">
+                  <%= link_to fa_icon('folder', text: "Ministerio", style: "font-size: 2em; color:rgb(28,163,184)"),
+                    document_ministerio_path,data: { turbo: false } %>
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <%= link_to fa_icon('folder', text: "Contratti", style: "font-size: 2em; color:rgb(28,163,184)"),
+                    document_contract_path,data: { turbo: false } %>
+                </a>
+              </li>
+            </ul>
+            <div class="v-spacing-xs"></div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

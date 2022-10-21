@@ -1,0 +1,106 @@
+<h1>Attività</h1>
+
+<table class="">
+  <tbody id="activities">
+    <tr>
+
+      <td>
+        <div style="width: 300px; display: table-cell;">
+          <%= pie_chart [
+            ["ore riconosciute", @validhours],
+            ["ore obietivo", @minhours]
+            ],
+            title: "Partecipazione annuale alle attività",
+            donut: true,
+            colors:["mediumturquoise", "#666"] %>
+        </div>
+      </td>
+
+      <td>
+        <table class="">
+          <tbody id="activities">
+            <tr>
+              <td>Ore riconosciute</td>
+              <td style="padding-left:20px"><%= @validhours %>h</td>
+            </tr>
+
+            <tr>
+            </tr>
+
+            <tr style="border-bottom:1px solid mediumturquoise">
+            <td>Partecipazione</td>
+            <td style="padding-bottom:10px;">
+              <% mostrar = (@validattendance*100).round(1).to_s + "%" %>
+              <span class="badge rounded-pill bg-danger" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= mostrar if @validattendance < 0.9 %></span>
+              <span class="badge rounded-pill bg-warning" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= mostrar if @validattendance >= 0.9 and  validattendance < 0.95 %></span>
+              <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= mostrar if @validattendance >= 0.95 %></span>
+              <span class="badge rounded-pill bg-dark" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= 'NA' if @validattendance == 'NA' %></span>
+            </td>
+            <td> (percentuale di ore riconosciute rispetto al mio obietivo) </td>
+            </tr>
+
+
+            <tr>
+              <td style="padding-top:10px;">Ore frequentate </td>
+              <td style="padding-left:20px;padding-top:10px"><%= @courseattendances.sum(:hours) %>h</td>
+            </tr>
+
+
+            <tr>
+              <td>Il mio obietivo</td>
+
+              <td style="padding-left:20px"><%= @stays.pluck(:min_hours_required).max.round(0) %>h</td>
+            </tr>
+
+            <tr>
+              <td>Totale ore offerta formativa annuale</td>
+              <td style="padding-left:20px"><%= @courses.sum(:duration) %>h</td>
+            </tr>
+
+          </tbody>
+        </table>
+      </td>
+
+    </tr>
+  </tbody>
+</table>
+
+
+<br>
+<br>
+
+<table class="table student-list">
+  <thead style="text-align: center;">
+      <tr>
+        <th style="width:20%;"><span> Attività </span></th>
+        <th><span> Data </span></th>
+        <th><span> Numero di lezioni </span></th>
+        <th><span> Ore attività </span></th>
+        <th><span> Partecipazione minima (%)</span></th>
+        <th><span> Attività frequentate </span></th>
+        <th><span> Ore frequentate </span></th>
+        <th><span> La mia partecipazione (%)</span></th>
+        <th><span> Ore riconosciute </span></th>
+      </tr>
+  </thead>
+
+  <tbody id="activities" style="text-align: center;">
+    <% @courses.each do |course| %>
+      <tr>
+      <% courseattendance = Courseattendance.find_by(course: course.id, student: @student.id) %>
+      <% orevalide = 0 %>
+      <% orevalide = courseattendance.hours if courseattendance.perc_attendance > course.min_attendance %>
+      <td style="text-align: left;"> <%= link_to course.name, course %> </td>
+      <td> <%= course.date.to_date.strftime("%d/%m/%y") %> </td>
+      <td style="width:5%;"> <%= course.numberactivities %> </td>
+      <td> <%= course.duration %> </td>
+      <td> <%= (course.min_attendance*100).round(0) %> </td>
+      <td> <%= courseattendance.total_activities %> </td>
+      <td> <%= if courseattendance.hours == 0 then fa_icon('times',text: "", style: "text-align: center;font-size: 2em; color:rgb(28,163,184)") else courseattendance.hours end %>
+      <td> <%= (courseattendance.perc_attendance*100).round(0) %> </td>
+      <td style="background-color: #a4e8e6"> <%= orevalide %> </td>
+      </tr>
+    <% end %>
+  </tbody>
+
+</table>

@@ -1,0 +1,19 @@
+body{margin-top:20px;}
+
+/* student LIST TABLE */
+.student-list tbody td > img {
+  position: relative;
+	max-width: 50px;
+	float: left;
+	margin-right: 15px;
+}
+.student-list tbody td .student-link {
+/*	display: block; */
+	font-size: 1.25em;
+	padding-top: 0px;
+	margin-left: 0px;
+}
+.student-list tbody td .student-subhead {
+	font-size: 0.875em;
+	font-style: italic;
+}

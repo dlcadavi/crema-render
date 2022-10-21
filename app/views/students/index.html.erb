@@ -1,0 +1,229 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<h1>Studenti</h1>
+<br>
+<h5>totale studenti: <%=@students.count%></h5>
+
+<p>
+  <!-- No se pueden crear estudiantes: se debe crear primero el usuario
+    <%= link_to fa_icon('plus', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
+    new_student_path, data: { turbo: false } %>
+  -->
+</p>
+<hr>
+
+<table class="">
+
+  <tbody id="activities">
+    <tr>
+    <td style="padding: 15px;">
+      <h6> Cerca per anno accademico </h6>
+      <%= form_tag(students_path, method: :get) do %>
+        <%= select_tag(:acyear_filter,
+          options_from_collection_for_select(Acyear.all, :id, :name, params[:acyear_filter]),
+          include_blank: 'tutti', onchange: 'this.form.submit()', class:"form-control", style:"display: table-cell;width: 100%;") %>
+      <% end %>
+    </td>
+
+    <td style="padding: 15px;">
+      <h6> Cerca per studente </h6>
+      <% @estudiantes = Student.where(user: User.where(role_id: Role.find_by(name: 'Student'))).order(:lastname,:name) %>
+      <%= form_tag(students_path, method: :get) do %>
+        <%= select_tag(:name_filter,
+        options_from_collection_for_select(@estudiantes, :id, :display_fullname, params[:name_filter]),
+        include_blank: 'tutti', onchange: 'this.form.submit()', class:"form-control", style:"display: table-cell;width: 100%;") %>
+      <% end %>
+    </td>
+
+    <td style="padding: 15px;">
+      <h6> Guarda i voti finale di laurea </h6> <br>
+      <div style="text-align: center;">
+        <%= link_to fa_icon('graduation-cap', style: "font-size: 2.5em; color:rgb(28,163,184)"), graduations_path %>
+      </div>
+    </td>
+
+    <td style="padding: 15px;">
+      <h6> Guarda le mobilità </h6> <br>
+      <div style="text-align: center;">
+        <%= link_to fa_icon('plane', style: "font-size: 2.5em; color:rgb(28,163,184)"), mobilities_path %>
+      </div>
+    </td>
+
+    <td style="padding: 15px;">
+      <h6> Guarda l'alloggio </h6> <br>
+      <div style="text-align: center;">
+        <%= link_to image_tag('door.png', width: "30", height: "40"), locations_path %>
+      </div>
+    </td>
+
+    <td style="padding: 15px;">
+      <h6> Guarda la partecipazione alle attività </h6> <br>
+      <div style="text-align: center;">
+        <%= link_to image_tag('activities.png', width: "40", height: "40", alt: 'Activity'), courseattendance_students_path %>
+      </div>
+    </td>
+
+  </tbody>
+</table>
+
+
+<div style="width: 100%; overflow: hidden;">
+  <div style="display: table-cell;">
+    <%= pie_chart [
+      ["ottimo", @stays.where(attendance_status: "ottimo", typology: "S").count],
+      ["buono", @stays.where(attendance_status: "buono", typology: "S").count],
+      ["insufficiente", @stays.where(attendance_status: "insufficiente", typology: "S").count],
+      ["NA", @stays.where(attendance_status: "NA", typology: "S").count],
+      ],
+      title: "Partecipazione",
+      donut: true,
+      colors:["green","rgb(255, 193, 7)","darkred","#666"]
+    %>
+  </div>
+  <div style="width: 150px; display: table-cell;">
+    <%= pie_chart [
+      ["ottimo", @stays.where(periodgrades_status: 'ottimo', typology: "S", examfree: false).count],
+      ["buono", @stays.where(periodgrades_status: 'buono', typology: "S", examfree: false).count],
+      ["insufficiente", @stays.where(periodgrades_status: 'insufficiente', typology: "S", examfree: false).count],
+      ["NA", @stays.where(periodgrades_status: 'NA', typology: "S", examfree: false).count],
+      ],
+      title: "Voti nell'anno di riferimento",
+      donut: true,
+      colors:["green","rgb(255, 193, 7)","darkred","#666"]
+    %>
+  </div>
+
+  <div style="display: table-cell;">
+    <%= pie_chart [
+      ["ottimo", @stays.where(cumulativegrades_status: 'ottimo', typology: "S").count],
+      ["buono", @stays.where(cumulativegrades_status: 'buono', typology: "S").count],
+      ["insufficiente", @stays.where(cumulativegrades_status: 'insufficiente', typology: "S").count],
+      ["NA", @stays.where(cumulativegrades_status: 'NA', typology: "S").count],
+      ],
+      title: "Voti carriera",
+      donut: true,
+      colors:["green","rgb(255, 193, 7)","darkred","#666"]
+    %>
+  </div>
+</div>
+<hr>
+<br>
+
+<table class="table student-list">
+  <thead>
+    <tr>
+    <th>  </th>
+    <th>  </th>
+    <th><span> Partecipazione</span></th>
+    <th style="width:7%;"><span> Voti annuali </span></th>
+    <th style="width:7%;"><span> Voti carriera </span></th>
+    <th style="width:1%;"><span> No. di lezione </span></th>
+    <th><span> Struttura </span></th>
+    <th><span> Classe </span></th>
+    <th><span> Anno iscrizione </span></th>
+    <th><span> Data inizio </span></th>
+    <th><span> Data fine </span></th>
+    <th><span> Retta annuale </span></th>
+    <th><span> Email </span></th>
+    <th><span> Telefono </span></th>
+    <th style="width:5%;"><span> Azioni </span></th>
+  </thead>
+
+  <tbody id="students" class="text-center">
+
+    <tr>
+    <% @students.each do |student| %>
+      <% @staysstudent = Stay.where(id: @stays.pluck(:id),student_id: student.id) %>
+      <% stay = @staysstudent.find_by(acyear_id: @anno.id) %>
+      <tr>
+      <!-- Imagen del perfil -->
+      <td>
+        <% if student.profile_picture.present? %>
+          <%= link_to image_tag(student.profile_picture, style:"width:60px; height:60px", class: 'list_image'), student %>
+        <% else %>
+          <%= if student.gender == "Studentessa" then link_to image_tag('female.jpg',  style:"width:50px; height:50px", class: 'list_image'),student end %>
+          <%= if student.gender == "Studente" then link_to image_tag('male.jpg',  style:"width:50px; height:50px", class: 'list_image'),student end %>
+          <%= if student.gender == "non specificato" then link_to image_tag('unspecified.jpg',  style:"width:50px; height:50px", class: 'list_image'),student end %>
+        <% end %>
+      </td>
+
+      <!-- Nombre y CF -->
+      <td style="width: 7%; text-align: left;">
+        <a href="#" class="student-link"> <%= link_to student.lastname + ' ' + student.name, student%></a>
+        <br>
+        <span class="student-subhead"> <%= student.id_number %></span>
+      </td>
+
+      <!-- Semaforo Attendance -->
+      <td class="text-center">
+        <% if stay and stay.perc_attendance %>
+          <% mostrar = stay.hours_attended.to_s + "h, " + number_to_percentage(stay.perc_attendance*100, precision: 0).to_s %>
+        <% else %>
+          <% mostrar = "h, " %>
+        <% end %>
+
+        <% if stay %>
+          <span class="badge rounded-pill bg-danger" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= mostrar if stay.attendance_status == 'insufficiente' and stay.examfree == false %></span>
+          <span class="badge rounded-pill bg-warning" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= mostrar if stay.attendance_status == 'buono' and stay.examfree == false %></span>
+          <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= mostrar if stay.attendance_status == 'ottimo' and stay.examfree == false %></span>
+          <span class="badge rounded-pill bg-dark" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= 'NA' if stay.attendance_status == 'NA' and stay.examfree == false %></span>
+          <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= 'NA' if stay.examfree == true %></span>
+          <br>
+          <span class="student-subhead"> min: <%= stay.min_hours_required.round(0) if stay.min_hours_required %>h</span>
+        <% end %>
+      </td>
+
+      <!-- Semaforo PeriodGrades -->
+      <td class="text-center">
+        <% if stay %>
+          <span class="badge rounded-pill bg-danger" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades.round(2) if stay.periodgrades_status == 'insufficiente' %></span>
+          <span class="badge rounded-pill bg-warning" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades.round(2) if stay.periodgrades_status == 'buono' %></span>
+          <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades.round(2) if stay.periodgrades_status == 'ottimo'%></span>
+          <span class="badge rounded-pill bg-dark" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades_status if stay.periodgrades_status == 'NA' %></span>
+          <br>
+          <span class="student-subhead"> min: <%= stay.gradesmin %></span>
+        <% end %>
+      </td>
+
+      <!-- Semaforo CumulativeGrades -->
+      <td class="text-center">
+        <% if stay %>
+          <span class="badge rounded-pill bg-danger" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.cumulativegrades.round(2) if stay.cumulativegrades_status == 'insufficiente' %></span>
+          <span class="badge rounded-pill bg-warning" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.cumulativegrades.round(2) if stay.cumulativegrades_status == 'buono' %></span>
+          <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.cumulativegrades.round(2 ) if stay.cumulativegrades_status == 'ottimo'%></span>
+          <span class="badge rounded-pill bg-dark" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.cumulativegrades_status if stay.cumulativegrades_status == 'NA' %></span>
+          <br>
+          <span class="student-subhead"> min: <%= stay.gradesmin %></span>
+        <% end %>
+      </td>
+
+      <!-- cantidad de actividades de cada estudiante -->
+      <td>
+        <% if stay %>
+          <% @activities = student.activities.where(acyear_id: stay.acyear_id) %>
+          <a href="#" class="student-link"> <%= link_to @activities.count, studentactivities_stay_path(stay)%></a>
+        <% end %>
+      </td>
+
+      <!-- La l minúscula de las fechas es para que por defecto use el formato que yo definí en  config/locales/en.yml -->
+      <td> <%= stay.frame if stay %> </td>
+      <td style="text-align: left"> <%= stay.kind if stay %> </td>
+      <td> <%= stay.year_enrollment if stay and stay.year_enrollment%></td>
+      <td> <%= l stay.hosting_start_date if stay and stay.hosting_start_date %> </td>
+      <td> <%= l stay.hosting_end_date if stay and stay.hosting_end_date %> </td>
+      <td> <%= stay.annualfee if stay and stay.annualfee %> </td>
+
+      <!-- Los campos del estudiante -->
+      <td style="text-align: left"> <%= student.user.email %> </td>
+      <td style="text-align: left"> <%= student.phone_number %> </td>
+      <td>
+        <%= link_to fa_icon('pencil', style: "font-size: 1.5em;color:rgb(28,163,184)"), edit_student_path(student), data: { turbo: false }  %>
+        <%= link_to fa_icon('bed', style: "font-size: 1.5em; color:rgb(28,163,184)"),staystudent_path(student) %>
+        <%= link_to image_tag('door.png', width: "20", height: "25"),locationstudent_path(student) %>
+        <%= link_to fa_icon('plane', style: "font-size: 1.5em; color:rgb(28,163,184)"),mobilitystudent_path(student) %>
+        <%= link_to fa_icon('graduation-cap', style: "font-size: 1.5em; color:rgb(28,163,184)"),graduationstudent_path(student) %>
+      </td>
+
+    <% end %>
+  </tbody>
+</table>

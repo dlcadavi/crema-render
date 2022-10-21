@@ -1,0 +1,33 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  lastname: MyString
+  id_number: MyString
+  birthdate: 2022-07-12
+  hosting_start_date: 2022-07-12
+  hosting_end_date: 2022-07-12
+  email: MyString
+  phone_number: MyString
+  fee: 1.5
+  annualfee: 1.5
+  months: 1.5
+  gender: MyString
+  university: MyString
+  country_of_birth: MyString
+
+two:
+  name: MyString
+  lastname: MyString
+  id_number: MyString
+  birthdate: 2022-07-12
+  hosting_start_date: 2022-07-12
+  hosting_end_date: 2022-07-12
+  email: MyString
+  phone_number: MyString
+  fee: 1.5
+  annualfee: 1.5
+  months: 1.5
+  gender: MyString
+  university: MyString
+  country_of_birth: MyString

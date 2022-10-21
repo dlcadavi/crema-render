@@ -1,0 +1,19 @@
+body{margin-top:20px;}
+
+/* student LIST TABLE */
+.professor-list tbody td > img {
+  position: relative;
+	max-width: 50px;
+	float: left;
+	margin-right: 15px;
+}
+.professor-list tbody td .professor-link {
+/*	display: block; */
+	font-size: 1.25em;
+	padding-top: 0px;
+	margin-left: 0px;
+}
+.professor-list tbody td .professor-subhead {
+	font-size: 0.875em;
+	font-style: italic;
+}

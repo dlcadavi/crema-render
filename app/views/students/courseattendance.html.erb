@@ -1,0 +1,41 @@
+<h1>Partecipazione</h1>
+<p>
+
+</p>
+
+
+<table class="table student-list">
+  <thead>
+      <tr>
+        <th><span> Nome </span></th>
+        <th><span> Attività </span></th>
+        <th><span> Ore dell'attività </span></th>
+        <th><span> Numero di lezione dell'attività</span></th>
+        <th><span> Partecipazione </span></th>
+        <th><span> Ore frequentate </span></th>
+        <th><span> Lezioni frequentate </span></th>
+      </tr>
+  </thead>
+
+  <tbody id="students">
+    <% @students = Student.all %>
+    <% @students.each do |student| %>
+      <% @courseattendances = Courseattendance.where(student_id: student.id) %>
+      <% @courseattendances.each do |courseattendance| %>
+        <% if courseattendance.perc_attendance > 0 %>
+          <tr>
+          <% @course = Course.find_by_id(courseattendance.course_id) %>
+          <td> <%= student.name %> </td>
+          <td> <%= @course.name %> </td>
+          <td> <%= @course.duration %> </td>
+          <td> <%= @course.numberactivities %> </td>
+          <td> <%= number_to_percentage(courseattendance.perc_attendance*100, precision: 0) %> </td>
+          <td> <%= courseattendance.hours %> </td>
+          <td> <%= courseattendance.total_activities %> </td>
+        <% end %>
+      <% end %>
+  <% end %>
+
+  </tbody>
+
+</table>

@@ -1,0 +1,64 @@
+<% if current_user %>
+  <% student = Student.find_by_user_id(current_user.id)%>
+  <% if current_user.role.name == "Admin" %>
+    <%= link_to image_tag('students.png', width: "80", height: "80", alt: 'Courses'), '/students' %>
+    <%= link_to image_tag('courses.png', width: "80", height: "80", alt: 'Courses'), '/courses' %>
+    <%= link_to image_tag('activities.png', width: "80", height: "80", alt: 'Courses'), '/activities' %>
+    <%= link_to image_tag('reports.png', width: "80", height: "80", alt: 'Courses'), '/reports' %>
+  <% end %>
+  <% if current_user.role.name == "Student" %>
+    <%= link_to image_tag('mynextactivities.png', width: "80", height: "80", alt: 'Courses'), '/myactivities' %>
+    <%= link_to image_tag('myattendance.png', width: "80", height: "80", alt: 'Courses'), '/mycourses' %>
+    <%= link_to image_tag('mycalendar.png', width: "80", height: "80", alt: 'Courses'), '/mycalendar' %>
+    <%= link_to image_tag('calendar.png', width: "80", height: "80", alt: 'Courses'), '/calendar' %>
+  <% end %>
+
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <!-- si el usuario ya tiene asignado un estudiante que muestre el nombre del estudiante-->
+      <% if student %>
+        <%= student.name %>
+      <% end %>
+      <br>
+      <%= current_user.role.name %>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdown">
+      <% if current_user.role.name == "Admin" %>
+        <li><%= link_to "Studenti", students_path, class:"dropdown-item" if current_user %></li>
+        <li><%= link_to "Attività", courses_path, class:"dropdown-item" if current_user %></li>
+        <li><%= link_to "Lezioni", activities_path, class:"dropdown-item" if current_user %></li>
+        <li><%= link_to "Formatori", professors_path, class:"dropdown-item" %></li>
+        <li><%= link_to "Guest", guests_path, class:"dropdown-item" %></li>
+        <li><%= link_to "Partecipazione", report_attendances_path, class:"dropdown-item" %></li>
+        <li><%= link_to "Voti di laurea", graduations_path, class:"dropdown-item" %></li>
+        <li><%= link_to "Mobilità", mobilities_path, class:"dropdown-item" %></li>
+        <li><%= link_to "Alloggi", locations_path, class:"dropdown-item" %></li>
+        <li><%= link_to "Calendario", calendar_path, class:"dropdown-item" %></li>
+        <!-- tuve que apagar el turbo para que funcionara bien la carga de los documentos dirigido desde acá -->
+        <li><%= link_to "Documenti", documents_path, class:"dropdown-item", data: { turbo: false } %></li>
+        <li><%= link_to "Report", reports_path, class:"dropdown-item" %></li>
+        <li><%= link_to "Utenti", users_path, class:"dropdown-item" %></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><%= link_to "Configura anni accademici", acyears_path, class:"dropdown-item" %></li>
+        <li><%= link_to "Configura programmi accademici", programs_path, class:"dropdown-item" %></li>
+        <li><%= link_to "Configura voti minimi", gradesmins_path, class:"dropdown-item" %></li>
+      <% else %>
+        <li><%= link_to "Iscrizione", user_activities_path, class:"dropdown-item" if current_user %></li>
+        <li><%= link_to "Partecipazione", user_courses_path, class:"dropdown-item" if current_user %></li>
+        <li><%= link_to "Il mio calendario", user_calendar_path, class:"dropdown-item" if current_user %></li>
+        <li><%= link_to "Calendar", calendar_path, class:"dropdown-item" if current_user %></li>
+      <% end %>
+      <li><hr class="dropdown-divider"></li>
+      <li><%= link_to "Edit Account", edit_user_registration_path, class:"dropdown-item" %></li>
+      <li><%= button_to "Sign out", destroy_user_session_path, method: :delete, class:"dropdown-item" %></li>
+    </ul>
+  </li>
+<% else %>
+  <%= link_to image_tag('calendar.png', width: "80", height: "80", alt: 'Courses'), '/calendar' %>
+  <li class="nav-item">
+    <!-- <%= link_to "Sign Up", new_user_registration_path, class:"nav-link" %> -->
+  </li>
+  <li class="nav-item">
+    <!-- <%= link_to "Login", new_user_session_path, class:'nav-link'%> -->
+  </li>
+<% end %>

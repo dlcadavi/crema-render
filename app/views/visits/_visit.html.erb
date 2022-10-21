@@ -1,0 +1,74 @@
+<%= form_with(model: visit) do |form| %>
+
+  <div class="container">
+    <div class="row">
+  		<div class="col-12">
+  			<!-- Page title -->
+
+
+  			<div >
+          <%= link_to fa_icon('arrow-left', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
+            visitguest_path(@visit.guest_id), data: { turbo: false }  %>
+          <h3>Visita di</h3>
+          <h2><%= visit.guest.display_fullname %></h2>
+
+          <%= link_to fa_icon('pencil', style: "font-size: 1.5em;color:rgb(28,163,184)"),
+            edit_visit_path(@visit), data: { turbo: false }  %>
+
+  			  <hr>
+  		  </div>
+
+			<!-- Información general -->
+				<div class="row mb-5 gx-5">
+					<!-- Contatto -->
+					<div class="col-xxl-8 mb-5 mb-xxl-0">
+						<div class="bg-secondary-activity px-4 py-5 rounded">
+							<div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Anno accademico *</label>
+                  <% options = options_from_collection_for_select(Acyear.all, :id, :name, @visit.acyear_id) %>
+                  <select id='' type="text" class="form-control-non-editable" <%= select_tag(:acyear_id, options) %>
+
+                </div>
+                <!-- Estudiante: captura el ide dle estudiante desde la url y lo manda al campo :student.id para ser leido por el controlador-->
+                <% if !@visit.id %>
+                  <%= form.hidden_field :guest_id, value: params[:id] %>
+                <% end %>
+
+                <!-- Data inizio -->
+  							<div class="col-md-6">
+  								<label class="form-label">Data inizio *</label>
+                  <%= form.date_field :hosting_start_date, class: 'form-control-non-editable',placeholder: 'DD/MM/YYYY' %>
+  							</div>
+                <!-- Data fine -->
+  							<div class="col-md-6">
+  								<label class="form-label">Data fine *</label>
+                  <%= form.date_field :hosting_end_date, class: 'form-control-non-editable',placeholder: 'DD/MM/YYYY' %>
+  							</div>
+
+                <!-- Fee -->
+  							<div class="col-md-6">
+  								<label class="form-label">Retta complessa *</label>
+  								<input type="text" class="form-control-non-editable" placeholder="" <%= form.text_field :fee %>
+  							</div>
+
+                <!-- Motivo -->
+  							<div class="col-md-6">
+  								<label class="form-label">Motivo della visita *</label>
+                  <textarea rows="3" cols="1" class="form-control-non-editable" style="width: 200%;" <%= form.text_area :description %>
+  							</div>
+
+							</div> <!-- Row END -->
+						</div>
+					</div>
+				</div>  <!-- Terminan los dos primeros módulos -->
+
+				<!-- button -->
+				<div class="gap-3 d-md-flex justify-content-md-end text-center">
+          <%= form.submit "Inviare visita",  :class => "btn btn-primary btn-lg", local: true, data: { turbo: false } %>
+				</div>
+
+  		</div><!-- Form END -->
+  	</div>
+  </div>
+<% end %>

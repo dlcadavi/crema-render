@@ -1,0 +1,29 @@
+<div>
+  <h3> Importar notas mínimas </h3>
+  <%=form_tag import_gradesmins_path, multipart: true do %>
+    <%=file_field_tag :file%>
+    <%=submit_tag "Import"%>
+  <%end%>
+</div>
+
+<hr>
+
+
+<table>
+  <thead>
+    <th>Area</th>
+    <th>Anno di corso</th>
+    <th>Voti minimo</th>
+  </thead>
+
+  <tbody>
+    <%@gradesmins.each do |gradesmin|%>
+      <tr>
+        <td><%=gradesmin.area %></td>
+        <td><%=gradesmin.year%></td>
+        <td><%=gradesmin.grades%></td>
+      </tr>
+    <%end%>
+  </tbody>
+
+</table>

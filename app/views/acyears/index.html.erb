@@ -1,0 +1,45 @@
+<h1>Anni accademici</h1>
+
+<p>
+  Azioni:
+  <%= link_to fa_icon('plus', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
+    new_acyear_path %>
+
+</p>
+
+<table class="table student-list">
+  <thead>
+      <tr>
+        <th><span> Nome </span></th>
+        <th><span> Data inizio </span></th>
+        <th><span> Data fine </span></th>
+        <th><span> Totale studenti immatricolati </span></th>
+        <th><span> Azioni </span></th>
+      </tr>
+  </thead>
+
+  <tbody id="activities">
+    <tr>
+    <% @acyears.each do |acyear| %>
+
+
+      <td> <%= acyear.name %> </td>
+      <td> <%= acyear.startdate.to_date.strftime("%d/%m/%y") %> </td>
+      <td> <%= acyear.finaldate.to_date.strftime("%d/%m/%y") %> </td>
+      <td>
+        <% @stays = Stay.where(acyear_id: acyear.id) %>
+        <% @students = Student.where(id: @stays.pluck(:student_id)) if @stays %>
+        <%= @students.count %>
+       </td>
+
+      <td>
+        <%= link_to fa_icon('search-plus', style: "font-size: 1.5em; color:rgb(28,163,184)"),acyear %>
+        <%= link_to fa_icon('pencil', style: "font-size: 1.5em;color:rgb(28,163,184)"), edit_acyear_path(acyear) %>
+        <%= link_to fa_icon('trash', style: "font-size: 2em; color: Tomato;"),
+          acyear, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Sei sicuro di rimuovere quest'anno accademico?" }%>
+
+        </td>
+      </tbody>
+
+  <% end %>
+</table>

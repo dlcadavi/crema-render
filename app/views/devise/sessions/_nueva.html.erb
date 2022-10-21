@@ -1,0 +1,45 @@
+<%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+  <!-- Administración de los errores parece que no se necesita acá pero funciona, menos mal -->
+
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-7">
+
+        <!-- Mail -->
+        <div class="col-md-8">
+          <label class="" style="">Email *</label>
+          <input type="text" class="form-control" style="margin-top:1%;width:100%"
+          <%= f.text_field :email,
+            required: true,
+            autofocus: true
+          %>
+        </div>
+
+        <!-- Password -->
+        <div class="col-md-8">
+          <label class="form-label" style="margin-top:3%;" >Password *</label>
+          <input type="password" class="form-control" style=""
+          <%= f.text_field :password,
+                      required: true,
+                      input_html: { autocomplete: "current-password" } %>
+        </div>
+
+        <!-- Forgotten password -->
+        <%= link_to "Ho dimenticato la mia password", new_password_path(resource_name) %><br />
+
+        <!-- Remember me -->
+        <div class="col-md-6">
+          <label class="form-label" style="margin-top:5%;" >Ricordami</label>
+          <%= f.check_box :remember_me, as: :boolean if devise_mapping.rememberable?  %>
+        </div>
+
+        <!-- Button -->
+        <div class="form-actions"style="margin-top:1%;">
+          <%= f.button :submit, "Log in",  :class => "btn btn-primary btn-lg", data: { turbo: false } %>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+<% end %>

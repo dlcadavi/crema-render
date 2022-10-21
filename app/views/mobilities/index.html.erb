@@ -1,0 +1,46 @@
+<h3>Mobilities </h3>
+
+<p>
+  <%= link_to fa_icon('arrow-left', text: "", style: "font-size: 1.5em; color:rgb(28,163,184)"),
+      students_path  %>
+</p>
+
+<table class="table professor-list">
+  <thead>
+      <tr>
+        <th><span> Studente </span></th>
+        <th><span> Anno </span></th>
+        <th><span> Data inizio </span></th>
+        <th><span> Data fine </span></th>
+        <th><span> Paese </span></th>
+        <th><span> Accordo </span></th>
+        <th><span> Descrizzione </span></th>
+        <th><span> Azioni </th>
+      </tr>
+  </thead>
+
+  <tbody id="students">
+
+    <tr>
+      <% @mobilities.order(start_mobility_date: :desc).each do |mobility| %>
+
+      <!-- Los camnpos -->
+      <td> <%= mobility.stay.student.display_fullname %> </td>
+      <td> <%= mobility.stay.acyear_id %> </td>
+      <td> <%= l mobility.start_mobility_date if mobility.start_mobility_date%> </td>
+      <td> <%= l mobility.end_mobility_date if mobility.end_mobility_date%> </td>
+      <td> <%= mobility.country if mobility.country %> </td>
+      <td> <%= mobility.mobility_program if mobility.mobility_program %> </td>
+      <td> <%= mobility.description if mobility.description %> </td>
+
+      <td>
+        <%= link_to fa_icon('search-plus', style: "font-size: 1.5em; color:rgb(28,163,184)"),mobility %>
+        <%= link_to fa_icon('pencil', style: "font-size: 1.5em;color:rgb(28,163,184)"), edit_mobility_path(mobility)%>
+        <%= link_to fa_icon('trash', style: "font-size: 2em; color: Tomato;"),
+          mobility, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Sei sicuro di rimuovere questa mobilità?" } %>
+      </td>
+
+    </tbody>
+    <% end %>
+
+</table>

@@ -1,0 +1,135 @@
+<h3>Soggiorni di </h3>
+<h1> <%= @student.display_fullname %> </h1>
+
+<p>
+  Azioni:
+  <%= link_to fa_icon('arrow-left', text: "", style: "font-size: 1.5em; color:rgb(28,163,184)"),
+      students_path  %>
+  <%= link_to fa_icon('plus', text: "", style: "font-size: 2.5em; color:rgb(28,163,184)"),
+    new_stadia_path(@student), data: { turbo: false } %>
+</p>
+
+<table class="table professor-list">
+  <thead>
+      <tr>
+        <th><span> Anno accademico </span></th>
+        <th><span> Data inizio </span></th>
+        <th><span> Data fine </span></th>
+        <th><span> Classe </span></th>
+        <th><span> Anno iscrizione </span></th>
+        <th><span> Retta annuale </span></th>
+        <th><span> Mesi di soggiorno </span></th>
+        <th><span> Mesi di retta </span></th>
+        <th><span> Camere </span></th>
+        <th><span> Riduzione retta? </span></th>
+        <th><span> Borsa di studio INPS? </span></th>
+        <th><span> Nuovo? </span></th>
+        <th><span> Senza esami? </span></th>
+        <th><span> Numero d'attività </th>
+        <th><span> Ore d'attività </th>
+        <th><span> Partecipazione </th>
+        <th><span> Voti annuali status </th>
+        <th><span> Voti carriera status </th>
+        <th><span> Azioni </th>
+        <th><span> Scarica </th>
+      </tr>
+  </thead>
+
+  <tbody id="students">
+
+    <tr>
+      <% @stays.order(hosting_end_date: :desc).each do |stay| %>
+
+        <!-- Los camnpos -->
+        <!-- La l minúscula de las fechas es para que por defecto use el formato que yo definí en  config/locales/en.yml -->
+        <td> <%= stay.acyear.name %> </td>
+        <td> <%= l stay.hosting_start_date if stay.hosting_start_date%> </td>
+        <td> <%= l stay.hosting_end_date if stay.hosting_end_date%> </td>
+        <td> <%= stay.kind if stay.kind %> </td>
+        <td> <%= stay.year_enrollment if stay.year_enrollment %> </td>
+        <td> <%= stay.annualfee if stay.annualfee %> </td>
+
+        <td> <%= stay.months if stay.months %> </td>
+        <td> <%= stay.monthsfee if stay.monthsfee %> </td>
+        <td>
+          <%= link_to stay.locations.count, locationstudent_path(@student) %>
+          <%= link_to image_tag('door.png', width: "20", height: "25"),new_location_path(@student), data: { turbo: false } %>
+        </td>
+
+        <td> <%= if stay.fee_reduction_request then human_boolean(stay.fee_reduction_request) else 'no' end %> </td>
+        <td> <%= if stay.grant then human_boolean(stay.grant) else 'no' end  %> </td>
+        <td> <%= if stay.firsttime then human_boolean(stay.firsttime) else 'no' end %> </td>
+        <td> <%= if stay.examfree then human_boolean(stay.examfree) else 'no' end %> </td>
+
+        <% stay.update_number_activities_attended %>
+        <% stay.update_attendance_status %>
+        <% stay.update_periodgrades_status %>
+        <% stay.update_cumulativegrades_status %>
+
+        <td style="width: 7%;">
+          <a href="#" class="student-link"> <%= link_to stay.number_activities_attended, studentactivities_stay_path(stay)%></a>
+        </td>
+
+        <td> <%= stay.hours_attended %> </td>
+
+
+        <!-- Semaforo Attendance -->
+        <td class="text-center">
+
+          <% if stay.perc_attendance %>
+            <% mostrar = stay.hours_attended.to_s + "h, " + number_to_percentage(stay.perc_attendance*100, precision: 0).to_s %>
+          <% else %>
+            <% mostrar = stay.perc_attendance.to_s + "h, " %>
+          <% end %>
+
+          <span class="badge rounded-pill bg-danger" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= mostrar if stay.attendance_status == 'insufficiente' %></span>
+          <span class="badge rounded-pill bg-warning" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= mostrar if stay.attendance_status == 'buono'  %></span>
+          <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= mostrar if stay.attendance_status == 'ottimo' %></span>
+          <span class="badge rounded-pill bg-dark" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= 'NA' if stay.attendance_status == 'NA' %></span>
+          <br>
+          <span class="student-subhead"> min: <%= stay.min_hours_required.round(0) %>h</span>
+        </td>
+
+        <!-- Semaforo PeriodGrades -->
+        <td class="text-center">
+          <span class="badge rounded-pill bg-danger" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades.round(2) if stay.periodgrades_status == 'insufficiente' and stay.examfree == false %></span>
+          <span class="badge rounded-pill bg-warning" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades.round(2) if stay.periodgrades_status == 'buono' and stay.examfree == false %></span>
+          <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades.round(2) if stay.periodgrades_status == 'ottimo' and stay.examfree == false %></span>
+          <span class="badge rounded-pill bg-dark" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades_status if stay.periodgrades_status == 'NA' and stay.examfree == false %></span>
+          <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades_status if stay.examfree == true %></span>
+          <br>
+          <span class="student-subhead"> min: <%= stay.gradesmin %></span>
+        </td>
+
+
+        <!-- Semaforo CumulativeGrades -->
+        <td class="text-center">
+          <span class="badge rounded-pill bg-danger" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.cumulativegrades.round(2) if stay.cumulativegrades_status == 'insufficiente' %></span>
+          <span class="badge rounded-pill bg-warning" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.cumulativegrades.round(2) if stay.cumulativegrades_status == 'buono' %></span>
+          <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.cumulativegrades.round(2) if stay.cumulativegrades_status == 'ottimo'%></span>
+          <span class="badge rounded-pill bg-dark" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.cumulativegrades_status if stay.cumulativegrades_status == 'NA' %></span>
+          <br>
+          <span class="student-subhead"> min: <%= stay.gradesmin %></span>
+        </td>
+
+
+        <td>
+          <%= link_to fa_icon('search-plus', style: "font-size: 1.5em; color:rgb(28,163,184)"),stay %>
+          <%= link_to fa_icon('pencil', style: "font-size: 1.5em;color:green"), edit_stay_path(stay)%>
+          <%= link_to fa_icon('trash', style: "font-size: 2em; color: Tomato;"),
+            stay, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Sei sicuro di rimuovere questo soggiorno?" } %>
+        </td>
+
+        <td>
+          <%= link_to "Contratto in italiano", downloadcontractitalian_stay_path(stay) %>
+          <br>
+          <%= link_to "Progetto formativo", download_initial_libretto_stay_path(stay) %>
+          <br>
+          <%= link_to "Libretto finale", download_final_libretto_stay_path(stay) %>
+        </td>
+
+
+    </tbody>
+    <% end %>
+
+</table>

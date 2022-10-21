@@ -1,0 +1,58 @@
+<div>
+  <h3> Importare i programmi </h3>
+  <%=form_tag import_programs_path, multipart: true do %>
+    <%=file_field_tag :file%>
+    <%=submit_tag "Import"%>
+  <%end%>
+</div>
+
+
+<div>
+  <br>
+  <h3> Pulire i programmi </h3>
+  <%= form_tag massive_destroy_programs_path, data: { turbo_confirm: 'Sei sicuro di rimuovere i programmi che non si utilizzano finora?' }, multipart: true do %>
+    <%=submit_tag "Borrar"%>
+  <%end%>
+</div>
+
+
+<br>
+<br>
+<h1>Programmi</h1>
+<br>
+<h5> Totale = <%=@programs.count %> </h5>
+<br>
+<br>
+
+<table class="table professor-list">
+  <thead>
+    <tr>
+      <th><span> Codice </span></th>
+      <th><span> Nome </span></th>
+      <th><span> Area </span></th>
+      <th><span> Azioni </span></th>
+    </tr>
+  </thead>
+
+  <tbody id="students">
+
+    <tr>
+    <% @programs.each do |program| %>
+
+      <!-- Los camnpos -->
+      <!-- La l minúscula de las fechas es para que por defecto use el formato que yo definí en  config/locales/en.yml -->
+      <td> <%= program.code %> </td>
+      <td> <%= program.name %> </td>
+      <td> <%= program.area %> </td>
+
+      <td>
+        <%= link_to fa_icon('pencil', style: "font-size: 1.5em;color:rgb(28,163,184)"), edit_program_path(program), data: { turbo: false } %>
+        <%= link_to fa_icon('trash', style: "font-size: 2em; color: Tomato;"),
+          program, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Sei sicuro di rimuovere questo programma?" }%>
+      </td>
+
+
+    </tbody>
+    <% end %>
+
+</table>

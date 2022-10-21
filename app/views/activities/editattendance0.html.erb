@@ -1,0 +1,66 @@
+<%= form_with(model: @activity) do |form| %>
+
+<div class="container">
+<div class="row">
+		<div class="col-12">
+			<!-- Page title -->
+      <div >
+        <%= link_to fa_icon('arrow-left', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
+          activities_path %>
+        <h3>Partecipazione</h3>
+        <br><br>
+        <h3> <%= @activity.name  %> </h3>
+			  <hr>
+		  </div>
+
+
+			<!-- Form START -->
+			<form class="file-upload">
+				<div class="row mb-5 gx-5">
+
+          <!-- Estudiantes -->
+					<div class="row mb-5 gx-5">
+						<div class="col-xxl-6 mb-5 mb-xxl-0">
+							<div class="bg-secondary-activity px-4 py-5 rounded">
+								<div class="row g-3">
+									<h4 class="mb-4 mt-0">Studenti</h4>
+	                <div class="col-md-6">
+	                  <label class="form-label">Studenti iscritti </label>
+
+	                  <!-- solo listar los usuarios con rol Student -->
+	                  <!-- así si quiero listar a todos los estudiantes:
+	                  @students = Student.order(:lastname, :name)
+	                  -->
+
+	                  <% @rol = Role.find_by(:name => 'Student') %>
+	                  <% @usuarios = User.where(:role_id => @rol.id) %>
+	                  <% @students = Student.where(user: @usuarios).order(:lastname, :name) %>
+	                  <%= form.collection_check_boxes :student_ids, @students, :id, :name do |b|%>
+	                    <br>
+                    	<%= b.label(class: "check_box") do %>
+                      	<%= b.check_box(class: "check_box") %>
+                      	<%= b.object.lastname + " " + b.object.name %>
+	                  	<% end %>
+										<% end %>
+	                </div>
+
+								</div> <!-- Row END -->
+							</div>
+						</div>
+
+            <!-- para redireccionar en el edit de manera condicional -->
+            <%= hidden_field_tag :redirect_location, activities_path %>
+
+            <!-- button -->
+    				<div class="gap-3 d-md-flex justify-content-md-end text-center">
+              <%= form.submit "Inviare partecipazione",  :class => "btn btn-primary btn-lg", local: true, data: { turbo: false } %>
+    				</div>
+
+
+
+			</form> <!-- Form END -->
+		</div>
+	</div>
+	</div>
+
+  <% end %>

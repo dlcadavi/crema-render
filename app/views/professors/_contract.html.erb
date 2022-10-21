@@ -1,0 +1,71 @@
+<%= form_with(model: professor) do |form| %>
+
+  <div class="container">
+    <div class="row">
+  		<div class="col-12">
+
+  			<!-- Page title -->
+  			<div >
+          <%= link_to fa_icon('arrow-left', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
+            professors_path %>
+          <h3>Formatore <%=professor.display_fullname%></h3>
+  			  <hr>
+  		  </div>
+
+
+  			<!-- Form START -->
+  			<form class="file-upload">
+  				<div class="row mb-5 gx-5">
+
+  					<!-- Contatto -->
+  					<div class="col-xxl-8 mb-5 mb-xxl-0">
+  						<div class="bg-secondary-professor px-4 py-5 rounded" style="width: 80%;">
+  							<div class="row g-3">
+  								<h4 class="mb-4 mt-0">Informazione del formatore</h4>
+  								<!-- First Name -->
+  								<div class="col-md-6" style="width: 100%;">
+  									<label class="form-label">Nome *</label>
+                    <input type="text" class="form-control-non-editable" <%= form.text_field :name %>
+  								</div>
+                  <div>
+                  </div>
+  								<!-- Last name -->
+  								<div class="col-md-6" style="width: 100%;">
+  									<label class="form-label">Cognome *</label>
+                    <input type="text" class="form-control-non-editable"  <%= form.text_field :lastname %>
+  								</div>
+                </div> <!-- Row END -->
+  						</div>
+  					</div>
+          </div>
+        <% end %>
+
+        <%= form_tag download_contratto_italiano_professor_path do %>
+
+          <!-- Actividades -->
+					<div class="col-xxl-4">
+						<div class="bg-secondary-professor px-4 py-5 rounded" style="width: 150%;position:relative; top: -375px; left: 170%">
+							<div class="row g-3">
+								<h4 class="mb-4 mt-0">Lezioni del formatore</h4>
+                <!-- Qualification -->
+								<div class="col-md-6" style="width: 200%;">
+                  <% @professor.activities.each do |activity| %>
+                    <br>
+                    <%= check_box_tag 'activity_ids[]', activity.id %>
+                    <%= activity.name + ". " + activity.activity_date.to_time.strftime('%e %B at %l:%M %p')%>
+                  <% end %>
+								</div>
+              </div>
+						</div>
+					</div> <!-- Row END -->
+
+
+  				<!-- button -->
+  				<div class="gap-3 d-md-flex justify-content-md-end text-center">
+            <%= submit_tag "Scarica contratto" , :class => 'btn button-17 btn-xs'  %>
+  				</div>
+        <% end %>
+      </form> <!-- Form END -->
+    </div>
+  </div>
+</div>

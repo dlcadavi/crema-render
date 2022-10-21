@@ -1,0 +1,169 @@
+<%= form_with(model: activity) do |form| %>
+  <% if activity.errors.any? %>
+    <div style="color: red;font-size: 1em;">
+      <%= pluralize(activity.errors.count, "error") %> prohibited this activity from being saved:
+
+      <ul>
+        <% activity.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+
+<div class="container">
+<div class="row">
+		<div class="col-12">
+			<!-- Page title -->
+			<div >
+        <%= link_to fa_icon('arrow-left', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
+          :back %>
+        <h3>Lezione</h3>
+
+        <!-- Inscribirse: solamente los que son estudiantes pueden inscribirse a una actividad -->
+			  <hr>
+		  </div>
+
+			<!-- Información general -->
+				<div class="row mb-5 gx-5">
+					<!-- Contatto -->
+					<div class="col-xxl-7 mb-5 mb-xxl-0">
+						<div class="bg-secondary-activity px-4 py-5 rounded">
+							<div class="row g-3">
+								<h4 class="mb-4 mt-0">Informazione generale</h4>
+                <!-- Acyear. No he logrado que lo imprima en un form.text_field :(. anno viene de la acción show pasando por show.htm.erb que dispara este partial -->
+                <div class="col-md-6">
+                  <label class="form-label">Anno accademico della lezione: </label>
+                  <%= anno.name if anno %>
+                </div>
+                <!-- Div para mejoras estéticas -->
+                <div>
+                </div>
+                <!-- Título -->
+								<div class="col-md-6">
+									<label class="form-label">Argomento *</label>
+									<input type="text" class="form-control-non-editable" style="width: 200%;"<%= form.text_field :name %>
+								</div>
+
+                <div></div>
+                <!-- Subtitle -->
+                <div class="col-md-6">
+                  <label class="form-label">Subtitolo *</label>
+                  <input type="text" class="form-control" style="width: 200%;"<%= form.text_field :subtitle %>
+                </div>
+                <div></div>
+								<!-- Descripción -->
+								<div class="col-md-6">
+									<label class="form-label">Descrizione *</label>
+									<textarea rows="3" cols="1" class="form-control-non-editable" style="width: 200%;" <%= form.text_area :description %>
+								</div>
+
+                <!-- Div para mejoras estéticas -->
+                <div>
+								</div>
+
+                <!-- Contexto -->
+								<div class="col-md-6">
+									<label class="form-label">Contesto *</label>
+                  <select id='',type="text" class="form-control" <%= form.select :context, [["Nazionale", "N"], ["Internazionale", "I"]]  %>
+								</div>
+
+                <!-- tipo: no lo pueden ver los estudiantes-->
+                <div class="col-md-6">
+                  <% if current_user.role.name == "Admin" %>
+                	 <label class="form-label">Tipologia *</label>
+                   <select id='',type="text" class="form-control" <%= form.select :kind, options_for_select($typology_list,selected: activity.kind) %>
+                  <% end %>
+								</div>
+
+							</div> <!-- Row END -->
+						</div>
+					</div>
+
+          <!-- Detalles -->
+					<div class="col-xxl-5">
+						<div class="bg-secondary-activity px-4 py-5 rounded">
+							<div class="row g-3">
+								<h4 class="mb-4 mt-0">Dettagli</h4>
+
+                <!-- Fecha -->
+								<div class="col-md-6">
+									<label class="form-label">Data *</label>
+									<input class="form-control" style="width: 140%;" <%= form.datetime_field :activity_date,  placeholder: 'DD/MM/YYYY HH:%MM' %>
+								</div>
+
+                <!-- Duración -->
+								<div class="col-md-6" style="position:relative; width: 50%; left:90px;">
+									<label for="inputEmail4" class="form-label" >Ore *</label>
+									<input type="text" class="form-control" style="width: 50%;" <%= form.text_field :duration %>
+								</div>
+
+                <!-- Confirmed date-->
+                <div class="col-md-6">
+                  <label class="form-label">Data confermata? *</label>
+                  <%= form.check_box :confirmed_date, checked: if @activity.confirmed_date? then @activity.confirmed_date? end  %>
+                </div>
+
+                <hr/>
+
+                <!-- Formatori -->
+                <div class="row g-3">
+  								<h4 class="my-4">Formatori</h4>
+                  <!-- Profesores -->
+                  <div class="">
+                    <table class="">
+                      <thead>
+                        <th> </th>
+                        <th> </th>
+                        <th> cost </th>
+                      </thead>
+                    <% @professors.order(:lastname, :name).each do |professor| %>
+                      <tbody id="">
+                        <!-- Confirmed date-->
+                        <!-- no fui capaz de hacer la data confermata como un check, porque los check no se envían en html cuando son False, un poblema enorme-->
+                        <!-- en el div de más abajo (display: none) se capturta el ID de cada actividad para saber cuál hay que update en el courses_controller-->
+                        <% @professoractivity = Professoractivity.find_by(activity_id:activity.id, professor_id: professor.id) if activity.id %>
+                        <td style="width:15%">
+                          <% if @professoractivity.present? then seleccionado = 'sì' else seleccionado = 'no' end %>
+                          <select name="professors_selected[]" type="text" class="form-control"  <%= form.select(:professors_selected, ["sì", "no"], selected: seleccionado) %>
+                        </td>
+                        <td style="width:50%;"> <%= professor.display_fullname %> </td>
+                        <td> <input type="text" class="form-control" style="width:100%;" value = "<%= @professoractivity.cost if @professoractivity %>"<%= text_field_tag 'costs[]' %> </td>
+                      </tbody>
+                    <% end %>
+                  </table>
+                  <br><br>
+                    <!-- <%= link_to 'Creare nuovo professore', new_professor_path, data: { turbo: false } %>-->
+                  </div>
+  							</div>
+
+
+              </div>
+              </div>
+
+              </div>
+						</div>
+					</div> <!-- Row END -->
+
+				</div>  <!-- Terminan los dos primeros módulos -->
+
+				</div> <!-- Row END -->
+
+
+        <!-- para redireccionar en el edit de manera condicional (se comparte el update con editattendance) -->
+        <% if activity.id %>
+          <%= hidden_field_tag :redirect_location, activity_url(@activity) %>
+        <% end %>
+
+				<!-- button -->
+				<div class="gap-3 d-md-flex justify-content-md-end text-center">
+          <%= form.submit "Inviare lezione",  :class => "btn btn-primary btn-lg", local: true, data: { turbo: false } %>
+				</div>
+
+		</div><!-- Form END -->
+	</div>
+	</div>
+
+  <% end %>

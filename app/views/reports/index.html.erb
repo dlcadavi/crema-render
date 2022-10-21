@@ -1,0 +1,199 @@
+<%= render 'reports/left_panel' %>
+
+<!-- Panel derecho -->
+
+<div class="" style="position: relative;top: -150px; left: 250px;width:80%">
+
+  <table class="table student-list">
+
+    <thead>
+        <tr>
+          <th><span>  </span></th>
+          <th><span> Nome </span></th>
+          <th><span> Descrizione </span></th>
+          <th style="width:20%"><span> Scarica </span></th>
+        </tr>
+    </thead>
+
+    <tbody id="activities">
+
+
+      <!-- Anagráfica studenti -->
+      <tr>
+      <td> <i class="fa fa-file-excel-o" style="font-size: 30px; color:rgb(28,163,184);"></i> </td>
+      <td> Ministero: Anagrafica studenti </td>
+      <td> Documento in formato .csv con l'anagrafica degli studenti per Ministero </td>
+      <td>
+       <%= form_tag(href="/export_ministerio_anagrafica.csv", method: :get) do %>
+         <%= select_tag(:acyear_filter,
+         options_from_collection_for_select(Acyear.all, :id, :name, params[:acyear_filter]),
+         include_blank: 'seleziona anno', onchange: 'this.form.submit()', class:"form-control", style:"display: table-cell;width: 80%;") %>
+       <% end %>
+      </td>
+
+      <!-- Partecipazione Corsi SIN participación mínima (aparece como Actividad porque así la reconoce el Collegio)-->
+      <tr>
+      <td> <i class="fa fa-file-excel-o" style="font-size: 30px; color:rgb(28,163,184);"></i> </td>
+      <td> Ministero: Anagrafica attività senza partecipazione minima</td>
+      <td> Documento in formato .csv con l'informazione sulla partecipazione degli studenti alle attività culturale per Ministero </td>
+      <td>
+        <%= form_tag(href="/courseattendances_export.csv", method: :get) do %>
+          <%= select_tag(:acyear_filter,
+            options_from_collection_for_select(Acyear.all, :id, :name, params[:acyear_filter]),
+            include_blank: 'seleziona anno', onchange: 'this.form.submit()', class:"form-control", style:"display: table-cell;width: 80%;") %>
+          <span style="display:none;">
+            <%= hidden_field_tag :nombre, "sin_participacion_minima" %>
+          </span>
+        <% end %>
+      </td>
+
+      <!-- Partecipazione Corsi CON participación mínima (aparece como Actividad porque así la reconoce el Collegio)-->
+      <tr>
+      <td> <i class="fa fa-file-excel-o" style="font-size: 30px; color:rgb(28,163,184);"></i> </td>
+      <td> Ministero: Anagrafica attività con partecipazione minima</td>
+      <td> Documento in formato .csv con l'informazione sulla partecipazione degli studenti alle attività culturale per Ministero </td>
+      <td>
+        <%= form_tag(href="/courseattendances_export.csv", method: :get) do %>
+          <%= select_tag(:acyear_filter,
+            options_from_collection_for_select(Acyear.all, :id, :name, params[:acyear_filter]),
+            include_blank: 'seleziona anno', onchange: 'this.form.submit()', class:"form-control", style:"display: table-cell;width: 80%;") %>
+            <span style="display:none;">
+              <%= hidden_field_tag :nombre, "con_participacion_minima" %>
+            </span>
+        <% end %>
+      </td>
+
+      <!-- Full anagrafica -->
+      <tr>
+      <td> <i class="fa fa-file-excel-o" style="font-size: 30px; color:rgb(28,163,184);"></i> </td>
+      <td> Anagrafica studenti completa </td>
+      <td> Documento in formato .csv con l'anagrafica completa degli studenti </td>
+      <td>
+       <%= form_tag(href="/export_full_anagrafica.csv", method: :get) do %>
+         <%= select_tag(:acyear_filter,
+         options_from_collection_for_select(Acyear.all, :id, :name, params[:acyear_filter]),
+         include_blank: 'tutti', onchange: 'this.form.submit()', class:"form-control", style:"display: table-cell;width: 80%;") %>
+       <% end %>
+      </td>
+
+      <!-- Attività  (es decir, cursos) -->
+      <tr>
+      <td> <i class="fa fa-file-excel-o" style="font-size: 30px; color:rgb(28,163,184);"></i> </td>
+      <td> Elenco attività </td>
+      <td> Documento in formato .csv con l'elenco delle attività culturale </td>
+      <td>
+        <%= form_tag(export_courses_courses_path, method: :get) do %>
+          <%= select_tag(:acyear_filter,
+            options_from_collection_for_select(Acyear.all, :id, :name, params[:acyear_filter]),
+            include_blank: 'tutti', onchange: 'this.form.submit()', class:"form-control", style:"display: table-cell;width: 80%;") %>
+        <% end %>
+      </td>
+
+
+      <!-- Lezioni (es decir, attivitá) -->
+      <tr>
+      <td> <i class="fa fa-file-excel-o" style="font-size: 30px; color:rgb(28,163,184);"></i> </td>
+      <td> Elenco lezioni delle attività </td>
+      <td> Documento in formato .csv con l'elenco delle lezioni delle attività culturale </td>
+      <td>
+        <%= form_tag(export_activities_activities_path, method: :get) do %>
+          <%= select_tag(:acyear_filter,
+            options_from_collection_for_select(Acyear.all, :id, :name, params[:acyear_filter]),
+            include_blank: 'tutti', onchange: 'this.form.submit()', class:"form-control", style:"display: table-cell;width: 80%;") %>
+          <% end %>
+      </td>
+
+      <!-- Professors -->
+      <tr>
+      <td> <i class="fa fa-file-excel-o" style="font-size: 30px; color:rgb(28,163,184);"></i> </td>
+      <td> Anagrafica formatori </td>
+      <td> Documento in formato .csv con l'anagrafica dei formatori </td>
+      <td>
+        <%= form_tag(href="/professors_export.csv", method: :get) do %>
+          <%= select_tag(:acyear_filter,
+            options_from_collection_for_select(Acyear.all, :id, :name, params[:acyear_filter]),
+            include_blank: 'tutti', onchange: 'this.form.submit()', class:"form-control", style:"display: table-cell;width: 80%;") %>
+          <% end %>
+        </td>
+
+      <!-- Guests -->
+      <tr>
+      <td> <i class="fa fa-file-excel-o" style="font-size: 30px; color:rgb(28,163,184);"></i> </td>
+      <td> Anagrafica guests </td>
+      <td> Documento in formato .csv con l'anagrafica dei guest </td>
+      <td>
+          <%= form_tag(export_guests_guests_path, method: :get) do %>
+            <%= select_tag(:acyear_filter,
+            options_from_collection_for_select(Acyear.all, :id, :name, params[:acyear_filter]),
+            include_blank: 'tutti', onchange: 'this.form.submit()', class:"form-control", style:"display: table-cell;width: 80%;") %>
+          <% end %>
+      </td>
+
+      <!-- Estadías-->
+      <tr>
+      <td> <i class="fa fa-file-excel-o" style="font-size: 30px; color:rgb(28,163,184);"></i> </td>
+      <td> Soggiorni degli studenti </td>
+      <td> Documento in formato .csv con l'informazione sui soggiorni degli studenti </td>
+      <td>
+       <%= form_tag(href="/stays_export.csv", method: :get) do %>
+         <%= select_tag(:acyear_filter,
+           options_from_collection_for_select(Acyear.all, :id, :name, params[:acyear_filter]),
+           include_blank: 'tutti', onchange: 'this.form.submit()', class:"form-control", style:"display: table-cell;width: 80%;") %>
+       <% end %>
+      </td>
+
+      <!-- Locations-->
+      <tr>
+      <td> <i class="fa fa-file-excel-o" style="font-size: 30px; color:rgb(28,163,184);"></i> </td>
+      <td> Alloggi degli studenti </td>
+      <td> Documento in formato .csv con l'informazione sugli alloggi degli studenti </td>
+      <td>
+       <%= form_tag(href="/locations_export.csv", method: :get) do %>
+         <%= select_tag(:acyear_filter,
+           options_from_collection_for_select(Acyear.all, :id, :name, params[:acyear_filter]),
+           include_blank: 'tutti', onchange: 'this.form.submit()', class:"form-control", style:"display: table-cell;width: 80%;") %>
+       <% end %>
+      </td>
+
+      <!-- Mobility-->
+      <tr>
+      <td> <i class="fa fa-file-excel-o" style="font-size: 30px; color:rgb(28,163,184);"></i> </td>
+      <td> Mobilità degli studenti </td>
+      <td> Documento in formato .csv con l'informazione sulle mobilità degli studenti </td>
+      <td>
+       <%= form_tag(href="/mobilities_export.csv", method: :get) do %>
+         <%= select_tag(:acyear_filter,
+           options_from_collection_for_select(Acyear.all, :id, :name, params[:acyear_filter]),
+           include_blank: 'tutti', onchange: 'this.form.submit()', class:"form-control", style:"display: table-cell;width: 80%;") %>
+       <% end %>
+      </td>
+
+      <!-- Visitas-->
+      <tr>
+      <td> <i class="fa fa-file-excel-o" style="font-size: 30px; color:rgb(28,163,184);"></i> </td>
+      <td> Visite dei guests </td>
+      <td> Documento in formato .csv con l'informazione sulle visite dei guests </td>
+      <td>
+        <%= form_tag(href="/visits_export.csv", method: :get) do %>
+          <%= select_tag(:acyear_filter,
+            options_from_collection_for_select(Acyear.all, :id, :name, params[:acyear_filter]),
+            include_blank: 'tutti', onchange: 'this.form.submit()', class:"form-control", style:"display: table-cell;width: 80%;") %>
+        <% end %>
+      </td>
+
+       <!-- Graduaciones-->
+       <tr>
+       <td> <i class="fa fa-file-excel-o" style="font-size: 30px; color:rgb(28,163,184);"></i> </td>
+       <td> Voti di laurea </td>
+       <td> Documento in formato .csv con l'informazione sui voti di laurea degli studenti </td>
+       <td>
+         <%= form_tag(href="/graduations_export.csv", method: :get) do %>
+           <%= select_tag(:acyear_filter,
+             options_from_collection_for_select(Acyear.all, :id, :name, params[:acyear_filter]),
+             include_blank: 'tutti', onchange: 'this.form.submit()', class:"form-control", style:"display: table-cell;width: 80%;") %>
+         <% end %>
+      </td>
+
+    </tbody>
+  </table>
+</div>

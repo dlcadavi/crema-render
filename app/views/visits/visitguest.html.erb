@@ -1,0 +1,55 @@
+<h3>Visite di </h3>
+<h1> <%= @guest.lastname + ' ' + @guest.name  %> </h1>
+
+<p>
+  Azioni:
+  <%= link_to fa_icon('arrow-left', text: "", style: "font-size: 1.5em; color:rgb(28,163,184)"),
+      guests_path  %>
+  <%= link_to fa_icon('plus', text: "", style: "font-size: 2.5em; color:rgb(28,163,184)"),
+    new_visit_path(@guest), data: { turbo: false } %>
+</p>
+
+<table class="table professor-list">
+  <thead>
+      <tr>
+        <th><span> Anno accademico </span></th>
+        <th><span> Data inizio </span></th>
+        <th><span> Data fine </span></th>
+        <th><span> Motivo </span></th>
+        <th><span> Retta complessa </span></th>
+        <th><span> Azioni </th>
+        <th><span> Scarica </th>
+      </tr>
+  </thead>
+
+  <tbody id="students">
+
+    <tr>
+      <% @visits.order(hosting_end_date: :desc).each do |visit| %>
+
+      <!-- Los camnpos -->
+      <!-- La l minúscula de las fechas es para que por defecto use el formato que yo definí en  config/locales/en.yml -->
+      <td> <%= visit.acyear.name if visit.acyear %> </td>
+      <td> <%= l visit.hosting_start_date if visit.hosting_start_date%> </td>
+      <td> <%= l visit.hosting_end_date if visit.hosting_end_date%> </td>
+      <td> <%= visit.description if visit.description%> </td>
+      <td> <%= visit.fee if visit.fee %> </td>
+
+      <td>
+        <%= link_to fa_icon('search-plus', style: "font-size: 1.5em; color:rgb(28,163,184)"),visit %>
+        <%= link_to fa_icon('pencil', style: "font-size: 1.5em;color:green"), edit_visit_path(visit)%>
+        <%= link_to fa_icon('trash', style: "font-size: 2em; color: Tomato;"),
+          visit, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Sei sicuro di rimuovere questa visita?" } %>
+      </td>
+
+      <td>
+        <%= link_to "Contratto in italiano", downloadcontractitalian_visit_path(visit) %>
+        <br>
+        <%= link_to "Contratto in inglese", downloadcontractenglish_visit_path(visit) %>
+      </td>
+
+
+    </tbody>
+    <% end %>
+
+</table>

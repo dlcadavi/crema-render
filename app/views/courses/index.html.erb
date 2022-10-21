@@ -1,0 +1,62 @@
+<h1>Attività</h1>
+
+
+<p>
+  Azioni:
+  <%= link_to fa_icon('plus', text: "", style: "font-size: 2em; color:rgb(28,163,184"),new_course_path, data: { turbo: false }  %>
+  <br>
+  Visualizza tutte le lezioni formative delle attività:
+  <%= link_to image_tag('activities.png', width: "50", height: "50", alt: 'Activity'), '/activities'%>
+</p>
+
+
+<table class="table student-list">
+  <thead>
+      <tr>
+        <th><span> Anno </span></th>
+        <th><span> Nome </span></th>
+        <th><span> Data inizio </span></th>
+        <th><span> Numero di lezioni </span></th>
+        <th><span> Ore </span></th>
+        <th><span> Tipo </span></th>
+        <th><span> Formatori </span></th>
+        <th><span> Contesto </span></th>
+        <th><span> Costo </span></th>
+        <th><span> Partecipazione minima (%)</span></th>
+        <th><span> Azioni </span></th>
+      </tr>
+  </thead>
+
+  <tbody id="activities">
+    <tr>
+    <% @courses.each do |course| %>
+      <% ano = Acyear.find_by_id(course.acyear_id) %>
+      <td> <%= ano.name %> </td>
+      <td> <%= link_to course.name, course %> </td>
+      <td> <%= course.date.to_date.strftime("%d/%m/%y") %> </td>
+      <td style="width:10%;"> <%= link_to course.numberactivities, activitycourse_path(course) %> </td>
+      <td> <%= course.duration %> </td>
+      <td> <%= course.typology %> </td>
+
+      <!-- Mostrar el nombre de los profesores -->
+      <td>
+        <% course.professors.each do |professor| %>
+        <li><%= professor.lastname + " " + professor.name %></li>
+        <% end %>
+      </td>
+
+      <td> <%= course.context %> </td>
+      <td> <%= course.cost %> </td>
+      <td> <%= (course.min_attendance*100).round(0) %> </td>
+
+      <td>
+        <%= link_to fa_icon('search-plus', style: "font-size: 1.5em; color:rgb(28,163,184)"),course %>
+        <%= link_to fa_icon('pencil', style: "font-size: 1.5em;color:rgb(28,163,184)"), edit_course_path(course), data: { turbo: false }  %>
+        <%= link_to fa_icon('trash', style: "font-size: 2em; color: Tomato;"),
+          course, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Sei sicuro di rimuovere quest'attività?" }%>
+
+        </td>
+      </tbody>
+
+  <% end %>
+</table>

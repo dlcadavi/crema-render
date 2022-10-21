@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS
+    <script src="js/scripts.js"></script>-->
+
+    <!-- Para que funcione el .js que hice para deshabilitar botones
+    <div data-controller='hello'></div> -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <%= csrf_meta_tags %>
+
+<!-- con estos funciona el turbo pero no se actualiza después del update en la página -->
+<!-- yo creo que toca usar un gormat turbo en os controladores  -->
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+
+  </head>
+
+  <!-- Responsive navbar-->
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <% if current_user %>
+        <% if current_user.role.name == 'Admin' %>
+          <%= link_to image_tag('LogoConNombre.png', width: "150", height: "75", alt: 'Crema'), root_path %>
+        <% end %>
+        <% if current_user.role.name == 'Student' %>
+          <%= link_to image_tag('LogoConNombre.png', width: "150", height: "75", alt: 'Crema'), root_path %>
+        <% end %>
+      <% else %>
+        <%= link_to image_tag('LogoConNombre.png', width: "150", height: "75", alt: 'Crema'), root_path %>
+      <% end %>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        </ul>
+        <ul class="navbar-nav">
+          <%= render 'user/session_manager' %>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <body>
+
+
+    <!-- para las notificaciones y alertas de la aplicación -->
+    <header>
+      <%= render 'layouts/alerts' %>
+    </header>
+
+    <section>
+        <%= yield %>
+    </section>
+  </body>
+
+
+  <!-- Footer-->
+  <footer class="py-3 bg-light">
+      <div ><p class="text-center text-black">Copyright &copy; Crema 2022</p></div>
+  </footer>
+
+
+
+</html>

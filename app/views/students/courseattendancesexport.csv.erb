@@ -1,0 +1,9 @@
+<%- nombres_columnas = ['Nome', 'Data', 'Ore','Tipo attivita','Argomento','Docente','Qualifica','Contesto'] -%>
+<%= CSV.generate_line nombres_columnas -%>
+<%- @courseattendances.each do |courseattendance| %>
+  <%- student = Student.find_by_id(courseattendance.student_id) -%>
+  <%- course = Course.find_by_id(courseattendance.course_id) -%>
+  <%- typology_ministero = course.typology.partition('.').first-%>
+  <%- row = [student.id_number, course.date.to_date.strftime("%d/%m/%y"), courseattendance.hours, typology_ministero, course.name, course.professor, course.aggregated_qualification,course.context] -%>
+  <%= CSV.generate_line(row).html_safe -%>
+<%- end -%>

@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  hosting_start_date: 2022-07-12
+  hosting_end_date: 2022-07-12
+  fee: 1.5
+  months: 1.5
+  annualfee: 1.5
+
+two:
+  hosting_start_date: 2022-07-12
+  hosting_end_date: 2022-07-12
+  fee: 1.5
+  months: 1.5
+  annualfee: 1.5

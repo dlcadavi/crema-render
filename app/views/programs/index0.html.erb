@@ -1,0 +1,34 @@
+<div>
+  <h3> Importar programas </h3>
+  <%=form_tag import_programs_path, multipart: true do %>
+    <%=file_field_tag :file%>
+    <%=submit_tag "Import"%>
+  <%end%>
+</div>
+
+<hr>
+
+<div>
+  <h3> Borrar programas </h3>
+</div>
+
+<hr>
+
+<table>
+  <thead>
+    <th>Codice</th>
+    <th>Nome</th>
+    <th>Area</th>
+  </thead>
+
+  <tbody>
+    <%@programs.each do |program|%>
+      <tr>
+        <td><%=program.code %></td>
+        <td><%=program.name%></td>
+        <td><%=program.area%></td>
+      </tr>
+    <%end%>
+  </tbody>
+
+</table>

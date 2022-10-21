@@ -1,0 +1,11 @@
+<%- nombres_columnas = ['Anno','Cognome', 'Nome', 'Data inizio', 'Data fine', 'Mesi', 'Paese', 'Accordo','Description'] -%>
+<%= CSV.generate_line nombres_columnas -%>
+<%- @mobilities.each do |mobility| -%>
+  <%- stay = Stay.find_by_id(mobility.stay_id) -%>
+  <%- student = Student.find_by_id(stay.student_id) -%>
+  <%- anno = Acyear.find_by_id(stay.acyear_id) -%>
+  <%- row = [anno.name, student.lastname, student.name,
+  mobility.start_mobility_date.to_date.strftime("%d/%m/%y"), mobility.end_mobility_date.to_date.strftime("%d/%m/%y"),
+  mobility.months, mobility.country, mobility.mobility_program, mobility.description] -%>
+  <%= CSV.generate_line(row).html_safe -%>
+<%- end -%>

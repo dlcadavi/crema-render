@@ -1,0 +1,54 @@
+<h3>Voto finale di laurea di </h3>
+<h1> <%= @student.lastname + ' ' + @student.name  %> </h1>
+
+<p>
+  Azioni:
+  <%= link_to fa_icon('arrow-left', text: "", style: "font-size: 1.5em; color:rgb(28,163,184)"),
+      students_path  %>
+  <% stays = Stay.find_by(student_id: params[:id]) %>
+  <% if stays %>
+    <%= link_to fa_icon('plus', text: "", style: "font-size: 2.5em; color:rgb(28,163,184)"),
+      new_laurea_path(@student), data: { turbo: false } %>
+  <% else %>
+    <h6>Atenzione: per creare un nuovo voto di laurea devi prima creare un soggiorno per lo studente. </h6>
+  <% end %>
+</p>
+
+<table class="table professor-list">
+  <thead>
+      <tr>
+        <th><span> Classe </span></th>
+        <th><span> Data laurea </span></th>
+        <th><span> Tipo </span></th>
+        <th><span> Voti laurea </span></th>
+        <th><span> Lode? </span></th>
+        <th><span> Encomio? </span></th>
+        <th><span> Azioni </th>
+      </tr>
+  </thead>
+
+
+  <tbody id="students">
+
+    <tr>
+      <% @graduations.order(graduation_date: :desc).each do |graduation| %>
+
+      <!-- Los camnpos -->
+      <!-- La l minúscula de las fechas es para que por defecto use el formato que yo definí en  config/locales/en.yml -->
+      <td> <%= link_to graduation.stay.kind, graduation if  graduation.stay.kind %> </td>
+      <td> <%= l graduation.graduation_date if graduation.graduation_date%> </td>
+      <td> <%= graduation.tipo if graduation.tipo %> </td>
+      <td> <%= graduation.grades if graduation.grades %> </td>
+      <td> <%= if graduation.lode? then human_boolean(graduation.lode) else 'no' end %> </td>
+      <td> <%= if graduation.encomio? then human_boolean(graduation.encomio) else 'no' end %> </td>
+
+      <td>
+        <%= link_to fa_icon('pencil', style: "font-size: 1.5em;color:rgb(28,163,184)"), edit_graduation_path(graduation)%>
+        <%= link_to fa_icon('trash', style: "font-size: 2em; color: Tomato;"),
+          graduation, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Sei sicuro di rimuovere questa laurea?" } %>
+      </td>
+
+    </tbody>
+    <% end %>
+
+</table>

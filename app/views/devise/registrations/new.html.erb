@@ -1,0 +1,76 @@
+<h2>Creare nuovo utente</h2>
+
+<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+  <!-- Administración de los errores -->
+  <% if @user.errors.any? %>
+    <div style="color: gray;font-size: 1em;">
+      <%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:
+      <ul>
+        <% @user.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+  <div class="form-inputs">
+    <!-- Mail -->
+    <div class="col-md-6">
+      <label class="form-label" style="margin-top:3%;">Email *</label>
+      <input type="text" class="form-control" style="width: 60%;"
+      <%= f.text_field :email,
+                  required: true,
+                  autofocus: true %>
+    </div>
+
+    <!-- Nombre -->
+    <div class="col-md-6">
+      <label class="form-label" style="margin-top:3%;">Nome *</label>
+      <input type="text" class="form-control" style="width: 60%;"
+      <%= f.text_field :name,
+                  required: true,
+                  autofocus: true %>
+    </div>
+
+
+    <!-- Lastname -->
+    <div class="col-md-6">
+      <label class="form-label" style="margin-top:3%;">Cognome *</label>
+      <input type="text" class="form-control" style="width: 60%;"
+      <%= f.text_field :lastname,
+                  required: true,
+                  autofocus: true %>
+    </div>
+
+    <!-- Rol -->
+    <div class="col-md-6">
+      <label class="form-label" style="margin-top:3%;">Ruolo *</label>
+      <select type="text" class="form-control" style="width: 60%;" placeholder=""  <%= f.select :role_id, [["Admin", 1], ["Student", 2]] %>
+    </div>
+
+    <!-- Password -->
+    <div class="col-md-6">
+      <label class="form-label" style="margin-top:3%;" >Password *</label>
+      <input type="password" class="form-control" style="width: 60%;"
+      placeholder= "<%= ("#{@minimum_password_length} characters minimum" if @minimum_password_length) %>"
+      <%= f.text_field :password,
+                  required: true,
+                  input_html: { autocomplete: "new-password" } %>
+    </div>
+
+    <!-- Confirmation -->
+    <div class="col-md-6">
+      <label class="form-label" style="margin-top:3%;" >Conferma la password</label>
+      <input type="password" class="form-control" style="width: 60%;"
+      <%= f.text_field :password_confirmation,
+                  required: true,
+                  input_html: { autocomplete: "new-password" } %>
+    </div>
+
+  </div>
+
+  <div class="form-actions"style="margin-top:3%;">
+    <%= f.button :submit, "Invia",  :class => "btn btn-primary btn-lg" %>
+  </div>
+<% end %>

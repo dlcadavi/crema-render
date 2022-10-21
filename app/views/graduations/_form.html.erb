@@ -1,0 +1,93 @@
+<%= form_with(model: graduation) do |form| %>
+  <% if graduation.errors.any? %>
+    <div style="color: red;font-size: 1em;">
+      <%= "Hey #{current_user.name}!" %>, non possiamo salvare questa laurea per <%= pluralize(graduation.errors.count, "errore:") %>
+
+      <ul>
+        <% graduation.errors.each do |error| %>
+          <li><%= error.message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% if @graduation.id %>
+    <% stay = Stay.find_by_id(@graduation.stay_id) %>
+    <% student = Student.find_by_id(stay.student_id) %>
+    <% stays = Stay.where(student_id: student.id) %>
+  <% else %>
+    <% student = Student.find(params[:id]) %>
+    <% stays = Stay.where(student_id: student.id) %>
+  <% end %>
+
+
+  <div class="container">
+    <div class="row">
+  		<div class="col-12">
+  			<!-- Page title -->
+  			<div >
+          <%= link_to fa_icon('arrow-left', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
+            :back %>
+          <h3>Voto finale di laurea di</h3>
+          <h2><%= student.display_fullname %></h2>
+          <br><br>
+
+  			  <hr>
+  		  </div>
+
+			<!-- Información general -->
+				<div class="">
+					<!-- Contatto -->
+					<div class="col-xxl-8 mb-5 mb-xxl-0">
+						<div class="bg-secondary-activity px-4 py-5 rounded">
+							<div class="row g-3">
+                <div class="">
+                  <label class="form-label">Classe *</label>
+                  <% options = options_from_collection_for_select(stays, :id, :display_fullinfo, @graduation.stay_id) %>
+                  <select id='' type="text" class="form-control" <%= select_tag(:stay_id, options) %>
+
+                </div>
+                <!-- Estudiante: captura el ide del estudiante desde la url y lo manda al campo :student.id para ser leido por el controlador-->
+                <% if !@graduation.id %>
+                  <%= form.hidden_field :student_id, value: params[:id] %>
+                <% end %>
+
+
+                <div class="col-md-6">
+                  <table style="width:200%;">
+                    <tr>
+                      <!-- Graduation date -->
+                      <td style="width:50%;">
+                        <label class="form-label">Data laurea *</label>
+                        <%= form.date_field :graduation_date, class: 'form-control',placeholder: 'DD/MM/YYYY' %>
+                      </td>
+
+                      <td style="width:30%;padding-left:7%">
+                        <label class="form-label">Voti laurea</label>
+                        <input type="text" class="form-control" style="width: 90%;" placeholder= "" <%= form.text_field :grades %> </input>
+                      </td>
+                      <td style="width:70%;padding-top:3%">
+                        <label class="form-label">lode?</label>
+                        <%= form.check_box :lode, checked: if @graduation.lode? then @graduation.lode else false end  %>
+                        <br>
+                        <label class="form-label">encomio?</label>
+                        <%= form.check_box :encomio, checked: if @graduation.encomio? then @graduation.encomio else false end  %>
+                      </td>
+                    <tr>
+                  </table>
+                </div>
+
+							</div> <!-- Row END -->
+						</div>
+					</div>
+				</div>  <!-- Terminan los dos primeros módulos -->
+
+				<!-- button -->
+				<div class="gap-3 d-md-flex justify-content-md-end text-center">
+          <%= form.submit "Inviare laurea",  :class => "btn btn-primary btn-lg", local: true, data: { turbo: false } %>
+				</div>
+
+  		</div><!-- Form END -->
+  	</div>
+  </div>
+<% end %>
