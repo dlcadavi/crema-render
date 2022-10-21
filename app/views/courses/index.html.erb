@@ -31,15 +31,15 @@
     <tr>
     <% @courses.each do |course| %>
       <% ano = Acyear.find_by_id(course.acyear_id) %>
-      <td> <%= ano.name %> </td>
-      <td style="width: 30%;" > <%= link_to course.name, course %> </td>
+      <td style="width: 8%;"> <%= ano.name %> </td>
+      <td style="width: 25%;" > <%= link_to course.name, course %> </td>
       <td> <%= course.date.to_date.strftime("%d/%m/%y") %> </td>
-      <td style="width:10%;"> <%= link_to course.numberactivities, activitycourse_path(course) %> </td>
+      <td style="width:5%;"> <%= link_to course.numberactivities, activitycourse_path(course) %> </td>
       <td> <%= course.duration %> </td>
       <td> <%= course.typology %> </td>
 
       <!-- Mostrar el nombre de los profesores -->
-      <td>
+      <td style="width: 15%;">
         <% course.professors.each do |professor| %>
         <li><%= professor.lastname + " " + professor.name %></li>
         <% end %>
@@ -47,15 +47,15 @@
 
       <td> <%= course.context %> </td>
       <td> <%= course.cost %> </td>
-      <td> <%= (course.min_attendance*100).round(0) %> </td>
+      <td style="width: 5%;"> <%= (course.min_attendance*100).round(0) %> </td>
 
       <td>
         <%= link_to fa_icon('pencil', style: "font-size: 1.5em;color:rgb(28,163,184)"), edit_course_path(course), data: { turbo: false }  %>
         <%= link_to fa_icon('trash', style: "font-size: 2em; color: Tomato;"),
           course, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Sei sicuro di rimuovere quest'attività?" }%>
+      </td>
 
-        </td>
-      </tbody>
+    </tbody>
 
   <% end %>
 </table>

@@ -14,7 +14,7 @@ class Course < ApplicationRecord
   has_many :activities, through: :activitycourses
 
   after_save :create_courseattendances
-  after_update :modify_attributes, :update_course_activities, :update_professors_attributes
+  after_update :modify_attributes, :update_course_activitiesname, :update_professors_attributes
 
   # Validaciones
   # validates :name, :id_number, :hosting_start_date, :hosting_end_date, :fee, presence: true
@@ -35,14 +35,14 @@ class Course < ApplicationRecord
     end
   end
 
-
-  def update_course_activities
+  def update_course_activitiesname
     @actividades = Activity.where(id: Activitycourse.where(course_id: self.id).pluck(:activity_id))
     @actividades.order(:activity_date).each_with_index do |actividad, index|
+      anno = Acyear.find_by_id(actividad.acyear_id)
+#      nombre = anno.name + ' - ' + self.name + ' - lezione ' + (index + 1).to_s    # construir el nombres_columnas
       nombre = self.name + ' - lezione ' + (index + 1).to_s    # construir el nombres_columnas
       actividad.update_column :name, nombre
     end
-
   end
 
   def modify_attributes
@@ -71,7 +71,7 @@ class Course < ApplicationRecord
     @activities = Activitycourse.where(course_id: self.id)
     self.update_column :duration, @activities.pluck(:duration).sum
   end
-  
+
   #revisar esta, candidata a modificarse
   def update_attendance_course
     @courseattendances = Courseattendance.where(course_id: self.id)

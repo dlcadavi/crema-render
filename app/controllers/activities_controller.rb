@@ -200,7 +200,7 @@ class ActivitiesController < ApplicationController
     @borrado = 0
     if @course.activities.count > 1
       @activity.destroy
-      @course.update_course_activities
+      @course.update_course_activitiesname
       @borrado = 1
     end
     respond_to do |format|

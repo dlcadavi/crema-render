@@ -18,18 +18,16 @@ class Activity < ApplicationRecord
   has_many :courses, through: :activitycourses
 
   after_save :set_acyear
+  after_commit :update_professors_attributes, on: :create, on: :update
   after_update :update_attendance_course, :update_stay_perc_attendance, :update_cost, :update_course_typology, :update_course_duration
   before_destroy :check_before_removing!, prepend: true
-  after_commit :update_professors_attributes
   after_destroy :destroy_professoractivities
-
 
   # Campos obligatorios
   #validates :name, :activity_date, :duration, presence: true
 
   # Que cada nombre sea único (pero el nombre puede ser el mismo que otro si la fecha es distinta
   #validates :name, uniqueness: { scope: :activity_date }
-
 
   # estas rutinas no se pueden poner en el after_save porque requieren el Professoractivity y aún no se han creado cuando uno hace after save o after commit
   def modify_attributes
