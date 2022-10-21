@@ -6,6 +6,7 @@ class Course < ApplicationRecord
   has_many :courseattendances, dependent: :destroy
   has_many :students, through: :courseattendances
 
+
   has_one :acyear
 
   # el curso pertenece a las actividades, porque cada actividad tiene un curso
@@ -13,7 +14,7 @@ class Course < ApplicationRecord
   has_many :activities, through: :activitycourses
 
   after_save :create_courseattendances
-  after_update :modify_attributes, :update_course_activities
+  after_update :modify_attributes, :update_course_activities, :update_professors_attributes
 
   # Validaciones
   # validates :name, :id_number, :hosting_start_date, :hosting_end_date, :fee, presence: true
@@ -24,18 +25,16 @@ class Course < ApplicationRecord
   def ensure_at_least_one_activity
   end
 
-  def ensure_at_least_one_activity0
-    @actividades = Activitycourse.where(course_id: self.id)
-    unless @actividades.count > 0
-      errors.add(:base, "L'attività deve avere almeno una lezione")
+  def update_professors_attributes
+    actividades = Professoractivity.where(activity_id: self.id)
+    @profesores = Professor.where(id: actividades.pluck(:professor_id))
+    @profesores.each do |professor|
+      professor.update_activitiesname
+      professor.update_number_activities_lectured
+      professor.update_hours_lectured
     end
-
-    #if @actividades.count == 0
-    #  return
-    #  redirect_to root_path, alert: 'Admins only!'
-      #errors.add(:course, 'Floor is required, must be number...')
-    #end
   end
+
 
   def update_course_activities
     @actividades = Activity.where(id: Activitycourse.where(course_id: self.id).pluck(:activity_id))
@@ -43,6 +42,7 @@ class Course < ApplicationRecord
       nombre = self.name + ' - lezione ' + (index + 1).to_s    # construir el nombres_columnas
       actividad.update_column :name, nombre
     end
+
   end
 
   def modify_attributes

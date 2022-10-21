@@ -144,28 +144,12 @@ class CoursesController < ApplicationController
         @activity = Activity.find_by_id(actividadesID[index])
         # actualizar
         if @activity
-          #ver
           #fecha_actividad = DateTime.strptime(fecha, '%d/%m/%Y %H:%M')
           fechaconfirmada = true    # necesario porque en el form se ven como "sí y no"
           fechaconfirmada = false if params[:confirmed_dates][index]=="no"
           nombre = params[:course][:name] + ' - lezione ' + (index + 1).to_s    # construir el nombres_columnas
           @activity.update(name: nombre, activity_date: fecha, confirmed_date: fechaconfirmada, duration: duraciones[index], cost: costo,
             description: params[:course][:description], context: params[:course][:context], kind: params[:course][:typology],professor_fullname: @course.professor)
-
-          # eliminar las relaciones de los profesores con las actividades para los profesores que se eliminaron del curso
-          @profesoractivities = Professoractivity.where(activity_id:@activity.id)
-          @profesoractivities.each do |profesoractivity|
-            profesor = Professor.find_by_id(profesoractivity.professor_id)
-            unless @profesores.include?(profesor.id.to_s)
-              profesoractivity.destroy
-            end
-          end
-
-          # Crear las nuevas relaciones entre profesores y actividades si se agregaron nuevos profesores al curso
-          @profesores.each do |profesor|
-            profesoractivity = Professoractivity.where(activity_id:@activity.id, professor_id: profesor)
-            Professoractivity.create(activity_id:@activity.id, professor_id: profesor, cost: '0', present: true) if profesoractivity.empty?
-          end
         else
         #crear actividades
           nombre = params[:course][:name] + ' - lezione ' + (index + 1).to_s    # construir el nombres_columnas
@@ -179,6 +163,31 @@ class CoursesController < ApplicationController
             Professoractivity.create(activity_id:@activity.id, professor_id: profesor, cost: '0', present: true)
           end
         end
+
+        # Actualizar los profesores
+        @profesoractivities = Professoractivity.where(activity_id:@activity.id)
+
+        # eliminar las relaciones de los profesores con las actividades para los profesores que se eliminaron del curso
+        @profesoractivities.each do |profesoractivity|
+          profesor = Professor.find_by_id(profesoractivity.professor_id)
+          #ver
+          unless @profesores.include?(profesor.id.to_s)
+            profesoractivity.destroy
+            profesor.update_activitiesname
+            profesor.update_number_activities_lectured
+            profesor.update_hours_lectured
+          end
+        end
+        # Crear las nuevas relaciones entre profesores y actividades si se agregaron nuevos profesores al curso
+        @profesores.each do |profesor|
+          profesoractivity = Professoractivity.where(activity_id:@activity.id, professor_id: profesor)
+          Professoractivity.create(activity_id:@activity.id, professor_id: profesor, cost: '0', present: true) if profesoractivity.empty?
+          professor = Professor.find_by_id(profesor)
+          professor.update_activitiesname
+          professor.update_number_activities_lectured
+          professor.update_hours_lectured
+        end
+
 
         #Borrar actividades, bendito...
         #actividades = Activitycourse.where(course_id: @course.id)

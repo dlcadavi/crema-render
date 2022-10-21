@@ -21,7 +21,7 @@ class Activity < ApplicationRecord
   after_update :update_attendance_course, :update_stay_perc_attendance, :update_cost, :update_course_typology
   before_destroy :check_before_removing!, prepend: true
   after_commit :update_professors_attributes
-  after_destroy :update_professors_attributes
+  after_destroy :destroy_professoractivities
 
   # estas rutinas no se pueden poner en el after_save porque requieren el Professoractivity y aún no se han creado cuando uno hace after saver o after commit
   def modify_attributes
@@ -35,6 +35,30 @@ class Activity < ApplicationRecord
 
   # Que cada nombre sea único (pero el nombre puede ser el mismo que otro si la fecha es distinta
   #validates :name, uniqueness: { scope: :activity_date }
+
+
+  def destroy_professoractivities
+    professoractivities = Professoractivity.where(activity_id: self.id)
+    @profesores = Professor.where(id: professoractivities.pluck(:professor_id))
+    professoractivities.destroy_all
+    update_prof
+  end
+
+
+  def update_prof
+    @profesores.each do |professor|
+      professor.update_activitiesname
+      professor.update_number_activities_lectured
+      professor.update_hours_lectured
+    end
+  end
+
+  def update_professors_attributes
+    professoractivities = Professoractivity.where(activity_id: self.id)
+    @profesores = Professor.where(id: professoractivities.pluck(:professor_id))
+    update_prof
+  end
+
 
   def update_course_typology
     @activitycourse = Activitycourse.find_by(activity_id: self.id)
@@ -60,15 +84,6 @@ class Activity < ApplicationRecord
     self.update_column :aggregated_qualification, @profesores.collect(&:qualification).join(', ')
   end
 
-  def update_professors_attributes
-    actividades = Professoractivity.where(activity_id: self.id)
-    @profesores = Professor.where(id: actividades.pluck(:professor_id))
-    @profesores.each do |professor|
-      professor.update_activitiesname
-      professor.update_number_activities_lectured
-      professor.update_hours_lectured
-    end
-  end
 
   def set_professor_fullname
     actividades = Professoractivity.where(activity_id: self.id)
