@@ -12,10 +12,14 @@
 # rails roles_all
 
 #########################################################################################
+# roles
+
 desc "populate roles"
 task :populate_roles => :environment do
   Role.where( code: 'admin').first_or_create.update(name: 'Admin')
   Role.where( code: 'student').first_or_create.update(name: 'Student')
+  Role.where( code: 'viewer').first_or_create.update(name: 'Viewer')
+  Role.where( code: 'editor').first_or_create.update(name: 'Editor')
 end
 
 desc "set default roles"

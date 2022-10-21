@@ -38,6 +38,7 @@ class ApplicationController < ActionController::Base
     #]
   end
 
+
   # Para definir quiénes son los usuarios autorizados a hacer ciertas cosas en toda la app
   def authorize_admin
     if !user_signed_in?
