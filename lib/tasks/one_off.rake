@@ -62,3 +62,17 @@ task :update_estadias => :environment do
     stay.save
   end
 end
+
+###############################################################################################
+# actualizar courses
+
+task :update_courses => [:update_cursos] do
+  puts "Finiseh update stays task"
+end
+
+task :update_cursos => :environment do
+  courses = Course.all
+  courses.each do |course|
+    course.save
+  end
+end
