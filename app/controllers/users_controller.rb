@@ -3,7 +3,11 @@
 
 class UsersController < ApplicationController
   before_action :set_user, only: %i[ show edit update destroy]
+
   before_action :authenticate_user!
+  before_action :authorize_admin, only: [:create, :new, :edit, :update, :destroy]
+  before_action :authorize_to_see, only: [:index, :show]
+
 
   def index
     @users = User.all.order(:lastname, :name)
@@ -16,6 +20,7 @@ class UsersController < ApplicationController
   # GET /professors/1/edit
   def edit
   end
+
 
   # PATCH/PUT /professors/1 or /professors/1.json
   def update
@@ -67,10 +72,5 @@ class UsersController < ApplicationController
     )
   end
 
-  # Para que sólo los roles autorizados puedan crear nuevos usuarios
-  def authorize_admin
-    return unless current_user.role_id == 2
-    redirect_to root_path, alert: 'Admins only!'
-  end
 
 end

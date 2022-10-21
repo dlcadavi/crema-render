@@ -9,8 +9,8 @@
 <table class="table professor-list">
   <thead>
       <tr>
-        <th><span> Email </span></th>
         <th><span> Nome </span></th>
+        <th><span> Email </span></th>
         <th><span> Ruolo </span></th>
         <th><span> Ultimo ingresso </span></th>
         <th><span> Azioni </span></th>
@@ -24,12 +24,11 @@
 
       <!-- Los camnpos -->
       <!-- La l minúscula de las fechas es para que por defecto use el formato que yo definí en  config/locales/en.yml -->
+      <td> <%= link_to user.lastname + " " + user.name, user %> </td>
       <td> <%= user.email %> </td>
-      <td> <%= user.lastname + " " + user.name %> </td>
       <td> <%= user.role.name %> </td>
       <td> <%= user.last_sign_in_at ? l(user.last_sign_in_at, :format => :long) : "Mai" %></td>
       <td>
-        <%= link_to fa_icon('search-plus', style: "font-size: 1.5em; color:rgb(28,163,184)"),user %>
         <%= link_to fa_icon('pencil', style: "font-size: 1.5em;color:rgb(28,163,184)"), edit_user_path(user), data: { turbo: false } %>
         <%= link_to fa_icon('trash', style: "font-size: 2em; color: Tomato;"),
           user, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Sei sicuro di rimuovere quest'utente'?" }%>

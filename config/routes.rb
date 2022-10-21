@@ -98,8 +98,6 @@ Rails.application.routes.draw do
     #collection {post :upload}
     collection do
       post :upload
-      delete :bulk_destroy
-      post :bulk_download
       get :export_full_anagrafica
       get :courseattendance
     end

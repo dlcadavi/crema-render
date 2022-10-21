@@ -1,5 +1,9 @@
 class GradesminsController < ApplicationController
-  before_action :authorize_admin
+
+  before_action :authenticate_user!
+  before_action :authorize_to_see, only: [:index]
+  before_action :authorize_to_edit, only: [:import]
+
 
   def index
     @gradesmins=Gradesmin.all

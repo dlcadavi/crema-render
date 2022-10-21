@@ -30,7 +30,7 @@ class Stay < ApplicationRecord
   end
   def update_student_fields
     @student = Student.find_by_id(self.student_id)
-    @student.copy_attributes_from_stay
+    #@student.copy_attributes_from_stay
   end
 
   def set_kindcode

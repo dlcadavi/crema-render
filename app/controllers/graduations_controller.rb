@@ -1,6 +1,10 @@
 class GraduationsController < ApplicationController
   before_action :set_graduation, only: %i[ show edit update destroy ]
-  before_action :authorize_admin
+
+  before_action :authenticate_user!
+  before_action :authorize_to_edit, only: [:create, :new, :edit, :update, :graduationsexport]
+  before_action :authorize_admin, only: [:destroy]
+  before_action :authorize_to_see, only: [:index, :show, :graduationstudent]
 
 
   # Para exportar las graduaciones

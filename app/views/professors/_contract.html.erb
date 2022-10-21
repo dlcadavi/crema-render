@@ -52,13 +52,13 @@
                   <% @professor.activities.each do |activity| %>
                     <br>
                     <%= check_box_tag 'activity_ids[]', activity.id %>
-                    <%= activity.name + ". " + activity.activity_date.to_time.strftime('%e %B at %l:%M %p')%>
+                    <% nombre = if activity.subtitle then activity.subtitle else activity.name end %>
+                    <%= nombre + ". " + activity.activity_date.to_time.strftime('%e %B at %l:%M %p')%>
                   <% end %>
 								</div>
               </div>
 						</div>
 					</div> <!-- Row END -->
-
 
   				<!-- button -->
   				<div class="gap-3 d-md-flex justify-content-md-end text-center">

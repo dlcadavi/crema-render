@@ -2,6 +2,11 @@ class LocationsController < ApplicationController
   before_action :set_location, only: %i[ show edit update destroy ]
   before_action :authorize_admin
 
+  before_action :authenticate_user!
+  before_action :authorize_to_edit, only: [:create, :new, :edit, :update, :locationstudent]
+  before_action :authorize_admin, only: [:destroy]
+  before_action :authorize_to_see, only: [:index, :show, :locationsexport]
+
 
   # Para exportar las locations
   def locationsexport
@@ -22,7 +27,6 @@ class LocationsController < ApplicationController
       end
     end
   end
-
 
   def locationstudent
     @student = Student.find_by_id(params[:id])

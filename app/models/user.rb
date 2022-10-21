@@ -29,6 +29,24 @@ class User < ApplicationRecord
   # Que cada email sea único (parece que ya funciona pero no sé cómo, si dejo esto me sale dos veces el error)
   # validates :email, uniqueness: true
 
+
+  # para las validaciones
+  def admin?
+    role.name == "Admin"
+  end
+
+  def student?
+    role.name == "Student"
+  end
+
+  def viewer?
+    role.name == "Viewer"
+  end
+
+  def editor?
+    role.name == "Editor"
+  end
+
   def create_courseattendances_for_student
     @student = Student.find_by(user_id: self.id)
     @courses = Course.all

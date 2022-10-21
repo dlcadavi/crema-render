@@ -21,12 +21,13 @@
 
   <tbody id="students">
 
+
     <tr>
       <% @graduations.order(graduation_date: :desc).each do |graduation| %>
 
       <!-- Los camnpos -->
       <!-- La l minúscula de las fechas es para que por defecto use el formato que yo definí en  config/locales/en.yml -->
-      <td> <%= graduation.stay.student.display_fullname %> </td>
+      <td> <%= link_to graduation.stay.student.display_fullname, graduation.stay.student  %> </td>
       <td> <%= graduation.stay.kind %> </td>
       <td> <%= l graduation.graduation_date if graduation.graduation_date%> </td>
       <td> <%= graduation.tipo if graduation.tipo %> </td>

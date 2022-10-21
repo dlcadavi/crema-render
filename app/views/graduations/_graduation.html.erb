@@ -9,7 +9,7 @@
   			<!-- Page title -->
   			<div >
           <%= link_to fa_icon('arrow-left', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
-            graduationstudent_path(student), data: { turbo: false }  %>
+            graduations_path, data: { turbo: false }  %>
           <h3>Voto finale di laurea di di</h3>
           <h2><%= student.display_fullname %></h2>
           <%= link_to fa_icon('pencil', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),

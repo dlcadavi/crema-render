@@ -30,7 +30,7 @@
           <%=form_tag({action: :upload}, multipart: true) do %>
           <a class="btn btn-block btn-success" style="font-size: 14px;background-color: #fff;color:black;"> <i class="fa fa-plus"> </i> Trova file nel pc</a>
           <span style="display:none;">
-            <%= hidden_field_tag :nombre, "libretto_iniziale" %>
+            <%= hidden_field_tag :nombre, "initial_libretto" %>
             <%= file_field_tag 'file' %>
           </span>
           <td> <%= submit_tag 'Carica!', class: "btn button-17 btn-xs", style: "height:25px; width:80px; border-radius: 10px;"%> </td>

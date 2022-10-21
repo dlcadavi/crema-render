@@ -1,28 +1,30 @@
 <div>
-  <h3> Importare i programmi </h3>
-  <%=form_tag import_programs_path, multipart: true do %>
-    <%=file_field_tag :file%>
-    <%=submit_tag "Import"%>
-  <%end%>
+  <h2> Programmi accademici </h2>
+  <% if current_user.admin? or current_user.editor? %>
+    <br><br>
+    <h5> Caricare file coi programmi </h5>
+    <%=form_tag import_programs_path, multipart: true do %>
+      <%=file_field_tag :file%>
+      <%=submit_tag "Carica"%>
+    <% end %>
+  <% end %>
 </div>
 
 
 <div>
   <br>
-  <h3> Pulire i programmi </h3>
-  <%= form_tag massive_destroy_programs_path, data: { turbo_confirm: 'Sei sicuro di rimuovere i programmi che non si utilizzano finora?' }, multipart: true do %>
-    <%=submit_tag "Borrar"%>
-  <%end%>
+  <% if current_user.admin? or current_user.editor? %>
+    <h5> Pulire i programmi non uttilizati finora </h5>
+    <%= form_tag massive_destroy_programs_path, data: { turbo_confirm: 'Sei sicuro di rimuovere i programmi che non si utilizzano finora?' }, multipart: true do %>
+      <%=submit_tag "Romuovi"%>
+    <% end %>
+  <% end %>
 </div>
 
 
-<br>
-<br>
-<h1>Programmi</h1>
-<br>
+<br><br>
 <h5> Totale = <%=@programs.count %> </h5>
-<br>
-<br>
+<br><br>
 
 <table class="table professor-list">
   <thead>

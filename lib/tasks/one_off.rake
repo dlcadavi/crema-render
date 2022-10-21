@@ -11,16 +11,21 @@
 # rails db:reset db:migrate
 # rails roles_all
 
-#########################################################################################
-# roles
 
+#########################################################################################
+# crear los roles de la aplicación
 desc "populate roles"
 task :populate_roles => :environment do
   Role.where( code: 'admin').first_or_create.update(name: 'Admin')
   Role.where( code: 'student').first_or_create.update(name: 'Student')
   Role.where( code: 'viewer').first_or_create.update(name: 'Viewer')
   Role.where( code: 'editor').first_or_create.update(name: 'Editor')
+  #Role.where( name: 'Saver').first_or_create.update(name: 'Editor')
+  puts "Finished populate_roles roles"
 end
+
+#########################################################################################
+# asignar roles a los dos primeros correos creados
 
 desc "set default roles"
 task :default_roles => :environment do
@@ -34,14 +39,14 @@ end
 
 desc "role_tasks"
 task :roles_all => [ :populate_roles, :default_roles ] do
-  puts "Finished role tasks"
+  puts "Finished default_roles tasks"
 end
 
 ############################################################################################3
 # actualizar profesores
 
 task :update_professors => [:update_profesores] do
-  puts "Finiseh update professors task"
+  puts "Finished update professors task"
 end
 
 task :update_profesores => :environment do
@@ -57,7 +62,7 @@ end
 # actualizar stays
 
 task :update_stays => [:update_estadias] do
-  puts "Finiseh update stays task"
+  puts "Finished update stays task"
 end
 
 task :update_estadias => :environment do
@@ -71,7 +76,7 @@ end
 # actualizar courses
 
 task :update_courses => [:update_cursos] do
-  puts "Finiseh update courses task"
+  puts "Finished update courses task"
 end
 
 task :update_cursos => :environment do
@@ -85,7 +90,7 @@ end
 # actualizar actividades
 
 task :update_activities => [:update_actividades] do
-  puts "Finiseh update activities task"
+  puts "Finished update activities task"
 end
 
 task :update_actividades => :environment do

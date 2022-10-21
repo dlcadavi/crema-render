@@ -2,23 +2,13 @@ class CoursesController < ApplicationController
   before_action :set_course, only: %i[ show edit update destroy calc_attendance]
 
   # Para asegurar que sólo usuarios registrados podrían ver esto
-  before_action :authenticate_user!, except: %i[calendar]
-  before_action :authorize_admin, except: %i[show user_activities user_courses enroll unenrroll user_calendar calendar]
-  # Para verificar si es un usuario autorizado a ejecutar estas acciones
-  #before_action :authorize_admin, except: %i[calendar user_activities user_courses]
-  before_action :authorize_student, only: %i[user_activities user_courses enroll unenrroll user_calendar]
 
-  def actualizar_campos_curso
-    Course.all.each do |course|
-      #course.calc_professor_fullname
-      #course.set_acyear
-      #course.set_duration
-      #course.set_cost
-      #course.update_attendance_course
 
-      #activity.calc_enrollment_and_attendance
-    end
-  end
+  before_action :authenticate_user!
+  before_action :authorize_to_edit, only: [:create, :new, :edit, :update, :editattendance]
+  before_action :authorize_admin, only: [:destroy]
+  # Los estudiantes NO ven el index pero pueden ver el show, porque en el show del curso se omite la información sensible (ej costo)
+  before_action :authorize_to_see, only: [:index, :export_courses]
 
 
   # Exportar a excel los cursos para control del Collegio
@@ -38,7 +28,6 @@ class CoursesController < ApplicationController
 
   # GET /courses or /courses.json
   def index
-    #actualizar_campos_curso
     Course.all.each do |course|
       course.update_attendance_course
     end
@@ -60,9 +49,6 @@ class CoursesController < ApplicationController
   def edit
     activities_id = Activitycourse.where(course_id: @course.id).pluck(:activity_id)
     @activities = Activity.where(id: activities_id)
-  end
-
-  def crearactividad
   end
 
   # POST /courses or /courses.json

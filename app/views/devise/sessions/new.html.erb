@@ -31,10 +31,10 @@
 
 
       <% if current_user %>
-        <% if current_user.role.name == 'Admin' %>
+        <% if current_user.admin? or current_user.viewer? or current_user.editor? %>
           <%= render "home/admindashboard" %>
         <% end %>
-        <% if current_user.role.name == 'Student' %>
+        <% if current_user.student? %>
           <%= render "home/studentdashboard" %>
         <% end %>
       <% else %>

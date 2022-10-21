@@ -2,6 +2,9 @@ class Visit < ApplicationRecord
   belongs_to :guest
   belongs_to :acyear
 
+  after_save :set_months, :set_annualfee
+  after_update :set_months, :set_annualfee
+
 
   def set_months
     if self.hosting_end_date and self.hosting_start_date

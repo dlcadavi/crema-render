@@ -1,9 +1,19 @@
 class DocumentsController < ApplicationController
-  before_action :authorize_admin
+
+  before_action :authenticate_user!
+  before_action :authorize_to_see, only: [:index,
+    :download_model_italian_student_contract,
+    :download_model_english_student_contract,
+    :download_model_italian_professor_contract,
+    :download_model_initial_libretto,
+    :download_model_final_libretto,
+    :download_students_grades,
+  ]
+
+  before_action :authorize_to_edit, only: [:upload, :set_voti]
 
   def index
   end
-
 
   # Para cargar el contrato en italiano
   def upload
@@ -39,10 +49,6 @@ class DocumentsController < ApplicationController
         if !@student.nil?
           @anno = Acyear.find_by(name: anno)
           @stay = Stay.where(student_id: @student.id, acyear_id: @anno.id).first
-          #notas = voti_periodo[1]
-          #notas = voti_periodo[1].to_s.tr('.', ',').to_f
-          #@stay.periodgrades = voti_periodo[1]
-          #@stay.cumulativegrades = voti_carriera[1]
           @stay.update_column :periodgrades, voti_periodo[1]
           @stay.update_column :cumulativegrades, voti_carriera[1]
         end
@@ -68,6 +74,5 @@ class DocumentsController < ApplicationController
     def download_students_grades
       send_file("#{Rails.root}/app/assets/templates/students_grades.csv")
     end
-
 
 end

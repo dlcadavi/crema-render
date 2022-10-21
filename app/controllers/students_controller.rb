@@ -1,6 +1,13 @@
 class StudentsController < ApplicationController
   before_action :set_student, only: %i[ show edit update destroy duplicate downloadcontractitalian downloadcontractenglish download_final_libretto]
-  before_action :authorize_admin
+
+  # Autorizaciones
+  before_action :authenticate_user!
+  before_action :authorize_to_edit, only: [:create, :new, :edit, :update]
+  before_action :authorize_admin, only: [:destroy]
+  before_action :authorize_to_see, only: [:index, :show, :courseattendancesexport, :attendancesexport,
+    :export_ministerio_anagrafica, :export_full_anagrafica ]
+
 
   # GET /students or /students.json
   def index
@@ -127,40 +134,6 @@ class StudentsController < ApplicationController
   def edit
   end
 
-  def down
-  end
-
-  # Elimina masivamente los estudiantes
-  def bulk_destroy
-    Student.where(id: params[:collection_ids]).destroy_all
-
-    respond_to do |format|
-      format.html { redirect_to students_url }
-      format.json { head :no_content }
-    end
-  end
-
-  def duplicate
-   @old_record = Student.find(params[:id])          # Guardar los atributos del estudiante que se quiere duplicar
-   @student = Student.new(@old_record.attributes)   # Hacer un estudiante nuevo con los atributos del viejo
-   render :new                                      # Mostrarlo en el form de crear uno nuevo
-  end
-
-
-  # Descarga masivamente los estudiantes
-  def bulk_download
-
-    #Student.where(id: params[:collection_ids])
-    #collection_ids.each do |p|
-      #@student=Student.find(params[p])
-      @student=Student.where(id: params[:collection_ids])
-      Student.where(id: params[:collection_ids]).each do |u|
-      redirect_to export_contract_italian_path(u)
-      #redirect_to students_url
-    end
-  end
-
-
   # POST /students or /students.json
   def create
     @student = Student.new(student_params)
@@ -173,10 +146,6 @@ class StudentsController < ApplicationController
         format.json { render json: @student.errors, status: :unprocessable_entity }
       end
     end
-  end
-
-  def create_user_for_student
-    #@student.user. = current.User
   end
 
   # PATCH/PUT /students/1 or /students/1.json

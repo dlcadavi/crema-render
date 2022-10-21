@@ -1,6 +1,10 @@
 class ProgramsController < ApplicationController
   before_action :set_program, only: %i[ show edit update destroy]
-  before_action :authorize_admin
+
+  before_action :authenticate_user!
+  before_action :authorize_to_see, only: [:index]
+  before_action :authorize_to_edit, only: [:import, :edit, :update]
+  before_action :authorize_admin, only: [:massive_destroy, :destroy]
 
   def index
     @programs=Program.all.order(:name)

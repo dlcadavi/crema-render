@@ -1,22 +1,16 @@
 class ActivitiesController < ApplicationController
   before_action :set_activity, only: %i[ show edit update destroy editattendance]
 
-  # Para asegurar que sólo usuarios registrados podrían ver esto
+  # Autorizaciones
   before_action :authenticate_user!, except: %i[calendar]
-  before_action :authorize_admin, except: %i[show user_activities user_courses enroll unenrroll user_calendar calendar]
-  # Para verificar si es un usuario autorizado a ejecutar estas acciones
-  #before_action :authorize_admin, except: %i[calendar user_activities user_courses]
-  before_action :authorize_student, only: %i[user_activities user_courses enroll unenrroll user_calendar]
+  before_action :authorize_student, only: %i[ user_activities user_courses enroll unenrroll user_calendar ]
+  before_action :authorize_to_edit, only: [:create, :new, :edit, :update, :duplicate, :editattendance ]
+  before_action :authorize_to_see, only: [:export_activities]
+
+  before_action :authorize_admin, only: [:destroy]
 
 
-  def actualizar_campos_actividad
-    @activities.each do |activity|
-      #activity.calc_professor_fullname
-      activity.calc_enrollment_and_attendance
-    end
-  end
-
-  # Exportar a excel actividades para control del COllegio
+  # Exportar a excel actividades para control del Collegio
   def export_activities
     if params[:acyear_filter] != ""
       @activities = Activity.where(acyear_id: params[:acyear_filter])
@@ -34,7 +28,6 @@ class ActivitiesController < ApplicationController
 
   # GET /activities or /activities.json
   def index
-    #@activities = Activity.order(:course_id, :activity_date, :name)
     # Organizar por el nombre dle curso, despuès por fecha de la actividad y después
     @activities = Activity.joins(activitycourses: [:course]).order('courses.name, activity_date, name')
     actualizar_campos_actividad
@@ -67,15 +60,15 @@ class ActivitiesController < ApplicationController
     @courseattendances = Courseattendance.where(student_id: @student.id, course_id: @courses.pluck(:id))
     @validcourseattendances = @courseattendances.joins(:course).where('courses.min_attendance <= perc_attendance')
     @validhours = @validcourseattendances.sum(:hours)
-    @minhours = @student.min_hours_required
+    @minhours = 1
+    @minhours = @stay.min_hours_required if @stay
+
     @validattendance = @validhours / @minhours
   end
 
   def user_past_activities
-    # Sólo ver actividades futuras, no las pasadas
+    # Sólo ver actividades pasadas. NO está en uso pero me podría ser útil.
     @activities = Activity.where('activity_date < ?', DateTime.now).order(:activity_date, :name)
-    #@activities = Activity.order(:activity_date, :name)
-    #@activities = current_user.activities
   end
 
   # crear el calendario
@@ -154,9 +147,6 @@ class ActivitiesController < ApplicationController
   # POST /activities or /activities.json
   def create
     @activity = Activity.new(activity_params)
-    #link_professors
-
-    #@activity.total_enrollments = @activity.student_ids.count
 
     respond_to do |format|
       if @activity.save
@@ -169,17 +159,6 @@ class ActivitiesController < ApplicationController
     end
   end
 
-
-  def link_professors
-    @course = Course.find_by_id(@activitycourse.course_id)
-    @profesorescurso = Professorcourse.where(course_id: @course.id)
-    @profesores = Professor.where(id: @profesorescurso.pluck(:professor_id))
-    @profesores.order(:lastname, :name).each_with_index do |professor, index|
-      @professoractivity = Professoractivity.find_by(activity_id: @activity.id, professor_id: professor.id)
-      @professoractivity.update(present: true)
-      @professoractivity.update(cost: 0)
-    end
-  end
 
   # PATCH/PUT /activities/1 or /activities/1.json
   def update
@@ -218,10 +197,14 @@ class ActivitiesController < ApplicationController
   def destroy
     activitycourse = Activitycourse.find_by(activity_id: @activity.id)
     @course = Course.find_by_id(activitycourse.course_id)
-    @activity.destroy
-    @course.update_course_activities
+    @borrado = 0
+    if @course.activities.count > 1
+      @activity.destroy
+      @course.update_course_activities
+      @borrado = 1
+    end
     respond_to do |format|
-      if !@activity
+      if @borrado == 1
         format.html { redirect_to activities_url, alert: "La lezione è stata distrutta correttamente." }
         format.json { head :no_content }
       else
@@ -236,6 +219,12 @@ class ActivitiesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_activity
       @activity = Activity.find(params[:id])
+    end
+
+    def actualizar_campos_actividad
+      @activities.each do |activity|
+        activity.calc_enrollment_and_attendance
+      end
     end
 
     # Only allow a list of trusted parameters through.

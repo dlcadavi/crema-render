@@ -1,8 +1,12 @@
 <div>
-  <h3> Importar notas mínimas </h3>
-  <%=form_tag import_gradesmins_path, multipart: true do %>
-    <%=file_field_tag :file%>
-    <%=submit_tag "Import"%>
+  <h2> Voti ministerio </h2>
+  <% if current_user.admin? or current_user.editor? %>
+  <br><br><br>
+  <h5> Caricare file coi voti del ministerio </h5>
+    <%=form_tag import_gradesmins_path, multipart: true do %>
+      <%=file_field_tag :file%>
+      <%=submit_tag "Carica"%>
+    <%end%>
   <%end%>
 </div>
 

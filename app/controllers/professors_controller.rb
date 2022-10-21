@@ -1,6 +1,11 @@
 class ProfessorsController < ApplicationController
   before_action :set_professor, only: %i[ show edit update destroy set_contract descargar_contrato download_contratto_italiano]
-  before_action :authorize_admin
+
+  # Autorizaciones
+  before_action :authenticate_user!
+  before_action :authorize_to_edit, only: [:create, :new, :edit, :update]
+  before_action :authorize_admin, only: [:destroy]
+  before_action :authorize_to_see, only: [:index, :show, :set_contract, :download_contratto_italiano, :professorsexport]
 
   # Exportar a excel información profesores
   def professorsexport
@@ -24,7 +29,6 @@ class ProfessorsController < ApplicationController
   def index
     @professors = Professor.order(:lastname, :name)
   end
-
 
   def set_contract
   end
@@ -83,21 +87,6 @@ class ProfessorsController < ApplicationController
     end
   end
 
-  # Guardar con otro nombre, descargar y borrar el documento
-  def guardar(doc,nombre_archivo_contrato)
-    ruta = "#{Rails.root}/app/assets/templates/"
-    doc.save("#{ruta}#{nombre_archivo_contrato}.docx")
-
-    # Para exportar a Word y que después se pueda borrar el archivo
-    File.open(ruta+nombre_archivo_contrato+'.docx', 'r') do |f|
-      send_data(f.read, filename: "#{nombre_archivo_contrato}.docx", type: "text/docx")
-    end
-
-    # Para borrarlo ya que lo exportó
-    File.delete(ruta + "#{nombre_archivo_contrato}.docx")
-
-  end
-
   # GET /professors/1 or /professors/1.json
   def show
   end
@@ -149,7 +138,23 @@ class ProfessorsController < ApplicationController
   end
 
   private
+
+    # Guardar con otro nombre, descargar y borrar el documento
+    def guardar(doc,nombre_archivo_contrato)
+      ruta = "#{Rails.root}/app/assets/templates/"
+      doc.save("#{ruta}#{nombre_archivo_contrato}.docx")
+
+      # Para exportar a Word y que después se pueda borrar el archivo
+      File.open(ruta+nombre_archivo_contrato+'.docx', 'r') do |f|
+        send_data(f.read, filename: "#{nombre_archivo_contrato}.docx", type: "text/docx")
+      end
+
+      # Para borrarlo ya que lo exportó
+      File.delete(ruta + "#{nombre_archivo_contrato}.docx")
+    end
+
     # Use callbacks to share common setup or constraints between actions.
+
     def set_professor
       @professor = Professor.find(params[:id])
     end

@@ -23,7 +23,7 @@
     <% @acyears.each do |acyear| %>
 
 
-      <td> <%= acyear.name %> </td>
+      <td> <%= link_to acyear.name, acyear  %> </td>
       <td> <%= acyear.startdate.to_date.strftime("%d/%m/%y") %> </td>
       <td> <%= acyear.finaldate.to_date.strftime("%d/%m/%y") %> </td>
       <td>
@@ -33,7 +33,6 @@
        </td>
 
       <td>
-        <%= link_to fa_icon('search-plus', style: "font-size: 1.5em; color:rgb(28,163,184)"),acyear %>
         <%= link_to fa_icon('pencil', style: "font-size: 1.5em;color:rgb(28,163,184)"), edit_acyear_path(acyear) %>
         <%= link_to fa_icon('trash', style: "font-size: 2em; color: Tomato;"),
           acyear, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Sei sicuro di rimuovere quest'anno accademico?" }%>

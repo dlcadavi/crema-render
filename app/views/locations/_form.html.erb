@@ -21,11 +21,14 @@
   <% end %>
 
 
+
   <div class="container">
     <div class="row">
   		<div class="col-12">
   			<!-- Page title -->
   			<div >
+          <%= link_to fa_icon('arrow-left', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
+            :back %>
           <h3>Alloggio di</h3>
           <h2><%= student.display_fullname %></h2>
           <br><br>

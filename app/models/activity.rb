@@ -31,7 +31,7 @@ class Activity < ApplicationRecord
   #validates :name, uniqueness: { scope: :activity_date }
 
 
-  # estas rutinas no se pueden poner en el after_save porque requieren el Professoractivity y aún no se han creado cuando uno hace after saver o after commit
+  # estas rutinas no se pueden poner en el after_save porque requieren el Professoractivity y aún no se han creado cuando uno hace after save o after commit
   def modify_attributes
     self.set_professor_fullname
     self.update_aggregated_qualification
@@ -134,9 +134,6 @@ class Activity < ApplicationRecord
     @stays = Stay.where(student_id:@students.pluck(:id))
     @stays.each do |stay|
       stay.update_attendance_status
-    end
-    @students.each do |student|
-      student.copy_attributes_from_stay
     end
   end
 

@@ -51,7 +51,6 @@
       </td>
 
       <td>
-        <%= link_to fa_icon('search-plus', style: "font-size: 1.5em; color:rgb(28,163,184)"),professor %>
         <%= link_to fa_icon('pencil', style: "font-size: 1.5em;color:rgb(28,163,184)"), edit_professor_path(professor), data: { turbo: false } %>
         <%= link_to fa_icon('trash', style: "font-size: 2em; color: Tomato;"),
           professor, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Sei sicuro di rimuovere questo professor?" }%>

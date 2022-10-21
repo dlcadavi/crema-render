@@ -1,7 +1,13 @@
 class StaysController < ApplicationController
   before_action :set_stay, only: %i[ show edit update destroy downloadcontractitalian downloadcontractenglish download_initial_libretto download_final_libretto studentactivities]
-  before_action :actualizar_campos_stay, only: %i[ index downloadcontractitalian downloadcontractenglish download_initial_libretto download_final_libretto staystudent]
-  before_action :authorize_admin
+
+  # Autorizaciones
+  before_action :authenticate_user!
+  before_action :authorize_to_edit, only: [:create, :new, :edit, :update]
+  before_action :authorize_admin, only: [:destroy]
+  before_action :authorize_to_see, only: [:index, :show, :staysexport, :staystudent, 
+    :downloadcontractenglish, :download_initial_libretto, :download_final_libretto, :downloadcontractitalian]
+
 
   def staystudent
     @student = Student.find_by_id(params[:id])
@@ -31,13 +37,6 @@ class StaysController < ApplicationController
         response.headers['Content-Type'] = 'text/csv'
         response.headers['Content-Disposition'] = "attachment; filename=Soggiorni-Anno #{annoname}-Consulta#{Date.today}.csv"
       end
-    end
-  end
-
-  def actualizar_campos_stay
-    Stay.all.each do |stay|
-      stay.set_months
-      stay.set_annualfee
     end
   end
 
@@ -246,35 +245,6 @@ class StaysController < ApplicationController
     end
   end
 
-  # Guardar con otro nombre, descargar y borrar el documento
-  def guardar(doc,nombre_archivo_contrato)
-    ruta = "#{Rails.root}/app/assets/templates/"
-    doc.save("#{ruta}#{nombre_archivo_contrato}.docx")
-
-    # Esto funciona para cambiarlo a pdf pero se demora mucho la conversión
-    # Libreconv.convert("#{ruta}#{nombre_archivo_contrato}.docx", "#{ruta}#{nombre_archivo_contrato}.pdf")
-    # send_file "#{ruta}#{nombre_archivo_contrato}.pdf", :type=>"application/pdf", :x_sendfile=>true
-
-    # Esto para exportar a word. Funciona, pero cuando le digo que borre el archivo ya no funciona (lo borra antes de enviarlo)
-    # send_file "#{ruta}#{nombre_archivo_contrato}.docx", :type=>"application/docx", :x_sendfile=>true
-
-    # Esto es para exportar a Word y que después se pueda borrar el archivo
-    File.open(ruta+nombre_archivo_contrato+'.docx', 'r') do |f|
-      send_data(f.read, filename: "#{nombre_archivo_contrato}.docx", type: "text/docx")
-    end
-
-    # Para borrarlo ya que lo exportó
-    File.delete(ruta + "#{nombre_archivo_contrato}.docx")
-
-    # El redirect no funciona porque send_data ya es un render y genera como double redirect en el mismo def, y eso no se puede
-    #redirect_to activities_url
-    #respond_to do |format|
-    #  format.html { redirect_to activities_url, status: :ok, notice: "Contrato generado." }
-    #  format.json { head :no_content }
-    #end
-
-  end
-
   # GET /stays or /stays.json
   def index
     @stays = Stay.all
@@ -344,6 +314,34 @@ class StaysController < ApplicationController
   end
 
   private
+
+    # Guardar con otro nombre, descargar y borrar el documento
+    def guardar(doc,nombre_archivo_contrato)
+      ruta = "#{Rails.root}/app/assets/templates/"
+      doc.save("#{ruta}#{nombre_archivo_contrato}.docx")
+
+      # Esto funciona para cambiarlo a pdf pero se demora mucho la conversión
+      # Libreconv.convert("#{ruta}#{nombre_archivo_contrato}.docx", "#{ruta}#{nombre_archivo_contrato}.pdf")
+      # send_file "#{ruta}#{nombre_archivo_contrato}.pdf", :type=>"application/pdf", :x_sendfile=>true
+
+      # Esto para exportar a word. Funciona, pero cuando le digo que borre el archivo ya no funciona (lo borra antes de enviarlo)
+      # send_file "#{ruta}#{nombre_archivo_contrato}.docx", :type=>"application/docx", :x_sendfile=>true
+
+      # Esto es para exportar a Word y que después se pueda borrar el archivo
+      File.open(ruta+nombre_archivo_contrato+'.docx', 'r') do |f|
+        send_data(f.read, filename: "#{nombre_archivo_contrato}.docx", type: "text/docx")
+      end
+
+      # Para borrarlo ya que lo exportó
+      File.delete(ruta + "#{nombre_archivo_contrato}.docx")
+
+      # El redirect no funciona porque send_data ya es un render y genera como double redirect en el mismo def, y eso no se puede
+      #redirect_to activities_url
+      #respond_to do |format|
+      #  format.html { redirect_to activities_url, status: :ok, notice: "Contrato generado." }
+      #  format.json { head :no_content }
+      #end
+    end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_stay

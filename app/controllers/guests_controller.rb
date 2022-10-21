@@ -2,6 +2,11 @@ class GuestsController < ApplicationController
   before_action :set_guest, only: %i[ show edit update destroy ]
   before_action :authorize_admin
 
+  # Autorizaciones
+  before_action :authenticate_user!
+  before_action :authorize_to_edit, only: [:create, :new, :edit, :update]
+  before_action :authorize_admin, only: [:destroy]
+  before_action :authorize_to_see, only: [:index, :show, :export_guests]
 
   # Exportar a excel información profesores
   def export_guests
@@ -11,16 +16,9 @@ class GuestsController < ApplicationController
     else
       @guests = Guest.order(:lastname, :name)
     end
-    actualizar_campos_guest
     atributos =%w{ name lastname email phone_number id_number university hosting_start_date hosting_end_date }
     nombres_columnas = ["Name","Cognome","Email","Telefono","CF","Istituzione","Data inizio", "Data fine"]
     send_data @guests.to_csv(@guests,atributos,nombres_columnas), filename: "Anagrafica_guest-#{Date.today}.csv"
-  end
-
-  def actualizar_campos_guest
-    @guests.each do |guest|
-      guest.copy_attributes_from_visit
-    end
   end
 
   # GET /guests or /guests.json

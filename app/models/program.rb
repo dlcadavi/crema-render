@@ -10,10 +10,6 @@ class Program < ApplicationRecord
       @stays.each do |stay|
         stay.set_kind
       end
-      @students.each do |student|
-        student.copy_attributes_from_stay
-      end
-
     end
   end
 

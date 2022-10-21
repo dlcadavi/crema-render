@@ -1,7 +1,10 @@
 class VisitsController < ApplicationController
   before_action :set_visit, only: %i[ show edit update destroy downloadcontractitalian downloadcontractenglish]
-  before_action :actualizar_campos_visita, only: %i[ show index downloadcontractitalian downloadcontractenglish]
-  before_action :authorize_admin
+
+  before_action :authenticate_user!
+  before_action :authorize_to_edit, only: [:create, :new, :edit, :update, :visitsexport, :downloadcontractitalian]
+  before_action :authorize_admin, only: [:destroy]
+  before_action :authorize_to_see, only: [:index, :show, :visitguest]
 
 
   # Para exportar las visitas
@@ -79,30 +82,6 @@ class VisitsController < ApplicationController
     end
   end
 
-  # Guardar con otro nombre, descargar y borrar el documento
-  def guardar(doc,nombre_archivo_contrato)
-    ruta = "#{Rails.root}/app/assets/templates/"
-    doc.save("#{ruta}#{nombre_archivo_contrato}.docx")
-
-    # Esto es para exportar a Word y que después se pueda borrar el archivo
-    File.open(ruta+nombre_archivo_contrato+'.docx', 'r') do |f|
-      send_data(f.read, filename: "#{nombre_archivo_contrato}.docx", type: "text/docx")
-    end
-
-    # Para borrarlo ya que lo exportó
-    File.delete(ruta + "#{nombre_archivo_contrato}.docx")
-
-  end
-
-
-  def actualizar_campos_visita
-    Visit.all.each do |visit|
-      visit.set_months
-      visit.set_annualfee
-    end
-  end
-
-
   def visitguest
     @guest = Guest.find_by_id(params[:id])
     @visits = @guest.visits
@@ -168,6 +147,20 @@ class VisitsController < ApplicationController
   end
 
   private
+
+    # Guardar con otro nombre, descargar y borrar el documento
+    def guardar(doc,nombre_archivo_contrato)
+      ruta = "#{Rails.root}/app/assets/templates/"
+      doc.save("#{ruta}#{nombre_archivo_contrato}.docx")
+
+      # Esto es para exportar a Word y que después se pueda borrar el archivo
+      File.open(ruta+nombre_archivo_contrato+'.docx', 'r') do |f|
+        send_data(f.read, filename: "#{nombre_archivo_contrato}.docx", type: "text/docx")
+      end
+
+      # Para borrarlo ya que lo exportó
+      File.delete(ruta + "#{nombre_archivo_contrato}.docx")
+    end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_visit
