@@ -1,136 +1,129 @@
 <%= form_with(model: course) do |form| %>
 
+	<div >
+		<%= link_to fa_icon('arrow-left', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
+			courses_path %>
+		<h3>Attività</h3>
+		<%= link_to fa_icon('pencil', style: "font-size: 1.5em;color:rgb(28,163,184)"),
+			edit_course_path(@course), data: { turbo: false }  %>
 
-	<div class="">
-		<div class="row">
-			<div class="col-12">
-				<!-- Page title -->
-				<div >
-	        <%= link_to fa_icon('arrow-left', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
-	          courses_path %>
-	        <h3>Attività</h3>
-					<%= link_to fa_icon('pencil', style: "font-size: 1.5em;color:rgb(28,163,184)"),
-						edit_course_path(@course), data: { turbo: false }  %>
+			<!-- button -->
+			<div class="">
+			</div>
 
-						<!-- button -->
-		        <div class="">
-		        </div>
+		<!-- Inscribirse: solamente los que son estudiantes pueden inscribirse a una actividad -->
+		<hr>
+	</div>
 
-	        <!-- Inscribirse: solamente los que son estudiantes pueden inscribirse a una actividad -->
-				  <hr>
-			  </div>
+	<table >
+		<tbody >
+			<tr>
 
-					<!-- Información general -->
-					<div class="row mb-1 gx-5" style="width:90%;">
-						<!-- Contatto -->
-						<div class="col-xxl-5 mb-5 mb-xxl-0">
-							<div class="bg-secondary-activity px-4 py-5 rounded">
-								<div class="row g-3">
-									<h4 class="mb-4 mt-0">Informazione generale</h4>
-									<!-- Título -->
-									<div class="col-md-6">
-										<label class="form-label">Argomento *</label>
-										<textarea id="course_name" rows="2" cols="1" class="form-control-non-editable" style="width: 200%;" <%= form.text_area :name %>
-									</div>
-
-	                <!-- Div para mejoras estéticas -->
-	                <div>
-									</div>
-
-									<!-- Descripción -->
-									<div class="col-md-6">
-										<label class="form-label">Descrizione *</label>
-										<textarea rows="3" cols="1" class="form-control-non-editable" style="width: 200%;" <%= form.text_area :description %>
-									</div>
-
-	                <!-- Div para mejoras estéticas -->
-	                <div>
-									</div>
-
-	                <!-- Contexto -->
-									<div class="col-md-6">
-										<label class="form-label">Contesto *</label>
-	                  <select id='',type="text" class="form-control-non-editable" <%= form.select :context, [["Nazionale", "N"], ["Internazionale", "I"]]  %>
-									</div>
-
-	                <!-- tipo: no lo pueden ver los estudiantes-->
-	                <div class="col-md-6">
-	                  <% if current_user.role.name == "Admin" %>
-	                	 <label class="form-label">Tipologia dominante *</label>
-										 <select id='',type="text" class="form-control-non-editable" <%= form.select :typology, options_for_select($typology_list,selected: course.typology) %>
-	                  <% end %>
-									</div>
-
-	                <!-- Costo: no lo pueden ver los estudiantes -->
-	                <div class="col-md-6">
-	                  <% if current_user.role.name == "Admin" %>
-	                    <label for="inputEmail4" class="form-label" style="width: 150%;" >Costo per il Collegio (euro) *</label>
-	                    <input type="text" class="form-control-non-editable" <%= form.text_field :cost %>
-	                  <% end %>
-	                </div>
-	              </div>
-	            </div>
-
-
-						<div class="" style="position:relative; top:-590px; left:650px; width:90%;">
-
-							<div class="bg-secondary-activity px-4 py-5 rounded">
-                <div class="row g-3">
-      						<h4 class="mb-4 mt-0">Incontri</h4>
-
-									<!-- Participación mínima -->
-									<div class="" style="display: inline-block">
-			              <span>Partecipazione minima per studente *</span>
-			              <input type="text" class="form-control-enlinea-non-editable" style="width: 15%;" value="<%=(course.min_attendance*100).round(0)%>"
-			              <h5> % </h5>
-									</div>
-			            <hr>
-
-			            <div>
-			              <table class="">
-			                <thead>
-			                    <tr style="text-align:center">
-			                      <th style="width:30%"><span> Data </span></th>
-			                      <th style="width:10%"><span> Data confermata? </span></th>
-			                      <th style="width:20%"><span> Ore </span></th>
-			                    </tr>
-			                </thead>
-
-			                <% @activities.order(activity_date: :desc).each do |activity| %>
-			                  <table class="">
-			                    <tbody id="">
-			                      <td style="width:30%"> <input class="form-control-non-editable" style="width:100%" value = "<%= activity.activity_date.strftime('%d/%m/%Y, alle %H:%M') %>"> </td>
-			                      <td style="width:10%;text-align: center;"> <%= check_box_tag 'nada', 'true', activity.confirmed_date, :disabled => true  %> </td>
-			                      <td style="width:20%"> <input type="text" class="form-control-non-editable" style="width:100%;" value="<%= activity.duration if activity.duration %>"</td>
-			                    </tbody>
-			                  </table>
-			                <% end %>
-			            	</div>
-			          	</div>
-								</div>
-
-							<!-- Formatori -->
-							<div class="row mb-5 gx-5" style="position:relative; top: -380px; left: 610px; width: 100%" >
-	              <div class="bg-secondary-activity px-4 py-5 rounded">
-									<div>
-										<div>
-											<h4>Formatori</h4>
-											<!-- Profesores -->
-											<div class="col-md-6">
-												<% @course.professors.each do |professor| %>
-													<li><%= (professor.lastname + " " + professor.name) if professor %></li>
-												<% end %>
-											</div>
-										</div>
-									</div>
-								</div>
+				<!-- Contatto -->
+				<td style="vertical-align: top; width: 33%; border: 15px solid white">
+					<div class="bg-secondary-activity" style= "padding:30px">
+						<div class="row g-3">
+							<h4 >Informazione generale</h4>
+							<!-- Título -->
+							<div>
+								<label class="form-label">Argomento *</label>
+								<textarea id="course_name" rows="2" cols="1" class="form-control-non-editable" <%= form.text_area :name %>
 							</div>
 
-			    	</div>
-				  </div>
-				</div>
-			</div>
-		</div>
+							<!-- Div para mejoras estéticas -->
+							<div>
+							</div>
+
+							<!-- Descripción -->
+							<div>
+								<label class="form-label">Descrizione *</label>
+								<textarea rows="3" cols="1" class="form-control-non-editable" <%= form.text_area :description %>
+							</div>
+
+							<!-- Div para mejoras estéticas -->
+							<div>
+							</div>
+
+							<!-- Contexto -->
+							<div class="col-md-6">
+								<label class="form-label">Contesto *</label>
+								<select id='',type="text" class="form-control-non-editable" <%= form.select :context, [["Nazionale", "N"], ["Internazionale", "I"]]  %>
+							</div>
+
+							<!-- tipo: no lo pueden ver los estudiantes-->
+							<div class="col-md-6">
+								<% if current_user.role.name == "Admin" %>
+								 <label class="form-label">Tipologia dominante *</label>
+								 <select id='',type="text" class="form-control-non-editable" <%= form.select :typology, options_for_select($typology_list,selected: course.typology) %>
+								<% end %>
+							</div>
+
+							<!-- Costo: no lo pueden ver los estudiantes -->
+							<div class="col-md-6">
+								<% if current_user.role.name == "Admin" %>
+									<label for="inputEmail4" class="form-label" style="width: 150%;" >Costo per il Collegio (euro) *</label>
+									<input type="text" class="form-control-non-editable" <%= form.text_field :cost %>
+								<% end %>
+							</div>
+						</div>
+					</div>
+				</td>
+
+				<!-- Incontri -->
+				<td style="vertical-align: top; width: 33%; border: 15px solid white">
+					<div class="bg-secondary-activity" style= "padding:30px">
+						<div class="row g-3">
+							<h4 class="">Incontri</h4>
+
+							<!-- Participación mínima -->
+							<div class="" style="display: inline-block">
+								<span>Partecipazione minima per studente *</span>
+								<input type="text" class="form-control-enlinea-non-editable" style="width: 15%;" value="<%=(course.min_attendance*100).round(0)%>"
+								<h5> % </h5>
+							</div>
+							<hr>
+
+							<table>
+								<thead>
+									<tr style="text-align:center">
+										<th style="width:30%"><span> Data </span></th>
+										<th style="width:10%"><span> Data confermata? </span></th>
+										<th style="width:20%"><span> Ore </span></th>
+									</tr>
+								</thead>
+
+								<% @activities.order(activity_date: :desc).each do |activity| %>
+									<tbody id="">
+										<td style="width:30%"> <input class="form-control-non-editable" style="width:100%" value = "<%= activity.activity_date.strftime('%d/%m/%Y, alle %H:%M') %>"> </td>
+										<td style="width:10%;text-align: center;"> <%= check_box_tag 'nada', 'true', activity.confirmed_date, :disabled => true  %> </td>
+										<td style="width:20%"> <input type="text" class="form-control-non-editable" style="width:100%;" value="<%= activity.duration if activity.duration %>"</td>
+									</tbody>
+								<% end %>
+							</table>
+
+						</div>
+					</div>
+				</td>
+
+				<!-- Formatori -->
+				<td style="vertical-align: top; width: 33%; border: 15px solid white">
+					<div class="bg-secondary-activity" style= "padding:30px">
+						<div class="row g-3">
+							<h4>Formatori</h4>
+							<!-- Profesores -->
+							<div class="col-md-6">
+								<% @course.professors.each do |professor| %>
+									<li><%= (professor.lastname + " " + professor.name) if professor %></li>
+								<% end %>
+							</div>
+						</div>
+					</div>
+				</td>
+
+			</tr>
+		</tbody>
+	</table>
+
 
 
 	<!-- para redireccionar en el edit de manera condicional (se comparte el update con editattendance) -->
@@ -138,10 +131,6 @@
 	  <%= hidden_field_tag :redirect_location, course_url(@course) %>
 	<% end %>
 
-	<!-- button -->
-	<div class="gap-3 d-md-flex justify-content-md-end text-center">
-	  <%= form.submit "Inviare attività",  :class => "btn btn-primary btn-lg", local: true, data: { turbo: false } %>
-	</div>
 
 <% end %>
 
