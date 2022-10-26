@@ -24,7 +24,7 @@
         <th><span> Riduzione retta? </span></th>
         <th><span> Borsa di studio INPS? </span></th>
         <th><span> Nuovo? </span></th>
-        <th><span> Senza esami? </span></th>
+        <th><span> Esami? </span></th>
         <th><span> Numero d'attività </th>
         <th><span> Ore d'attività </th>
         <th><span> Partecipazione </th>
@@ -59,8 +59,13 @@
         <td> <%= if stay.fee_reduction_request then human_boolean(stay.fee_reduction_request) else 'no' end %> </td>
         <td> <%= if stay.grant then human_boolean(stay.grant) else 'no' end  %> </td>
         <td> <%= if stay.firsttime then human_boolean(stay.firsttime) else 'no' end %> </td>
-        <td> <%= if stay.examfree then human_boolean(stay.examfree) else 'no' end %> </td>
-
+        <td> <% if stay.examfree %>
+              <%= if stay.examfree == true then 'no' end %>
+              <%= if stay.examfree == false then 'sì' end %>
+            <% else %>
+              <%= 'sì' %>
+            <% end %>
+        <td>
         <% stay.update_number_activities_attended %>
         <% stay.update_attendance_status %>
         <% stay.update_periodgrades_status %>

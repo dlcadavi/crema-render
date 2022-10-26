@@ -82,10 +82,10 @@
   </div>
   <div style="width: 150px; display: table-cell;">
     <%= pie_chart [
-      ["ottimo", @stays.where(periodgrades_status: 'ottimo', typology: "S", examfree: false).count],
-      ["buono", @stays.where(periodgrades_status: 'buono', typology: "S", examfree: false).count],
-      ["insufficiente", @stays.where(periodgrades_status: 'insufficiente', typology: "S", examfree: false).count],
-      ["NA", @stays.where(periodgrades_status: 'NA', typology: "S", examfree: false).count],
+      ["ottimo", (@stays.where(periodgrades_status: 'ottimo', typology: "S", examfree: false).or(@stays.where(periodgrades_status: 'ottimo', typology: "S", examfree: nil))).count],
+      ["buono", (@stays.where(periodgrades_status: 'buono', typology: "S", examfree: false).or(@stays.where(periodgrades_status: 'buono', typology: "S", examfree: nil))).count],
+      ["insufficiente", (@stays.where(periodgrades_status: 'insufficiente', typology: "S", examfree: false).or(@stays.where(periodgrades_status: 'insufficiente', typology: "S", examfree: nil))).count],
+      ["NA", (@stays.where(periodgrades_status: 'NA', typology: "S", examfree: false).or(@stays.where(periodgrades_status: 'NA', typology: "S", examfree: nil))).count],
       ],
       title: "Voti nell'anno di riferimento",
       donut: true,
@@ -179,10 +179,12 @@
           <span class="badge rounded-pill bg-danger" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades.round(2) if stay.periodgrades_status == 'insufficiente' and (stay.examfree == false or not stay.examfree?) %></span>
           <span class="badge rounded-pill bg-warning" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades.round(2) if stay.periodgrades_status == 'buono' and (stay.examfree == false or not stay.examfree?) %></span>
           <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades.round(2) if stay.periodgrades_status == 'ottimo' and (stay.examfree == false or not stay.examfree?) %></span>
-          <span class="badge rounded-pill bg-dark" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades_status if stay.periodgrades_status == 'NA' and (stay.examfree == false or not stay.examfree?) %></span>
-          <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= 'NA' if stay.examfree == true %></span>
+          <span class="badge rounded-pill bg-dark" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.periodgrades_status if stay.periodgrades_status == 'NA' and (stay.examfree == false or not stay.examfree?) and stay.year_enrollment != 'FC' %></span>
+          <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= 'NA' if stay.examfree == true  or stay.year_enrollment == 'FC' %></span>
           <br>
-          <span class="student-subhead"> min: <%= stay.gradesmin %></span>
+          <% if (stay.examfree == false or not stay.examfree?) and stay.year_enrollment != 'FC' %>
+            <span class="student-subhead"> min: <%= stay.gradesmin %></span>
+          <% end %>
         <% end %>
       </td>
 
@@ -192,9 +194,12 @@
           <span class="badge rounded-pill bg-danger" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.cumulativegrades.round(2) if stay.cumulativegrades_status == 'insufficiente' %></span>
           <span class="badge rounded-pill bg-warning" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.cumulativegrades.round(2) if stay.cumulativegrades_status == 'buono' %></span>
           <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.cumulativegrades.round(2 ) if stay.cumulativegrades_status == 'ottimo'%></span>
-          <span class="badge rounded-pill bg-dark" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.cumulativegrades_status if stay.cumulativegrades_status == 'NA' %></span>
+          <span class="badge rounded-pill bg-dark" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= stay.cumulativegrades_status if stay.cumulativegrades_status == 'NA' and stay.year_enrollment != 'FC' %></span>
+          <span class="badge rounded-pill bg-success" style="height:auto;padding:10px; width:80px; font-size:1em;"><%= 'NA' if stay.year_enrollment == 'FC' %></span>
           <br>
-          <span class="student-subhead"> min: <%= stay.gradesmin %></span>
+          <% if stay.year_enrollment != 'FC' %>
+            <span class="student-subhead"> min: <%= stay.gradesmin %></span>
+          <% end %>
         <% end %>
       </td>
 
