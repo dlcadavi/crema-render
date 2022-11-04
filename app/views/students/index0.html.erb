@@ -26,9 +26,28 @@
     </td>
 
     <td style="padding: 15px;">
-      <h6> Cerca per studente </h6>
+      <h6> Cerca per studente0   </h6>
       <% @estudiantes = Student.where(user: User.where(role_id: Role.find_by(name: 'Student'))).order(:lastname,:name) %>
-      <h6> <%= link_to "(cerca tutti)", students_path %></h6>
+      <%= form_tag(students_path, method: :get) do %>
+        <%= select_tag(:name_filter,
+        options_from_collection_for_select(@estudiantes, :id, :display_fullname, params[:name_filter]),
+        include_blank: 'tutti', onchange: 'this.form.submit()', class:"form-control", style:"display: table-cell;width: 100%;") %>
+      <% end %>
+    </td>
+
+    <td style="padding: 15px;">
+      <h6> Cerca per studente1 </h6>
+      <%= form_tag(students_path, method: :get) do %>
+        <%= form_with url: search_students_path, method: :post do |form| %>
+          <%= form.search_field :lastname_search, onchange: "this.form.requestSubmit()", class:"form-control", style:"display: table-cell;width: 100%;" %>
+        <% end %>
+      <% end %>
+    </td>
+
+
+    <td style="padding: 15px;">
+      <h6> Cerca per studente2 </h6>
+      <% @estudiantes = Student.where(user: User.where(role_id: Role.find_by(name: 'Student'))).order(:lastname,:name) %>
       <%= form_with url: search_students_path, method: :post do |form| %>
         <%= form.search_field :lastname_search, oninput: "this.form.requestSubmit()", class:"form-control", style:"display: table-cell;width: 100%;" %>
       <% end %>
@@ -61,15 +80,11 @@
         <%= link_to image_tag('activities.png', width: "40", height: "40", alt: 'Activity'), courseattendance_students_path %>
       </div>
     </td>
-    <tr>
-      <td style="padding: 15px;"></td>
-      <td style="padding: 15px;">
-        <div id="search_students_results"></div>
-      </td>
+
   </tbody>
 </table>
 
-
+<div id="search_results"></div>
 
 <div style="width: 100%; overflow: hidden;">
   <div style="display: table-cell;">

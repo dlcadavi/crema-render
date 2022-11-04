@@ -43,17 +43,6 @@ class Student < ApplicationRecord
     end
   end
 
-
-  def self.search0(search)
-    if search
-      criterio = "%#{search}%"
-      where("name ILIKE ? or lastname ILIKE ?", criterio, criterio).to_a
-      #debug
-    else
-      find(:all)
-    end
-  end
-
   def display_fullname
     self.lastname + ' ' + self.name if self.lastname and self.name
   end
@@ -67,7 +56,7 @@ class Student < ApplicationRecord
 
   # Exportar a excel (método que creé yo)
   def self.to_csv(students,attributes,nombres_columnas)
-    CSV.generate(headers:true) do |csv|
+    CSV.generate(headers:true, col_sep: ';') do |csv|
       csv << nombres_columnas
       students.each do |student|                                 # el csv se va construyendo fila por fila (estudiante por estudiante)
         # Necesario para que la fecha exporte como fecha sin hora, grrrr

@@ -36,6 +36,23 @@ class StudentsController < ApplicationController
     end
   end
 
+  # para buscar por nombre de estudiante con un autocompletar
+  # También hubo que agregar esto en routes
+  # https://www.youtube.com/watch?v=PfCU0Nni8fI
+  def search
+    if params[:lastname_search].present?
+      @students = Student.where('lastname ILIKE ? OR name ILIKE ?', "%#{params[:lastname_search]}%", "%#{params[:lastname_search]}%")
+    else
+      @students = []
+    end
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.update("search_students_results",
+                              partial: "students/search_results", locals: {students: @students})
+      end
+    end
+  end
+
   # Para la vista de las asistencias a los cursos
   def courseattendance
   end
@@ -81,10 +98,8 @@ class StudentsController < ApplicationController
     end
   end
 
-
-  # Para exportar las locations
+  # Para exportar la anagrafica de estudiantes para el ministerio
   def export_ministerio_anagrafica
-  #def students_min_anagrafica_export
     @stays = Stay.where(acyear_id: params[:acyear_filter])
     @students = Student.where(id: @stays.pluck(:student_id))
     @acyearid = params[:acyear_filter]

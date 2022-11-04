@@ -100,6 +100,7 @@ Rails.application.routes.draw do
       post :upload
       get :export_full_anagrafica
       get :courseattendance
+      post :search
     end
 
     member do
@@ -151,6 +152,7 @@ Rails.application.routes.draw do
     collection do
       get 'search'
       get :export_activities
+      post :search
     end
   end
   get 'activities(/:id)/editattendance', to: 'activities#editattendance', as:'editattendance'

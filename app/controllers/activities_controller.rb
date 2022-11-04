@@ -26,11 +26,32 @@ class ActivitiesController < ApplicationController
   def editattendance
   end
 
+
+  # para buscar por nombre de estudiante con un autocompletar
+  # También hubo que agregar esto en routes
+  # https://www.youtube.com/watch?v=PfCU0Nni8fI
+  def search
+    if params[:activityname_search].present?
+      @activities = Activity.where('name ILIKE ?', "%#{params[:activityname_search]}%")
+    else
+      @activities = []
+    end
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.update("search_activities_results",
+                              partial: "activities/search_results", locals: {activities: @activities})
+      end
+    end
+  end
+
   # GET /activities or /activities.json
   def index
     # Organizar por el nombre dle curso, despuès por fecha de la actividad y después
     @activities = Activity.joins(activitycourses: [:course]).order('courses.name, activity_date, name')
-    actualizar_campos_actividad
+    # actualizar_campos_actividad
+    if params[:activityname_filter]
+      @activities = Activity.where(id: params[:activityname_filter])
+    end
   end
 
 

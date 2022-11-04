@@ -1,0 +1,5 @@
+<%= activities.count %> lezioni trovate
+<% activities.each do |activity| %>
+  <br>
+  <%= link_to highlight(activity.name, params[:activityname_search]), activities_path(:activityname_filter => activity) %>
+<% end %>

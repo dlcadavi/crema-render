@@ -1,10 +1,29 @@
-<h1>Lezione</h1>
+<table class="">
+  <tbody id="activities">
+    <tr>
+      <td style="padding: 15px;">
+        <%= link_to fa_icon('arrow-left', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
+          :back %>
+          <h1>Lezione</h1>
+        </td>
+      <td style="width: 80%; padding: 15px;">
+        <h6> Cerca per titolo </h6>
+        <h6> <%= link_to "(cerca tutti)", activities_path %></h6>
+        <%= form_with url: search_activities_path, method: :post do |form| %>
+          <%= form.search_field :activityname_search, oninput: "this.form.requestSubmit()", class:"form-control", style:"display: table-cell;width: 100%;" %>
+        <% end %>
+      </td>
 
-<p>
-  Azioni:
-  <%= link_to fa_icon('arrow-left', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
-    :back %>
-</p>
+    <tr>
+      <td style="padding: 15px;"></td>
+      <td style="padding: 15px;">
+        <div id="search_activities_results"></div>
+      </td>
+
+  </tbody>
+</table>
+
+
 
 <table class="table student-list">
   <thead>

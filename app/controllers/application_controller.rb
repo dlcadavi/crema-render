@@ -39,28 +39,28 @@ class ApplicationController < ActionController::Base
   # redirigen a la misma página donde están
 
   def authorize_to_edit
-    redirect_to(request.referrer, :notice => "Utente non autorizato :(") and return unless (current_user.editor? or current_user.admin?)
+    redirect_to(request.referrer, :notice => "Utente non abilitato :(") and return unless (current_user.editor? or current_user.admin?)
   end
 
   def authorize_to_see
-    redirect_to(root_path, :notice => "Utente non autorizato :(") and return unless (current_user.editor? or current_user.admin? or current_user.viewer?)
+    redirect_to(root_path, :notice => "Utente non abilitato :(") and return unless (current_user.editor? or current_user.admin? or current_user.viewer?)
   end
 
 
   def authorize_admin
-    redirect_to(request.referrer, :notice => "Utente non autorizato :(") and return unless current_user.admin?
+    redirect_to(request.referrer, :notice => "Utente non abilitato :(") and return unless current_user.admin?
   end
 
   def authorize_student
-    redirect_to(request.referrer, :notice => "Utente non autorizato :(") and return unless current_user.student?
+    redirect_to(request.referrer, :notice => "Utente non abilitato :(") and return unless current_user.student?
   end
 
   def authorize_viewer
-    redirect_to(request.referrer, :notice => "Utente non autorizato :(") and return unless current_user.viewer?
+    redirect_to(request.referrer, :notice => "Utente non abilitato :(") and return unless current_user.viewer?
   end
 
   def authorize_editor
-    redirect_to(request.referrer, :notice => "Utente non autorizato :(") and return unless current_user.editor?
+    redirect_to(request.referrer, :notice => "Utente non abilitato :(") and return unless current_user.editor?
   end
 
 
@@ -68,7 +68,7 @@ class ApplicationController < ActionController::Base
   # Para definir quiénes son los usuarios autorizados a hacer ciertas cosas en toda la app
   def authorize_student0
     if !user_signed_in?
-      redirect_to(root_path, :notice => "Utente non autorizato :(") and return
+      redirect_to(root_path, :notice => "Utente non abilitato :(") and return
     else
       if current_user.role.name != "Student"
         redirect_to(root_path, :notice => "Deve essere un studente per fare questo.") and return

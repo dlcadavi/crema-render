@@ -1,13 +1,15 @@
 <%- nombres_columnas = ['CF','Cognome', 'Nome', 'Data nascita', 'Email', 'Telefono', 'Tipologia', 'Nazionalita', 'Struttura',
 'Classe','Anno iscrizione','Data inizio', 'Data fine', 'Retta'] -%>
 <%= CSV.generate_line nombres_columnas -%>
-<%- @students.each do |student| -%>
-  <%- @stays = Stay.where(student_id: student.id, acyear_id: @acyearid) -%>
+<%- @students.order(:lastname, :name).each do |student| -%>
+  <%- @stays = Stay.where(student_id: student.id, acyear_id: @acyearid).order(:hosting_start_date) -%>
     <%- @stays.each do |stay| -%>
+    <%- if stay.typology == 'D' then @classe = nil else @classe = stay.kindcode end -%>
+    <%- if stay.typology == 'D' then @anno_iscrizione = nil else @anno_iscrizione = stay.year_enrollment end -%>
     <%- row = [student.id_number, student.lastname, student.name, student.birthdate.to_date.strftime("%d/%m/%y"), student.email, student.phone_number,
-    stay.typology, student.country_of_birth,stay.frame, stay.kindcode, stay.year_enrollment,
+    stay.typology, student.country_of_birth,stay.frame, @classe, @anno_iscrizione,
     stay.hosting_start_date.to_date.strftime("%d/%m/%y"), stay.hosting_end_date.to_date.strftime("%d/%m/%y"),
-    stay.annualfee] -%>
+    stay.annualfee.to_s.tr('.', ',')] -%>
     <%= CSV.generate_line(row).html_safe -%>
   <%- end -%>
 <%- end -%>

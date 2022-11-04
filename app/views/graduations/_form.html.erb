@@ -42,9 +42,17 @@
 						<div class="bg-secondary-activity px-4 py-5 rounded">
 							<div class="row g-3">
                 <div class="">
-                  <label class="form-label">Classe *</label>
-                  <% options = options_from_collection_for_select(stays, :id, :display_fullinfo, @graduation.stay_id) %>
-                  <select id='' type="text" class="form-control" <%= select_tag(:stay_id, options) %>
+                  <label class="form-label">Classe di Laurea *</label>
+                  <br><h7> Corsi frequentati dall* student* durante la pemanenza in Collegio:  </h7>
+                  <ul>
+                    <% stays.order(hosting_start_date: :desc).each do |stay| %>
+                   <li><%= stay.kind if stay.kind %> </li>
+                  <% end %>
+                  </ul>
+
+                  <% options = options_from_collection_for_select(Program.all.order(:name), :id, :name, @graduation.stay_id) %>
+                  <select id='' type="text" class="form-control" <%= form.select(:program_id, options) %>
+
 
                 </div>
                 <!-- Estudiante: captura el ide del estudiante desde la url y lo manda al campo :student.id para ser leido por el controlador-->

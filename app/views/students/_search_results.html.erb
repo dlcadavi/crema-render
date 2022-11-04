@@ -1,0 +1,5 @@
+<%= students.count %> studenti trovati
+<% students.each do |student| %>
+  <br>
+  <%= link_to highlight(student.display_fullname, params[:lastname_search]), students_path(:name_filter => student) %>
+<% end %>
