@@ -28,7 +28,7 @@
       <!-- Los camnpos -->
       <!-- La l minúscula de las fechas es para que por defecto use el formato que yo definí en  config/locales/en.yml -->
       <td> <%= link_to graduation.stay.student.display_fullname, graduation.stay.student  %> </td>
-      <td> <%= programa.name %> </td>
+      <td> <%= programa.name if programa.name%> </td>
       <td> <%= l graduation.graduation_date if graduation.graduation_date%> </td>
       <td> <%= graduation.tipo if graduation.tipo %> </td>
       <td> <%= graduation.grades if graduation.grades %> </td>

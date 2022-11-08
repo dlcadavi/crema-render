@@ -102,7 +102,6 @@ end
 
 ###############################################################################################
 # actualizar voti
-
 task :update_graduations => [:update_gradaciones] do
   puts "Finished update graduation task"
 end
@@ -110,6 +109,21 @@ end
 task :update_graduaciones => :environment do
   graduaciones = Graduation.all
   graduaciones.each do |grad|
+    grad.save
+  end
+end
+
+###############################################################################################
+# actualizar programas dei voti
+task :update_programs_graduations => [:update_porgramas_graduaciones] do
+  puts "Finished update graduation task"
+end
+
+task :update_porgramas_graduaciones => :environment do
+  graduaciones = Graduation.all
+  graduaciones.each do |grad|
+    stay = Stay.find_by_id(grad.stay_id)
+    self.update_column :program_id, stay.program_id
     grad.save
   end
 end
