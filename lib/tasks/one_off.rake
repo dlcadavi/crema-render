@@ -123,7 +123,7 @@ task :update_porgramas_graduaciones => :environment do
   graduaciones = Graduation.all
   graduaciones.each do |grad|
     stay = Stay.find_by_id(grad.stay_id)
-    self.update_column :program_id, stay.program_id
+    grad.update_column :program_id, stay.program_id
     grad.save
   end
 end
