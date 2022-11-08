@@ -1,5 +1,6 @@
 class Graduation < ApplicationRecord
   belongs_to :stay, optional: true
+  belongs_to :program, optional: true
 
   #validates :id_number,
   #  uniqueness: {
@@ -16,11 +17,8 @@ class Graduation < ApplicationRecord
   #private: no lo puedo usar porque el controlador stays invoca este método para actualizar el campo tipo de la graduación cuando cambia el stay
 
   def set_tipo
-    stay = Stay.find_by_id(self.stay_id)
-    segundo_caracter = stay.year_enrollment[1,1]
-    if segundo_caracter == 'T' then self.update_column :tipo, "triennale" end
-    if segundo_caracter == 'S' then self.update_column :tipo, "magistrale" end
-    if segundo_caracter == 'U' then self.update_column :tipo, "ciclo unico" end
+    programa = Program.find_by_id(self.program_id)
+    self.update_column :tipo, programa.tipo
   end
 
 end

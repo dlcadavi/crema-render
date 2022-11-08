@@ -25,11 +25,16 @@
 						<div class="bg-secondary-activity px-4 py-5 rounded">
 							<div class="row g-3">
                 <div class="">
-
-                  <label class="form-label">Classe *</label>
+                  <label class="form-label">Anno di Laurea *</label>
                   <% grad = Graduation.find(params[:id]) %>
                   <% stay = Stay.find_by_id(grad.stay_id) %>
-                  <select id='' type="text" class="form-control-non-editable" <%= form.select :kind, [stay.kind]  %>
+                  <% program = Program.find_by_id(grad.program_id) %>
+                  <select id='' type="text" class="form-control-non-editable" <%= form.select :kind, [stay.show_year]  %>
+
+
+                  <br><label class="form-label">Corso di Laurea</label>
+                  <select id='' type="text" class="form-control-non-editable" <%= form.select :kind, [program.name]  %>
+
                 </div>
 
                 <div class="col-md-6">

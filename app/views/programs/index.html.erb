@@ -31,6 +31,7 @@
     <tr>
       <th><span> Codice </span></th>
       <th><span> Nome </span></th>
+      <th><span> Tipo </span></th>
       <th><span> Area </span></th>
       <th><span> Azioni </span></th>
     </tr>
@@ -44,7 +45,8 @@
       <!-- Los camnpos -->
       <!-- La l minúscula de las fechas es para que por defecto use el formato que yo definí en  config/locales/en.yml -->
       <td> <%= program.code %> </td>
-      <td> <%= program.name %> </td>
+      <td> <%= link_to program.name, program if program.name %> </td>
+      <td> <%= program.tipo %> </td>
       <td> <%= program.area %> </td>
 
       <td>

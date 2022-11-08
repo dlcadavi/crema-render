@@ -99,3 +99,17 @@ task :update_actividades => :environment do
     activity.save
   end
 end
+
+###############################################################################################
+# actualizar voti
+
+task :update_graduations => [:update_gradaciones] do
+  puts "Finished update graduation task"
+end
+
+task :update_graduaciones => :environment do
+  graduaciones = Graduation.all
+  graduaciones.each do |grad|
+    grad.save
+  end
+end

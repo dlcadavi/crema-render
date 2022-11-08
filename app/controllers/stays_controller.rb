@@ -5,7 +5,7 @@ class StaysController < ApplicationController
   before_action :authenticate_user!
   before_action :authorize_to_edit, only: [:create, :new, :edit, :update]
   before_action :authorize_admin, only: [:destroy]
-  before_action :authorize_to_see, only: [:index, :show, :staysexport, :staystudent, 
+  before_action :authorize_to_see, only: [:index, :show, :staysexport, :staystudent,
     :downloadcontractenglish, :download_initial_libretto, :download_final_libretto, :downloadcontractitalian]
 
 
@@ -355,7 +355,7 @@ class StaysController < ApplicationController
         :firsttime, :periodgrades, :cumulativegrades,
         :hours_attended, :number_activities_attended,
         :attendance_status, :cumulativegrades_status, :periodgrades_status,
-        :typology, :frame, :kind, :program_id, :gradesmin, :perc_attendance, :examfree
+        :typology, :frame, :kind, :program_id, :gradesmin, :perc_attendance, :examfree,
       )
     end
 end

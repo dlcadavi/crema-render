@@ -98,7 +98,7 @@ class GraduationsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def graduation_params
-      params.require(:graduation).permit(:stay_id, :graduation_date, :grades, :tipo, :lode, :encomio,
+      params.require(:graduation).permit(:stay_id, :program_id, :graduation_date, :grades, :tipo, :lode, :encomio,
       )
     end
 

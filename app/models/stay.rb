@@ -26,7 +26,6 @@ class Stay < ApplicationRecord
 
   def show_year_with_dates
     Acyear.find_by_id(self.acyear_id).name + " (dal " + self.hosting_start_date.to_date.strftime("%d/%m/%y").to_s + " al " + self.hosting_end_date.to_date.strftime("%d/%m/%y").to_s + ")"
-
   end
   def update_student_fields
     @student = Student.find_by_id(self.student_id)

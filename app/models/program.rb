@@ -1,5 +1,6 @@
 class Program < ApplicationRecord
   has_many :stays
+  has_many :graduations
 
   after_save :update_stays
 

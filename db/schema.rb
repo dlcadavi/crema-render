@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_21_205143) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_08_204917) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -158,6 +158,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_21_205143) do
     t.string "tipo"
     t.boolean "lode"
     t.boolean "encomio"
+    t.bigint "program_id"
+    t.index ["program_id"], name: "index_graduations_on_program_id"
     t.index ["stay_id"], name: "index_graduations_on_stay_id"
   end
 
@@ -238,6 +240,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_21_205143) do
     t.string "area"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "tipo"
   end
 
   create_table "reports", force: :cascade do |t|
@@ -357,6 +360,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_21_205143) do
   add_foreign_key "courses", "acyears"
   add_foreign_key "enrollments", "activities"
   add_foreign_key "enrollments", "users"
+  add_foreign_key "graduations", "programs"
   add_foreign_key "graduations", "stays"
   add_foreign_key "locations", "stays"
   add_foreign_key "mobilities", "stays"

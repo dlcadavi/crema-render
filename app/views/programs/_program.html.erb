@@ -20,6 +20,8 @@
         <%= link_to fa_icon('arrow-left', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
           programs_path %>
         <h3>Programma</h3>
+        <%= link_to fa_icon('pencil', text: "", style: "font-size: 2em; color:rgb(28,163,184)"),
+          edit_program_path(program) %>
 			  <hr>
 		  </div>
 
@@ -47,15 +49,14 @@
 									<label class="form-label">Area *</label>
 									<input type="text" class="form-control-non-editable" placeholder="" aria-label="Phone number" <%= form.text_field :area %>
 								</div>
+                <div class="col-md-6">
+                  <label class="form-label">Tipo *</label>
+                  <select id='',type="text" class="form-control-non-editable", value=<%= form.select :tipo, ["Triennale", "Magistrale", "Ciclo unico", "Dottorato"]%>
+                </div>
               </div>
             </div>
           </div>
 				</div>  <!-- Terminan los dos primeros módulos -->
-
-				<!-- button -->
-				<div class="gap-3 d-md-flex justify-content-md-end text-center">
-          <%= form.submit "Inviare programma",  :class => "btn btn-primary btn-lg", local: true, data: { turbo: false } %>
-				</div>
 
 		</div>
 	</div>

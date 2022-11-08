@@ -47,6 +47,11 @@
 									<label class="form-label">Area *</label>
 									<input type="text" class="form-control" placeholder="" aria-label="Phone number" <%= form.text_field :area %>
 								</div>
+                <!-- Tipo -->
+                <div class="col-md-6">
+                  <label class="form-label">Tipo *</label>
+                  <select id='',type="text" class="form-control" <%= form.select :tipo, ["Triennale", "Magistrale", "Ciclo unico", "Dottorato"]  %>
+                </div>
               </div>
             </div>
           </div>
