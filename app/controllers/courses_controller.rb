@@ -28,9 +28,6 @@ class CoursesController < ApplicationController
 
   # GET /courses or /courses.json
   def index
-    Course.all.each do |course|
-      course.update_attendance_course
-    end
     @courses = Course.all.order(date: :asc)
   end
 
