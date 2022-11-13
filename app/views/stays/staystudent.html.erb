@@ -8,34 +8,33 @@
   <%= link_to fa_icon('plus', text: "", style: "font-size: 2.5em; color:rgb(28,163,184)"),
     new_stadia_path(@student), data: { turbo: false } %>
 </p>
+<hr>
 
-<table class="table professor-list">
+<table class="table" style="text-align: center;">
   <thead>
       <tr>
-        <th><span> Anno accademico </span></th>
-        <th><span> Data inizio </span></th>
-        <th><span> Data fine </span></th>
-        <th><span> Classe </span></th>
-        <th><span> Anno iscrizione </span></th>
-        <th><span> Retta annuale </span></th>
-        <th><span> Mesi di soggiorno </span></th>
-        <th><span> Mesi di retta </span></th>
-        <th><span> Camere </span></th>
-        <th><span> Riduzione retta? </span></th>
-        <th><span> Borsa di studio INPS? </span></th>
-        <th><span> Nuovo? </span></th>
-        <th><span> Esami? </span></th>
-        <th><span> Numero d'attività </th>
-        <th><span> Ore d'attività </th>
-        <th><span> Partecipazione </th>
-        <th><span> Voti annuali status </th>
-        <th><span> Voti carriera status </th>
-        <th><span> Azioni </th>
-        <th><span> Scarica </th>
+        <th style="width:6%;"><span> Anno </span></th>
+        <th style="width:1%;"><span> Data inizio </span></th>
+        <th style="width:1%;"><span> Data fine </span></th>
+        <th style="width:10%;"><span> Classe </span></th>
+        <th style="width:1%;"><span> Partecipazione </th>
+        <th style="width:1%;"><span> Voti annuali </th>
+        <th style="width:1%;"><span> Voti carriera </th>
+        <th style="width:1%;"><span> Anno iscriz. </span></th>
+        <th style="width:1%;"><span> Retta annuale </span></th>
+        <th style="width:4%;"><span> Mesi di sogg. </span></th>
+        <th style="width:1%;"><span> Camere </span></th>
+        <th style="width:2%;"><span> Riduz. retta? </span></th>
+        <th style="width:2%;"><span> Borsa INPS? </span></th>
+        <th style="width:1%;"><span> Nuovo? </span></th>
+        <th style="width:1%;"><span> Esami? </span></th>
+        <th style="width:1%;"><span> Ore d'attività </th>
+        <th style="width:5%;"><span> Azioni </th>
+        <th style="width:10%"><span> Scarica </th>
       </tr>
   </thead>
 
-  <tbody id="students">
+  <tbody id="students" class="text-center">
 
     <tr>
       <% @stays.order(hosting_end_date: :desc).each do |stay| %>
@@ -46,41 +45,9 @@
         <td> <%= l stay.hosting_start_date if stay.hosting_start_date%> </td>
         <td> <%= l stay.hosting_end_date if stay.hosting_end_date%> </td>
         <td> <%= stay.kind if stay.kind %> </td>
-        <td> <%= stay.year_enrollment if stay.year_enrollment %> </td>
-        <td> <%= stay.annualfee if stay.annualfee %> </td>
-
-        <td> <%= stay.months if stay.months %> </td>
-        <td> <%= stay.monthsfee if stay.monthsfee %> </td>
-        <td>
-          <%= link_to stay.locations.count, locationstudent_path(@student) %>
-          <%= link_to image_tag('door.png', width: "20", height: "25"),new_location_path(@student), data: { turbo: false } %>
-        </td>
-
-        <td> <%= if stay.fee_reduction_request then human_boolean(stay.fee_reduction_request) else 'no' end %> </td>
-        <td> <%= if stay.grant then human_boolean(stay.grant) else 'no' end  %> </td>
-        <td> <%= if stay.firsttime then human_boolean(stay.firsttime) else 'no' end %> </td>
-        <td> <% if stay.examfree %>
-              <%= if stay.examfree == true then 'no' end %>
-              <%= if stay.examfree == false then 'sì' end %>
-            <% else %>
-              <%= 'sì' %>
-            <% end %>
-        <td>
-        <% stay.update_number_activities_attended %>
-        <% stay.update_attendance_status %>
-        <% stay.update_periodgrades_status %>
-        <% stay.update_cumulativegrades_status %>
-
-        <td style="width: 7%;">
-          <a href="#" class="student-link"> <%= link_to stay.number_activities_attended, studentactivities_stay_path(stay)%></a>
-        </td>
-
-        <td> <%= stay.hours_attended %> </td>
-
 
         <!-- Semaforo Attendance -->
         <td class="text-center">
-
           <% if stay.perc_attendance %>
             <% mostrar = stay.hours_attended.to_s + "h, " + number_to_percentage(stay.perc_attendance*100, precision: 0).to_s %>
           <% else %>
@@ -118,6 +85,27 @@
         </td>
 
 
+        <td> <%= stay.year_enrollment if stay.year_enrollment %> </td>
+        <td> <%= stay.annualfee if stay.annualfee %> </td>
+        <td> <%= stay.months if stay.months %> </td>
+        <td>
+          <%= link_to stay.locations.count, locationstudent_path(@student) %>
+          <%= link_to image_tag('door.png', width: "20", height: "25"),new_location_path(@student), data: { turbo: false } %>
+        </td>
+        <td> <%= if stay.fee_reduction_request then human_boolean(stay.fee_reduction_request) else 'no' end %> </td>
+        <td> <%= if stay.grant then human_boolean(stay.grant) else 'no' end  %> </td>
+        <td> <%= if stay.firsttime then human_boolean(stay.firsttime) else 'no' end %> </td>
+        <td>
+          <% if stay.examfree %>
+            <%= if stay.examfree == true then 'no' end %>
+            <%= if stay.examfree == false then 'sì' end %>
+          <% else %>
+            <%= 'sì' %>
+          <% end %>
+        </td>
+
+        <td><%= link_to stay.hours_attended, studentactivities_stay_path(stay) %></td>
+
         <td>
           <%= link_to fa_icon('search-plus', style: "font-size: 1.5em; color:rgb(28,163,184)"),stay %>
           <%= link_to fa_icon('pencil', style: "font-size: 1.5em;color:green"), edit_stay_path(stay)%>
@@ -125,7 +113,7 @@
             stay, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Sei sicuro di rimuovere questo soggiorno?" } %>
         </td>
 
-        <td>
+        <td  style="text-align:left;">
           <%= link_to "Contratto in italiano", downloadcontractitalian_stay_path(stay) %>
           <br>
           <%= link_to "Progetto formativo", download_initial_libretto_stay_path(stay) %>

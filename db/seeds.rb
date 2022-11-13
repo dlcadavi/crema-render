@@ -60,6 +60,8 @@ Professor.create(name: 'Carlo', lastname: 'Moreno', email: 'carlomoreno@gmail.co
 ##################
 
 # Stay: estudiantes con años
+Stay.create(student_id: 1, acyear_id: 2, hosting_start_date: '2022/09/03',hosting_end_date: '2023/07/06', year_enrollment: '3T')
+
 
 # Crear los programas
 
@@ -67,7 +69,6 @@ Professor.create(name: 'Carlo', lastname: 'Moreno', email: 'carlomoreno@gmail.co
 Visit.create(guest_id: 1, acyear_id: 2, hosting_start_date: '2022/09/03', hosting_end_date: '2023/07/06',fee: 400)
 Visit.create(guest_id: 1, acyear_id: 1, hosting_start_date: '2021/11/01', hosting_end_date: '2021/12/08',fee: 350)
 Visit.create(guest_id: 2, acyear_id: 2, hosting_start_date: '2023/02/15', hosting_end_date: '2023/08/04',fee: 520)
-
 # ProfessorActivity: profesores con actividades
 
 #Attendance.create(activity_id: 1, student_id: 3)
