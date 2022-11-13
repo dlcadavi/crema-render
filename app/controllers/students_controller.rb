@@ -12,7 +12,8 @@ class StudentsController < ApplicationController
   # GET /students or /students.json
   def index
     @students = Student.where(user: User.where(:role_id => Role.find_by(:name => 'Student').id)).order(:lastname, :name)
-    @stays = Stay.where(acyear_id: $year.id)
+    # por defecto mostrar los estudiantes del año en curso
+    @stays = Stay.where(acyear_id: 2)
     @anno = $year
     if params[:acyear_filter] == "" or params[:name_filter] == ""
       @students = Student.where(user: User.where(:role_id => Role.find_by(:name => 'Student').id)).order(:lastname, :name)
