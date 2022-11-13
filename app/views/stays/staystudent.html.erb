@@ -13,10 +13,10 @@
 <table class="table" style="text-align: center;">
   <thead>
       <tr>
-        <th style="width:6%;"><span> Anno </span></th>
+        <th style="width:5%;"><span> Anno </span></th>
         <th style="width:1%;"><span> Data inizio </span></th>
         <th style="width:1%;"><span> Data fine </span></th>
-        <th style="width:10%;"><span> Classe </span></th>
+        <th style="width:12%;"><span> Classe </span></th>
         <th style="width:1%;"><span> Partecipazione </th>
         <th style="width:1%;"><span> Voti annuali </th>
         <th style="width:1%;"><span> Voti carriera </th>
@@ -30,7 +30,7 @@
         <th style="width:1%;"><span> Esami? </span></th>
         <th style="width:1%;"><span> Ore d'attività </th>
         <th style="width:5%;"><span> Azioni </th>
-        <th style="width:10%"><span> Scarica </th>
+        <th style="width:8%"><span> Scarica </th>
       </tr>
   </thead>
 
@@ -44,7 +44,7 @@
         <td> <%= stay.acyear.name %> </td>
         <td> <%= l stay.hosting_start_date if stay.hosting_start_date%> </td>
         <td> <%= l stay.hosting_end_date if stay.hosting_end_date%> </td>
-        <td> <%= stay.kind if stay.kind %> </td>
+        <td style="text-align:left"> <%= stay.kind if stay.kind %> </td>
 
         <!-- Semaforo Attendance -->
         <td class="text-center">
