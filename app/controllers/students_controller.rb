@@ -11,16 +11,23 @@ class StudentsController < ApplicationController
 
   # GET /students or /students.json
   def index
-    @students = Student.where(user: User.where(:role_id => Role.find_by(:name => 'Student').id)).order(:lastname, :name)
+    #@students = Student.where(user: User.where(:role_id => Role.find_by(:name => 'Student').id)).order(:lastname, :name)
     # por defecto mostrar los estudiantes del año en curso
-    @stays = Stay.where(acyear_id: 2)
-    @anno = $year
-    if params[:acyear_filter] == "" or params[:name_filter] == ""
-      @students = Student.where(user: User.where(:role_id => Role.find_by(:name => 'Student').id)).order(:lastname, :name)
-      @stays = Stay.where(acyear_id: $year.id)
+    if not params[:acyear_filter]
+      @stays = Stay.where(acyear_id: 2)
       @anno = $year
+      if @stays
+        @students = Student.where(id: @stays.pluck(:student_id)).order(:lastname, :name)
+      else
+        @students = Student.where(user: User.where(:role_id => Role.find_by(:name => 'Student').id)).order(:lastname, :name)
+      end
+      params[:acyear_filter] = 2
     else
-      if params[:acyear_filter]
+      if params[:acyear_filter] == ""
+        @students = Student.where(user: User.where(:role_id => Role.find_by(:name => 'Student').id)).order(:lastname, :name)
+        @stays = Stay.all
+        @anno = $year
+      else
         @stays = Stay.where(acyear_id: params[:acyear_filter])
         @anno = Acyear.find_by_id(params[:acyear_filter])
         if @stays
@@ -29,11 +36,11 @@ class StudentsController < ApplicationController
           @students = Student.where(user: User.where(:role_id => Role.find_by(:name => 'Student').id)).order(:lastname, :name)
         end
       end
-      if params[:name_filter]
-        @students = Student.where(id: params[:name_filter]).order(:lastname, :name)
-        @stays = Stay.where(student_id: @students.pluck(:id))
-        @anno = $year
-      end
+    end
+    if params[:name_filter]
+      @students = Student.where(id: params[:name_filter]).order(:lastname, :name)
+      @stays = Stay.where(student_id: @students.pluck(:id))
+      @anno = $year
     end
   end
 
