@@ -98,7 +98,7 @@
                     <th style="width:30%"><span> Data </span></th>
                     <th style="width:10%"><span> Data confermata? </span></th>
                     <th style="width:20%"><span> Ore </span></th>
-                    <%= render partial: "activityinfo", locals: {course: false} if !course.id %>
+
                   </tr>
                 </thead>
 
@@ -106,7 +106,7 @@
                 <% if course.id  %>
                   <% @activities.each do |activity| %>
                     <tbody id="">
-
+                      <tr style="width:30%">
                       <!-- Fecha-->
                       <td style="width:30%">
                         <input type="text" class="form-control" style="width:100%;" value="<%= activity.activity_date.strftime('%d/%m/%Y %H:%M')%>"
@@ -122,7 +122,9 @@
                       </td>
 
                       <!-- Duration-->
-                      <td style="width:20%"> <input type="text" class="form-control" style="width:100%;" value="<%= activity.duration if activity.duration %>" <%= text_field_tag 'durations[]' %> </td>
+                      <td style="width:20%">
+                        <input type="text" class="form-control" style="width:100%;" value="<%= activity.duration if activity.duration %>" <%= text_field_tag 'durations[]' %>
+                      </td>
 
                       <div style="display: none;">
                         <input value='<%= activity.id %>' <%= text_field_tag 'activityID[]' %>
@@ -133,13 +135,12 @@
                 <% end %>
               </table>
             </div>
-
             <!-- Crear nuevas actividades: sólo si el curso es nuevo (es decir, el curso no tiene id porque si tiene lo estamos editando) -->
             <a href="javascript:;" id="addNewTag">Creare un'altra lezione per quest'attività</a>
-
           </div>
         </div>
       </td>
+
 
       <!-- Formatori -->
 			<td style="vertical-align: top; width: 33%; border: 15px solid white">

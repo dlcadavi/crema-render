@@ -127,3 +127,17 @@ task :update_porgramas_graduaciones => :environment do
     grad.save
   end
 end
+
+###############################################################################################
+# actualizar nombre de profesores en las actividades
+
+task :update_activities_formatori => [:update_actividades_profesores] do
+  puts "Finished update activities task"
+end
+
+task :update_actividades_profesores => :environment do
+  activities = Activity.all
+  activities.each do |activity|
+    activity.modify_attributes
+  end
+end
