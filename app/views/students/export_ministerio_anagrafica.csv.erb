@@ -1,6 +1,6 @@
 <%- nombres_columnas = ['CF','Cognome', 'Nome', 'Data nascita', 'Email', 'Telefono', 'Tipologia', 'Nazionalita', 'Struttura',
 'Classe','Anno iscrizione','Data inizio', 'Data fine', 'Retta'] -%>
-<%= CSV.generate_line nombres_columnas -%>
+<%= CSV.generate_line(nombres_columnas,col_sep: ';') -%>
 <%- @students.order(:lastname, :name).each do |student| -%>
   <%- @stays = Stay.where(student_id: student.id, acyear_id: @acyearid).order(:hosting_start_date) -%>
     <%- @stays.each do |stay| -%>
@@ -10,6 +10,6 @@
     stay.typology, student.country_of_birth,stay.frame, @classe, @anno_iscrizione,
     stay.hosting_start_date.to_date.strftime("%d/%m/%y"), stay.hosting_end_date.to_date.strftime("%d/%m/%y"),
     stay.annualfee.to_s.tr('.', ',')] -%>
-    <%= CSV.generate_line(row).html_safe -%>
+    <%= CSV.generate_line(row,col_sep: ';').html_safe -%>
   <%- end -%>
 <%- end -%>

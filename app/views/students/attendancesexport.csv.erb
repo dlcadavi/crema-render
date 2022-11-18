@@ -1,9 +1,9 @@
 <%- nombres_columnas = ['Nome', 'Data', 'Ore','Tipo attivita','Argomento','Docente','Qualifica','Contesto'] -%>
-<%= CSV.generate_line nombres_columnas -%>
+<%= CSV.generate_line(nombres_columnas,col_sep: ';') -%>
 <%- @students.each do |student| -%>
   <%- student.activities.each do |activity| -%>
     <%- kind_ministero = activity.kind.partition('.').first-%>
     <%- row = [student.id_number, activity.activity_date.to_date.strftime("%d/%m/%y"), activity.duration,kind_ministero,activity.name,activity.professor_fullname, activity.aggregated_qualification,activity.context] -%>
-    <%= CSV.generate_line(row).html_safe -%>
+    <%= CSV.generate_line(row,col_sep: ';').html_safe -%>
   <%- end -%>
 <%- end -%>

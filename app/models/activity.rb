@@ -44,6 +44,11 @@ class Activity < ApplicationRecord
     update_prof
   end
 
+  def update_professors_attributes
+    professoractivities = Professoractivity.where(activity_id: self.id)
+    @profesores = Professor.where(id: professoractivities.pluck(:professor_id))
+    update_prof
+  end
 
   def update_prof
     @profesores.each do |professor|
@@ -53,11 +58,7 @@ class Activity < ApplicationRecord
     end
   end
 
-  def update_professors_attributes
-    professoractivities = Professoractivity.where(activity_id: self.id)
-    @profesores = Professor.where(id: professoractivities.pluck(:professor_id))
-    update_prof
-  end
+
 
   def update_course_duration
     @activitycourse = Activitycourse.find_by(activity_id: self.id)
@@ -92,7 +93,7 @@ class Activity < ApplicationRecord
 
 
   def set_professor_fullname
-    actividades = Professoractivity.where(activity_id: self.id)
+    actividades = Professoractivity.where(activity_id: self.id, present:true)
     @profesores = Professor.where(id: actividades.pluck(:professor_id))
     self.update_column :professor_fullname,  @profesores.collect(&:display_fullname).join(', ')
   end

@@ -1,11 +1,11 @@
 <%- nombres_columnas = ['CF', 'Cognome', 'Nome', 'Anno accademico', 'Data inizio', 'Data fine', 'Retta mensile', 'Descrizione'] -%>
-<%= CSV.generate_line nombres_columnas -%>
+<%= CSV.generate_line(nombres_columnas,col_sep: ';') -%>
 <%- @guests.each do |guest| -%>
   <%- @visits = Visit.where(guest_id: guest.id, acyear_id: @acyearid).to_a -%>
   <%- @visits.each do |visit| -%>
     <%- row = [guest.id_number, guest.lastname, guest.name,
     visit.acyear.name, visit.hosting_start_date.to_date.strftime("%d/%m/%y"), visit.hosting_end_date.to_date.strftime("%d/%m/%y"),
     visit.fee, visit.description] -%>
-    <%= CSV.generate_line(row).html_safe -%>
+    <%= CSV.generate_line(row,col_sep: ';').html_safe -%>
   <%- end -%>
 <%- end -%>

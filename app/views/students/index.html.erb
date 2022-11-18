@@ -121,13 +121,9 @@
     <th><span> Partecipazione</span></th>
     <th style="width:7%;"><span> Voti annuali </span></th>
     <th style="width:7%;"><span> Voti carriera </span></th>
-    <th style="width:1%;"><span> No. di lezione </span></th>
-    <th><span> Struttura </span></th>
-    <th><span> Classe </span></th>
-    <th><span> Anno iscrizione </span></th>
-    <th><span> Data inizio </span></th>
-    <th><span> Data fine </span></th>
-    <th><span> Retta annuale </span></th>
+    <th style="width:7%;"><span> No. di lezione </span></th>
+    <th style="width:20%;"><span> Classe </span></th>
+    <th style="width:8%;"><span> Anno iscrizione </span></th>
     <th><span> Email </span></th>
     <th><span> Telefono </span></th>
     <th style="width:5%;"><span> Azioni </span></th>
@@ -216,12 +212,11 @@
       </td>
 
       <!-- La l minúscula de las fechas es para que por defecto use el formato que yo definí en  config/locales/en.yml -->
-      <td> <%= stay.frame if stay %> </td>
       <td style="text-align: left"> <%= stay.kind if stay %> </td>
       <td> <%= stay.year_enrollment if stay and stay.year_enrollment%></td>
-      <td> <%= l stay.hosting_start_date if stay and stay.hosting_start_date %> </td>
-      <td> <%= l stay.hosting_end_date if stay and stay.hosting_end_date %> </td>
-      <td> <%= stay.annualfee if stay and stay.annualfee %> </td>
+      <!-- <td> <%= l stay.hosting_start_date if stay and stay.hosting_start_date %> </td> -->
+      <!-- <td> <%= l stay.hosting_end_date if stay and stay.hosting_end_date %> </td> -->
+      <!-- <td> <%= stay.annualfee if stay and stay.annualfee %> </td> -->
 
       <!-- Los campos del estudiante -->
       <td style="text-align: left"> <%= student.user.email %> </td>

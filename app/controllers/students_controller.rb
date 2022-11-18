@@ -65,13 +65,17 @@ class StudentsController < ApplicationController
   def courseattendance
   end
 
+
   def courseattendancesexport
     if params[:acyear_filter] != ""
       @stays = Stay.where(acyear_id: params[:acyear_filter])
       @students = Student.where(id: @stays.pluck(:student_id))
+      fechainianno = Acyear.find_by_id(params[:acyear_filter]).startdate
+      fechafinanno = Acyear.find_by_id(params[:acyear_filter]).finaldate
+      @courses = Course.where('date > ?', fechainianno).where('end_date < ?', fechafinanno)
       #@courseattendances = Courseattendance.where(student_id: @students.pluck(:id), 'perc_attendance >': 0)
       # tuve que filtrar de este modo porque no fui capaz de poner que perc_attendances > 0
-      @courseattendances = Courseattendance.where(student_id: @students.pluck(:id))
+      @courseattendances = Courseattendance.where(student_id: @students.pluck(:id), course_id: @courses.pluck(:id))
       if params[:nombre] == "sin_participacion_minima"
         @courseattendances = @courseattendances.where.not(perc_attendance: ..0)
       end

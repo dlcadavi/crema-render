@@ -1,5 +1,5 @@
 <%- nombres_columnas = ['Anno','Cognome', 'Nome', 'Data inizio', 'Data fine', 'Mesi', 'Retta mensile', 'Description'] -%>
-<%= CSV.generate_line nombres_columnas -%>
+<%= CSV.generate_line(nombres_columnas,col_sep: ';') -%>
 <%- @locations.each do |location| -%>
   <%- stay = Stay.find_by_id(location.stay_id) -%>
   <%- student = Student.find_by_id(stay.student_id) -%>
@@ -7,5 +7,5 @@
   <%- row = [anno.name, student.lastname, student.name,
   location.start_location_date.to_date.strftime("%d/%m/%y"), location.end_location_date.to_date.strftime("%d/%m/%y"),
   location.months, location.fee, location.description] -%>
-  <%= CSV.generate_line(row).html_safe -%>
+  <%= CSV.generate_line(row,col_sep: ';').html_safe -%>
 <%- end -%>

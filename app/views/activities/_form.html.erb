@@ -50,7 +50,7 @@
                 <div></div>
                 <!-- Subtitle -->
                 <div class="col-md-6">
-                  <label class="form-label">Subtitolo *</label>
+                  <label class="form-label">Sottotitolo *</label>
                   <input type="text" class="form-control" style="width: 200%;"<%= form.text_field :subtitle %>
                 </div>
                 <div></div>
@@ -72,7 +72,7 @@
 
                 <!-- tipo: no lo pueden ver los estudiantes-->
                 <div class="col-md-6">
-                  <% if current_user.role.name == "Admin" %>
+                  <% if current_user.editor? or current_user.admin? or current_user.viewer? %>
                 	 <label class="form-label">Tipologia *</label>
                    <select id='',type="text" class="form-control" <%= form.select :kind, options_for_select($typology_list,selected: activity.kind) %>
                   <% end %>

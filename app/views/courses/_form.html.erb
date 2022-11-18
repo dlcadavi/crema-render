@@ -60,7 +60,7 @@
 
             <!-- tipo: no lo pueden ver los estudiantes-->
             <div class="col-md-6">
-              <% if current_user.role.name == "Admin" %>
+              <% if current_user.editor? or current_user.admin? or current_user.viewer? %>
                <label class="form-label">Tipologia (cambia tutte le lezioni)*</label>
                <select id='',type="text" class="form-control" <%= form.select :typology, options_for_select($typology_list,selected: course.typology) %>
               <% end %>
@@ -68,9 +68,9 @@
 
             <!-- Costo: no lo pueden ver los estudiantes -->
             <div class="col-md-6">
-              <% if current_user.role.name == "Admin" %>
+              <% if current_user.editor? or current_user.admin? or current_user.viewer? %>
                 <label for="inputEmail4" class="form-label" style="width: 150%;" >Costo per il Collegio (euro) *</label>
-                <input type="text" class="form-control-non-editable" value="<%= course.cost%>"
+                <input  class="form-control-non-editable" value= "<%=course.cost%>"
               <% end %>
             </div>
           </div>
@@ -156,7 +156,6 @@
                 <% end %>
               <% end %>
               <br><br>
-              <%= link_to 'Creare nuovo professore', new_professor_path, data: { turbo: false } %>
             </div>
           </div>
         </div>

@@ -183,30 +183,37 @@ class ActivitiesController < ApplicationController
 
   # PATCH/PUT /activities/1 or /activities/1.json
   def update
-    # Desambiguar el tema del costo de los Profesores
-    costos = params[:costs]
-    professors_selected = params[:professors_selected]
-    if @activity.update(activity_params)
-      @activitycourse = Activitycourse.find_by(activity_id: @activity.id)
-      @course = Course.find_by_id(@activitycourse.course_id)
-      @profesorescurso = Professorcourse.where(course_id: @course.id)
-      @profesores = Professor.where(id: @profesorescurso.pluck(:professor_id))
-      @profesores.order(:lastname, :name).each_with_index do |professor, index|
-        @professoractivity = Professoractivity.find_by(activity_id: @activity.id, professor_id: professor.id)
-        @professoractivity.update(present: true)
-        @professoractivity.update(cost: costos[index])
-        if professors_selected[index] == "no"
-          @professoractivity.update(present: false)
-          @professoractivity.update(cost: 0)
+    if params[:asistencia] != "asistencia"
+      # Desambiguar el tema del costo de los Profesores
+      costos = params[:costs]
+      professors_selected = params[:professors_selected]
+      if @activity.update(activity_params)
+        @activitycourse = Activitycourse.find_by(activity_id: @activity.id)
+        @course = Course.find_by_id(@activitycourse.course_id)
+        @profesorescurso = Professorcourse.where(course_id: @course.id)
+        @profesores = Professor.where(id: @profesorescurso.pluck(:professor_id))
+        @profesores.order(:lastname, :name).each_with_index do |professor, index|
+          @professoractivity = Professoractivity.find_by(activity_id: @activity.id, professor_id: professor.id)
+          @professoractivity.update(present: true)
+          @professoractivity.update(cost: costos[index])
+          if professors_selected[index] == "no"
+            @professoractivity.update(present: false)
+            @professoractivity.update(cost: 0)
+          end
         end
+        @activity.modify_attributes
       end
+
     end
 
     respond_to do |format|
       if @activity.update(activity_params)
-        #format.html { redirect_to params[:redirect_location], notice: "La lezione è stata aggiornata correttamente." }
-        format.html { redirect_to activity_url(@activity), notice: "La lezione è stata aggiornata correttamente." }
-        format.json { render :show, status: :ok, location: @activity }
+        if params[:asistencia] == "asistencia"
+          format.html { redirect_to activities_path, notice: "La lezione è stata aggiornata correttamente." }
+        else
+          format.html { redirect_to activity_url(@activity), notice: "La lezione è stata aggiornata correttamente." }
+          format.json { render :show, status: :ok, location: @activity }
+        end
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @activity.errors, status: :unprocessable_entity }

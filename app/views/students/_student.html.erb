@@ -35,7 +35,7 @@
 								</div>
 								<!-- Mobile number -->
 								<div class="col-md-6">
-									<label class="form-label">Telefono cellulare *</label>
+									<label class="form-label">Telefono *</label>
 									<input type="text" class="form-control-non-editable" placeholder="" aria-label="Phone number" <%= form.text_field :phone_number %>
 								</div>
 								<!-- Email -->
@@ -101,32 +101,6 @@
 						</div>
 					</div>
 
-
-					<!-- Actividades-->
-					<div class="col-xxl-6">
-						<div class="bg-secondary-soft px-4 py-4 rounded">
-							<div class="row g-3">
-								<h4 class="my-4">Attività</h4>
-
-                <!-- Inscritas -->
-								<div class="col-md-6">
-									<label class="form-label">Iscritte </label>
-									<% @student.user.activities.each do |activity| %>
-					          <li><%= activity.name %></li>
-					        <% end %>
-								</div>
-
-								<!-- Frecuentadas -->
-								<div class="col-md-6">
-									<label class="form-label">Frequentate </label>
-									<% @student.activities.each do |activity| %>
-					          <li><%= activity.name %></li>
-					        <% end %>
-								</div>
-
-							</div>
-						</div>
-					</div>
 				</div> <!-- Row END -->
 
 			</div>

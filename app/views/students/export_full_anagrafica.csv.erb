@@ -1,11 +1,11 @@
 <%- nombres_columnas = ["CF","Cognome","Nome", "Genere", "Data nascita", "Email", "Telefono","Nazionalità"] -%>
-<%= CSV.generate_line nombres_columnas -%>
+<%= CSV.generate_line(nombres_columnas,col_sep: ';') -%>
 <%- @students.each do |student| -%>
   <%- @stays = Stay.where(student_id: student.id) -%>
   <%- @stays = Stay.where(student_id: student.id, acyear_id: @anno.id) if @anno-%>
     <%- @stays.each do |stay| -%>
     <%- row = [student.id_number, student.lastname, student.name, student.gender, student.birthdate.to_date.strftime("%d/%m/%y"), student.email, student.phone_number,
     student.country_of_birth] -%>
-    <%= CSV.generate_line(row).html_safe -%>
+    <%= CSV.generate_line(row,col_sep: ';').html_safe -%>
   <%- end -%>
 <%- end -%>
