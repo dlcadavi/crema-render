@@ -19,12 +19,11 @@ services:
         value: enabled
       - key: RAILS_SERVE_STATIC_FILES # Imported from Heroku app
         value: enabled
-      - key: DATABASE_URL # Render PostgreSQL database
-        fromDatabase:
-          name: postgresql-polished-67729
-          property: connectionString
+      # - key: DATABASE_URL # Render PostgreSQL database
+      #   fromDatabase:
+      #     name: postgresql-polished-67729
+      #     property: connectionString
 
 databases: # Render PostgreSQL database
-  - name: postgresql-polished-67729
-    ipAllowList: [] # only allow internal connections
-    plan: free
+  # - name: postgresql-polished-67729
+  #   ipAllowList: [] # only allow internal connections
