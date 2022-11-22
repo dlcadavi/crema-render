@@ -2,6 +2,7 @@ databases:
   - name: crema
     databaseName: crema
     user: crema
+    plan: free
 
 services:
   - type: web
