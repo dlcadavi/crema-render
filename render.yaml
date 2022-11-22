@@ -27,3 +27,4 @@ services:
 databases: # Render PostgreSQL database
   - name: postgresql-polished-67729
     ipAllowList: [] # only allow internal connections
+    plan: free
