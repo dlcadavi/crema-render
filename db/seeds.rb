@@ -60,7 +60,7 @@ Professor.create(name: 'Carlo', lastname: 'Moreno', email: 'carlomoreno@gmail.co
 ##################
 
 # Stay: estudiantes con años
-Stay.create(student_id: 1, acyear_id: 2, hosting_start_date: '2022/09/03',hosting_end_date: '2023/07/06', year_enrollment: '3T')
+# Stay.create(student_id: 1, acyear_id: 2, hosting_start_date: '2022/09/03',hosting_end_date: '2023/07/06', year_enrollment: '3T')
 
 
 # Crear los programas
